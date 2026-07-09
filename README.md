@@ -4,7 +4,7 @@
 
 ### AI-Powered Smart Stadium Operations Platform
 
-[![CI](https://github.com/yourusername/smartarena-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/smartarena-ai/actions)
+[![CI](https://github.com/themukeshdev/smartarena-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/themukeshdev/smartarena-ai/actions)
 [![Python](https://img.shields.io/badge/Python-3.12-3776ab?logo=python&logoColor=white)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3.1-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com)
 [![Firebase](https://img.shields.io/badge/Firebase-Firestore-ffca28?logo=firebase&logoColor=black)](https://firebase.google.com)
