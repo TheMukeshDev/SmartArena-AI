@@ -1,0 +1,193 @@
+/* =============================================================================
+   SmartArena AI — TailwindCSS Source
+   ============================================================================= */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base Layer ─────────────────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    background-color: #060810;
+    color: #e2e8f0;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: rgba(51, 141, 255, 0.3);
+    color: #ffffff;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0a0e1a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #338dff;
+  }
+}
+
+/* ── Component Layer ────────────────────────────────────────────────────── */
+@layer components {
+  /* Glass Card */
+  .glass-card {
+    @apply bg-surface-800/50 backdrop-blur-xl border border-white/5
+           rounded-2xl shadow-lg transition-all duration-300;
+  }
+
+  .glass-card:hover {
+    @apply border-arena-500/20 shadow-glow;
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent
+           bg-gradient-to-r from-arena-400 via-neon-blue to-neon-green;
+  }
+
+  /* Neon Button */
+  .btn-neon {
+    @apply relative px-6 py-3 rounded-xl font-semibold text-white
+           bg-gradient-to-r from-arena-600 to-arena-500
+           shadow-glow transition-all duration-300
+           hover:shadow-glow-lg hover:scale-[1.02]
+           active:scale-[0.98] cursor-pointer;
+  }
+
+  .btn-neon::before {
+    content: "";
+    @apply absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300;
+    background: linear-gradient(
+      135deg,
+      rgba(51, 141, 255, 0.4),
+      rgba(0, 255, 136, 0.2)
+    );
+  }
+
+  .btn-neon:hover::before {
+    @apply opacity-100;
+  }
+
+  /* Secondary Button */
+  .btn-ghost {
+    @apply px-6 py-3 rounded-xl font-semibold text-arena-400
+           border border-arena-500/30 bg-transparent
+           transition-all duration-300
+           hover:bg-arena-500/10 hover:border-arena-500/50
+           active:scale-[0.98] cursor-pointer;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full
+           text-xs font-medium bg-arena-500/10 text-arena-400
+           border border-arena-500/20;
+  }
+
+  .badge-success {
+    @apply bg-neon-green/10 text-neon-green border-neon-green/20;
+  }
+
+  .badge-warning {
+    @apply bg-neon-orange/10 text-neon-orange border-neon-orange/20;
+  }
+
+  .badge-danger {
+    @apply bg-neon-pink/10 text-neon-pink border-neon-pink/20;
+  }
+
+  /* Stat Card */
+  .stat-card {
+    @apply glass-card p-6 flex flex-col gap-2;
+  }
+
+  .stat-card .stat-value {
+    @apply text-3xl font-display font-bold text-white;
+  }
+
+  .stat-card .stat-label {
+    @apply text-sm text-surface-200/60 uppercase tracking-wider;
+  }
+
+  /* Loading Skeleton */
+  .skeleton {
+    @apply bg-surface-700/50 rounded-lg animate-pulse;
+  }
+
+  /* Input */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl
+           bg-surface-800/80 border border-white/10
+           text-white placeholder-surface-200/40
+           focus:outline-none focus:border-arena-500/50 focus:ring-1 focus:ring-arena-500/30
+           transition-all duration-200;
+  }
+}
+
+/* ── Utility Layer ──────────────────────────────────────────────────────── */
+@layer utilities {
+  /* Mesh Gradient Background */
+  .bg-mesh {
+    background-image: radial-gradient(
+        at 20% 20%,
+        rgba(51, 141, 255, 0.08) 0px,
+        transparent 50%
+      ),
+      radial-gradient(
+        at 80% 80%,
+        rgba(0, 255, 136, 0.05) 0px,
+        transparent 50%
+      ),
+      radial-gradient(
+        at 50% 50%,
+        rgba(168, 85, 247, 0.04) 0px,
+        transparent 50%
+      );
+  }
+
+  /* Grid Pattern Overlay */
+  .bg-grid {
+    background-image: linear-gradient(
+        rgba(255, 255, 255, 0.02) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.02) 1px,
+        transparent 1px
+      );
+    background-size: 40px 40px;
+  }
+
+  /* Text glow */
+  .text-glow {
+    text-shadow: 0 0 20px rgba(51, 141, 255, 0.5);
+  }
+}
