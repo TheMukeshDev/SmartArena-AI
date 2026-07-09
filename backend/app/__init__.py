@@ -6,7 +6,8 @@ Creates and configures the Flask application using the factory pattern.
 This enables multiple configurations (dev, prod, test) and simplifies testing.
 """
 
-from flask import Flask
+from flask import Flask, jsonify
+from flask_wtf.csrf import CSRFProtect, generate_csrf
 
 from app.config.settings import get_config
 from app.config.firebase import init_firebase
@@ -56,6 +57,13 @@ def create_app(config_name: str | None = None) -> Flask:
 
     # ── Register Blueprints ─────────────────────────────────────────────
     register_blueprints(app)
+
+    # ── Initialize CSRF Protection ──────────────────────────────────────
+    csrf = CSRFProtect(app)
+    
+    @app.route('/api/v1/csrf-token', methods=['GET'])
+    def get_csrf():
+        return jsonify({"csrf_token": generate_csrf()})
 
     # ── Register Error Handlers ─────────────────────────────────────────
     register_error_handlers(app)

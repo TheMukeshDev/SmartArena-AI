@@ -43,3 +43,36 @@ const CONFIG = {
 
 // Freeze config to prevent mutations
 Object.freeze(CONFIG);
+
+// ── Global CSRF Injection ──────────────────────────────────────────────
+let _csrfToken = null;
+const _originalFetch = window.fetch;
+
+window.fetch = async function (resource, options) {
+  if (
+    options && 
+    ['POST', 'PUT', 'DELETE'].includes(options.method?.toUpperCase()) && 
+    typeof resource === 'string' && 
+    (resource.includes(CONFIG.API_BASE_URL) || resource.startsWith('/'))
+  ) {
+    if (!_csrfToken) {
+      try {
+        const tokenRes = await _originalFetch(CONFIG.baseUrl('/api/v1/csrf-token'), { credentials: 'include' });
+        if (tokenRes.ok) {
+          const data = await tokenRes.json();
+          _csrfToken = data.csrf_token;
+        }
+      } catch (e) {
+        console.warn('Failed to fetch CSRF token');
+      }
+    }
+    
+    if (_csrfToken) {
+      options.headers = {
+        ...options.headers,
+        'X-CSRFToken': _csrfToken
+      };
+    }
+  }
+  return _originalFetch(resource, options);
+};

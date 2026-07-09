@@ -7,7 +7,7 @@ def test_incident_classification(client):
          patch("app.services.ai_service.get_firestore_client") as mock_fs:
         
         mock_init.return_value = True
-        mock_response = mock_model.return_value.generate_content.return_value
+        mock_response = mock_model.return_value.generate_content_async.return_value
         mock_response.text = '{"category": "Medical", "priority": "High", "action": "Dispatch medics", "announcement": ""}'
         
         client.set_cookie("localhost", "session", "fake")
@@ -24,7 +24,7 @@ def test_crowd_analysis(client):
          patch("app.services.ai_service.get_firestore_client") as mock_fs:
         
         mock_init.return_value = True
-        mock_response = mock_model.return_value.generate_content.return_value
+        mock_response = mock_model.return_value.generate_content_async.return_value
         mock_response.text = '{"global_status": "Congested", "insights": ["Issue"], "routing_advice": "Go left"}'
         
         client.set_cookie("localhost", "session", "fake")
@@ -40,7 +40,7 @@ def test_volunteer_assign(client):
          patch("app.services.ai_service.get_firestore_client") as mock_fs:
         
         mock_init.return_value = True
-        mock_response = mock_model.return_value.generate_content.return_value
+        mock_response = mock_model.return_value.generate_content_async.return_value
         mock_response.text = '{"task": "Clean spill", "priority": "Low", "description": "Clean it"}'
         
         client.set_cookie("localhost", "session", "fake")
@@ -56,7 +56,7 @@ def test_sustainability_optimize(client):
          patch("app.services.ai_service.get_firestore_client") as mock_fs:
         
         mock_init.return_value = True
-        mock_response = mock_model.return_value.generate_content.return_value
+        mock_response = mock_model.return_value.generate_content_async.return_value
         mock_response.text = '{"status": "Good", "recommendations": ["Dim lights"]}'
         
         client.set_cookie("localhost", "session", "fake")
@@ -71,7 +71,7 @@ def test_assistant_chat(client):
          patch("app.ai.gemini._init_gemini") as mock_init:
         
         mock_init.return_value = True
-        mock_response = mock_model.return_value.generate_content.return_value
+        mock_response = mock_model.return_value.generate_content_async.return_value
         mock_response.text = 'This is a test response.'
         
         client.set_cookie("localhost", "session", "fake")
