@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartArena AI — AI-Powered Smart Stadium Operations Platform. Real-time crowd intelligence, incident management, and sustainability tracking.">
+    <meta name="theme-color" content="#060810">
+    <title>SmartArena AI — Smart Stadium Operations</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- TailwindCSS (compiled) -->
+    <link rel="stylesheet" href="css/output.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏟️</text></svg>">
+</head>
+<body class="bg-surface-950 bg-mesh bg-grid min-h-screen">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         NAVIGATION
+         ═══════════════════════════════════════════════════════════════════ -->
+    <nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 bg-transparent transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 lg:h-20">
+                <!-- Logo -->
+                <a href="/" class="flex items-center gap-3 group" id="nav-logo">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-arena-500 to-neon-green flex items-center justify-center text-xl transition-transform duration-300 group-hover:scale-110">
+                        🏟️
+                    </div>
+                    <div>
+                        <span class="text-lg font-display font-bold text-white">Smart<span class="gradient-text">Arena</span></span>
+                        <span class="hidden sm:inline text-xs text-surface-200/40 ml-1 font-mono">AI</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#features" class="text-sm text-surface-200/60 hover:text-white transition-colors">Features</a>
+                    <a href="#stats" class="text-sm text-surface-200/60 hover:text-white transition-colors">Stats</a>
+                    <a href="#tech" class="text-sm text-surface-200/60 hover:text-white transition-colors">Technology</a>
+                    <div class="flex items-center gap-2">
+                        <span id="api-status" class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" title="Checking..."></span>
+                        <span class="text-xs text-surface-200/40 font-mono">API</span>
+                    </div>
+                    <a href="pages/login.html" class="btn-ghost text-sm !px-4 !py-2" id="nav-login">Login</a>
+                    <a href="pages/login.html" class="btn-neon text-sm !px-5 !py-2" id="nav-dashboard">Dashboard</a>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button id="mobile-menu-toggle" class="md:hidden text-white p-2" aria-label="Toggle menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden flex-col gap-4 pb-6 md:hidden">
+                <a href="#features" class="text-sm text-surface-200/60 hover:text-white transition-colors py-2">Features</a>
+                <a href="#stats" class="text-sm text-surface-200/60 hover:text-white transition-colors py-2">Stats</a>
+                <a href="#tech" class="text-sm text-surface-200/60 hover:text-white transition-colors py-2">Technology</a>
+                <a href="pages/login.html" class="btn-neon text-sm text-center !py-2">Launch Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         HERO SECTION
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden" id="hero">
+        <!-- Animated Background Orbs -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-arena-500/10 rounded-full blur-3xl animate-float"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-neon-green/8 rounded-full blur-3xl animate-float" style="animation-delay: 1s;"></div>
+            <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-neon-purple/5 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
+        </div>
+
+        <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center">
+            <!-- Badge -->
+            <div data-animate="hero" class="inline-flex items-center gap-2 mb-8">
+                <span class="badge">
+                    <span class="w-1.5 h-1.5 rounded-full bg-neon-green animate-pulse mr-2"></span>
+                    AI-Powered Stadium Intelligence
+                </span>
+            </div>
+
+            <!-- Main Heading -->
+            <h1 data-animate="hero" class="text-4xl sm:text-5xl md:text-7xl font-display font-extrabold leading-tight mb-6">
+                <span class="text-white">Smarter Stadiums.</span><br>
+                <span class="gradient-text text-glow">Powered by AI.</span>
+            </h1>
+
+            <!-- Subheading -->
+            <p data-animate="hero" class="text-lg sm:text-xl text-surface-200/60 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Real-time crowd intelligence, predictive incident management, 
+                and sustainability tracking — all from one 
+                <span class="text-arena-400 font-medium">intelligent command center</span>.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div data-animate="hero" class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                <a href="pages/login.html" class="btn-neon text-base w-full sm:w-auto" id="hero-cta-primary">
+                    🚀 Launch Dashboard
+                </a>
+                <a href="#features" class="btn-ghost text-base w-full sm:w-auto" id="hero-cta-secondary">
+                    Explore Features
+                </a>
+            </div>
+
+            <!-- Hero Visual — Glassmorphic Dashboard Preview -->
+            <div data-animate="hero" class="relative max-w-4xl mx-auto">
+                <div class="glass-card p-4 sm:p-6 animate-pulse-glow">
+                    <div class="bg-surface-900/80 rounded-xl p-4 sm:p-8 border border-white/5">
+                        <!-- Mock Dashboard Header -->
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-3 h-3 rounded-full bg-neon-pink"></div>
+                                <div class="w-3 h-3 rounded-full bg-neon-orange"></div>
+                                <div class="w-3 h-3 rounded-full bg-neon-green"></div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-mono text-surface-200/40">smartarena.ai/dashboard</span>
+                            </div>
+                        </div>
+                        <!-- Mock Dashboard Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4">
+                            <div class="bg-surface-800/60 rounded-lg p-3 sm:p-4 border border-white/5">
+                                <div class="text-xs text-surface-200/40 mb-1">Attendance</div>
+                                <div class="text-lg sm:text-xl font-display font-bold text-white">45,230</div>
+                                <div class="text-xs text-neon-green mt-1">↑ 12%</div>
+                            </div>
+                            <div class="bg-surface-800/60 rounded-lg p-3 sm:p-4 border border-white/5">
+                                <div class="text-xs text-surface-200/40 mb-1">Crowd Flow</div>
+                                <div class="text-lg sm:text-xl font-display font-bold text-white">Normal</div>
+                                <div class="text-xs text-neon-blue mt-1">● Stable</div>
+                            </div>
+                            <div class="bg-surface-800/60 rounded-lg p-3 sm:p-4 border border-white/5">
+                                <div class="text-xs text-surface-200/40 mb-1">Incidents</div>
+                                <div class="text-lg sm:text-xl font-display font-bold text-neon-orange">3</div>
+                                <div class="text-xs text-surface-200/40 mt-1">Active</div>
+                            </div>
+                            <div class="bg-surface-800/60 rounded-lg p-3 sm:p-4 border border-white/5">
+                                <div class="text-xs text-surface-200/40 mb-1">AI Score</div>
+                                <div class="text-lg sm:text-xl font-display font-bold gradient-text">98.5</div>
+                                <div class="text-xs text-neon-green mt-1">Excellent</div>
+                            </div>
+                        </div>
+                        <!-- Mock Chart Area -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                            <div class="sm:col-span-2 bg-surface-800/60 rounded-lg p-4 border border-white/5 h-32 flex items-end gap-1">
+                                <div class="w-full bg-arena-500/30 rounded-t" style="height: 40%"></div>
+                                <div class="w-full bg-arena-500/40 rounded-t" style="height: 55%"></div>
+                                <div class="w-full bg-arena-500/50 rounded-t" style="height: 70%"></div>
+                                <div class="w-full bg-arena-500/60 rounded-t" style="height: 45%"></div>
+                                <div class="w-full bg-arena-500/70 rounded-t" style="height: 80%"></div>
+                                <div class="w-full bg-arena-500/80 rounded-t" style="height: 60%"></div>
+                                <div class="w-full bg-neon-green/50 rounded-t" style="height: 90%"></div>
+                                <div class="w-full bg-neon-green/40 rounded-t" style="height: 75%"></div>
+                            </div>
+                            <div class="bg-surface-800/60 rounded-lg p-4 border border-white/5">
+                                <div class="text-xs text-surface-200/40 mb-2">AI Insights</div>
+                                <div class="space-y-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-neon-green"></div>
+                                        <span class="text-xs text-surface-200/60">Gate A optimal</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-neon-orange"></div>
+                                        <span class="text-xs text-surface-200/60">Gate C congested</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-arena-400"></div>
+                                        <span class="text-xs text-surface-200/60">Deploy 3 volunteers</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-surface-200/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         STATS SECTION
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="py-20 border-t border-white/5" id="stats">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="stat-card text-center" data-animate="card">
+                    <div class="stat-value gradient-text" data-count="50000" data-suffix="+">0</div>
+                    <div class="stat-label">Max Capacity</div>
+                </div>
+                <div class="stat-card text-center" data-animate="card">
+                    <div class="stat-value text-neon-green" data-count="99" data-suffix="%">0</div>
+                    <div class="stat-label">AI Accuracy</div>
+                </div>
+                <div class="stat-card text-center" data-animate="card">
+                    <div class="stat-value text-neon-blue" data-count="15" data-suffix="ms">0</div>
+                    <div class="stat-label">Response Time</div>
+                </div>
+                <div class="stat-card text-center" data-animate="card">
+                    <div class="stat-value text-neon-purple" data-count="24" data-suffix="/7">0</div>
+                    <div class="stat-label">Monitoring</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         FEATURES SECTION
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="py-24" id="features">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="text-center mb-16" data-animate="card">
+                <span class="badge mb-4">Powered by Gemini AI</span>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white mb-4">
+                    Intelligent Stadium <span class="gradient-text">Operations</span>
+                </h2>
+                <p class="text-surface-200/60 max-w-2xl mx-auto text-lg">
+                    Every aspect of stadium management enhanced by artificial intelligence 
+                    and real-time analytics.
+                </p>
+            </div>
+
+            <!-- Feature Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Feature 1: Crowd Intelligence -->
+                <div class="glass-card p-6 group" data-animate="card" id="feature-crowd">
+                    <div class="w-12 h-12 rounded-xl bg-arena-500/10 border border-arena-500/20 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        👥
+                    </div>
+                    <h3 class="text-lg font-display font-semibold text-white mb-2">Crowd Intelligence</h3>
+                    <p class="text-sm text-surface-200/50 leading-relaxed">
+                        AI-powered crowd density analysis with real-time predictions for congestion, 
+                        wait times, and optimal gate routing.
+                    </p>
+                </div>
+
+                <!-- Feature 2: Incident Management -->
+                <div class="glass-card p-6 group" data-animate="card" id="feature-incident">
+                    <div class="w-12 h-12 rounded-xl bg-neon-pink/10 border border-neon-pink/20 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        🚨
+                    </div>
+                    <h3 class="text-lg font-display font-semibold text-white mb-2">Incident Management</h3>
+                    <p class="text-sm text-surface-200/50 leading-relaxed">
+                        Gemini classifies, prioritizes, and auto-assigns incidents with 
+                        real-time AI announcements and volunteer dispatch.
+                    </p>
+                </div>
+
+                <!-- Feature 3: Stadium Map -->
+                <div class="glass-card p-6 group" data-animate="card" id="feature-map">
+                    <div class="w-12 h-12 rounded-xl bg-neon-blue/10 border border-neon-blue/20 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        🗺️
+                    </div>
+                    <h3 class="text-lg font-display font-semibold text-white mb-2">Interactive Stadium Map</h3>
+                    <p class="text-sm text-surface-200/50 leading-relaxed">
+                        SVG-based interactive stadium layout with occupancy heatmaps, 
+                        clickable zones, and live crowd flow visualization.
+                    </p>
+                </div>
+
+                <!-- Feature 4: Volunteer Management -->
+                <div class="glass-card p-6 group" data-animate="card" id="feature-volunteer">
+                    <div class="w-12 h-12 rounded-xl bg-neon-green/10 border border-neon-green/20 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        🤝
+                    </div>
+                    <h3 class="text-lg font-display font-semibold text-white mb-2">Volunteer Management</h3>
+                    <p class="text-sm text-surface-200/50 leading-relaxed">
+                        Track volunteer locations, manage assignments, and let AI 
+                        recommend optimal deployments in real-time.
+                    </p>
+                </div>
+
+                <!-- Feature 5: Sustainability -->
+                <div class="glass-card p-6 group" data-animate="card" id="feature-sustainability">
+                    <div class="w-12 h-12 rounded-xl bg-neon-green/10 border border-neon-green/20 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        🌱
+                    </div>
+                    <h3 class="text-lg font-display font-semibold text-white mb-2">Sustainability Dashboard</h3>
+                    <p class="text-sm text-surface-200/50 leading-relaxed">
+                        Monitor energy, water, waste, and carbon metrics with AI-generated 
+                        optimization recommendations.
+                    </p>
+                </div>
+
+                <!-- Feature 6: AI Assistant -->
+                <div class="glass-card p-6 group" data-animate="card" id="feature-assistant">
+                    <div class="w-12 h-12 rounded-xl bg-neon-purple/10 border border-neon-purple/20 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        🤖
+                    </div>
+                    <h3 class="text-lg font-display font-semibold text-white mb-2">AI Assistant</h3>
+                    <p class="text-sm text-surface-200/50 leading-relaxed">
+                        Ask anything about stadium operations. Generate reports, 
+                        announcements, and summaries with natural language.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         TECH STACK SECTION
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="py-24 border-t border-white/5" id="tech">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-animate="card">
+                <h2 class="text-3xl sm:text-4xl font-display font-bold text-white mb-4">
+                    Built with <span class="gradient-text">Modern Tech</span>
+                </h2>
+                <p class="text-surface-200/60 max-w-xl mx-auto">
+                    Enterprise-grade architecture designed for scale, security, and performance.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4" data-animate="card">
+                <div class="glass-card p-4 text-center group">
+                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform">🐍</div>
+                    <div class="text-xs font-medium text-surface-200/60">Flask</div>
+                </div>
+                <div class="glass-card p-4 text-center group">
+                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform">🔥</div>
+                    <div class="text-xs font-medium text-surface-200/60">Firebase</div>
+                </div>
+                <div class="glass-card p-4 text-center group">
+                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform">🧠</div>
+                    <div class="text-xs font-medium text-surface-200/60">Gemini AI</div>
+                </div>
+                <div class="glass-card p-4 text-center group">
+                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform">🎨</div>
+                    <div class="text-xs font-medium text-surface-200/60">TailwindCSS</div>
+                </div>
+                <div class="glass-card p-4 text-center group">
+                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform">📊</div>
+                    <div class="text-xs font-medium text-surface-200/60">Chart.js</div>
+                </div>
+                <div class="glass-card p-4 text-center group">
+                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform">🐳</div>
+                    <div class="text-xs font-medium text-surface-200/60">Docker</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         FOOTER
+         ═══════════════════════════════════════════════════════════════════ -->
+    <footer class="py-12 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-lg">🏟️</span>
+                    <span class="text-sm font-display font-semibold text-white">SmartArena AI</span>
+                </div>
+                <p class="text-sm text-surface-200/40">
+                    &copy; 2026 SmartArena AI. AI-Powered Stadium Intelligence Platform.
+                </p>
+                <div class="flex items-center gap-4">
+                    <a href="https://github.com" class="text-surface-200/40 hover:text-white transition-colors" aria-label="GitHub" target="_blank" rel="noopener">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
