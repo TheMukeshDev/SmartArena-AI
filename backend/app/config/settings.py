@@ -40,6 +40,7 @@ class BaseConfig:
 
     # ── Rate Limiting ───────────────────────────────────────────────────
     RATE_LIMIT_DEFAULT: str = os.getenv("RATE_LIMIT_DEFAULT", "100/hour")
+    REDIS_URL: str = os.getenv("REDIS_URL", "")
 
     # ── Logging ─────────────────────────────────────────────────────────
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
@@ -62,6 +63,11 @@ class ProductionConfig(BaseConfig):
     DEBUG: bool = False
     TESTING: bool = False
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "WARNING")
+
+    def __init__(self):
+        super().__init__()
+        if not os.getenv("SECRET_KEY"):
+            raise ValueError("SECRET_KEY environment variable is required in production.")
 
 
 class TestingConfig(BaseConfig):

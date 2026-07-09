@@ -98,21 +98,23 @@ def session_logout() -> tuple[Response, int]:
 
 
 @auth_bp.route("/register", methods=["POST"])
+@require_auth
 def register_user() -> tuple[Response, int]:
     """Register a new user, set their role in Firestore and Custom Claims."""
+    from flask import g
     data = request.get_json()
     
-    # Needs uid (from client-side signup) and role
     uid = data.get("uid")
-    role = data.get("role", "fan") # Default role is fan
     email = data.get("email")
     name = data.get("name", "")
     
     if not uid or not email:
         return error_response("uid and email are required", status_code=400)
         
-    if role not in ["admin", "volunteer", "fan"]:
-        return error_response("Invalid role", status_code=400)
+    if g.user["uid"] != uid:
+        return error_response("Cannot register a different user", status_code=403)
+        
+    role = "fan" # Force default role; elevation should be admin-only
 
     try:
         # 1. Set Custom Claims for RBAC

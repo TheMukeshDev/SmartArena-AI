@@ -23,6 +23,7 @@ limiter = Limiter(
 
 def init_ratelimit(app: Flask) -> None:
     """Initialize Rate Limiting on the application."""
+    app.config['RATELIMIT_STORAGE_URI'] = app.config.get("REDIS_URL") or "memory://"
     limiter.init_app(app)
     
     # Customize the rate limit exceeded error response

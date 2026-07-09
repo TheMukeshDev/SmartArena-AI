@@ -19,7 +19,8 @@
     <script src="../js/firebase-init.js"></script>
     <script src="../js/auth.js"></script>
 </head>
-<body class="bg-surface-950 min-h-screen text-white">
+<body class="bg-surface-950 min-h-screen text-white relative">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-arena-500 text-white px-4 py-2 rounded z-[100]">Skip to main content</a>
 
     <!-- Navbar -->
     <nav class="border-b border-white/10 bg-surface-900/50 backdrop-blur-md sticky top-0 z-50">
@@ -41,7 +42,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" tabindex="-1">
         
         <!-- Loading State -->
         <div id="loading-state" class="flex justify-center items-center h-64">
@@ -183,13 +184,13 @@
         <div id="ai-chat-window" class="hidden mb-4 w-80 sm:w-96 glass-card border-arena-500/50 shadow-2xl overflow-hidden flex flex-col transition-all duration-300">
             <div class="bg-surface-800 p-4 border-b border-white/10 flex justify-between items-center">
                 <div class="flex items-center gap-2">
-                    <span class="text-xl">🤖</span>
+                    <span class="text-xl" aria-hidden="true">🤖</span>
                     <h3 class="font-bold text-white">ArenaBot</h3>
                 </div>
-                <button id="ai-chat-close" class="text-surface-200 hover:text-white">&times;</button>
+                <button id="ai-chat-close" class="text-surface-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white rounded" aria-label="Close chat window">&times;</button>
             </div>
             
-            <div id="ai-chat-messages" class="h-64 overflow-y-auto p-4 space-y-3 bg-surface-900/50">
+            <div id="ai-chat-messages" aria-live="polite" aria-atomic="false" class="h-64 overflow-y-auto p-4 space-y-3 bg-surface-900/50">
                 <div class="bg-surface-800 text-sm text-surface-200 p-3 rounded-xl rounded-tl-none border border-white/5 self-start w-10/12">
                     Hi! I'm your SmartArena AI Assistant. How can I help you manage the stadium today?
                 </div>
@@ -197,17 +198,18 @@
             
             <div class="p-3 border-t border-white/10 bg-surface-800">
                 <form id="ai-chat-form" class="flex gap-2">
-                    <input type="text" id="ai-chat-input" class="flex-1 bg-surface-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-arena-400" placeholder="Ask something..." autocomplete="off">
-                    <button type="submit" class="bg-arena-500 hover:bg-arena-600 text-white rounded-lg px-3 py-2 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    <label for="ai-chat-input" class="sr-only">Message ArenaBot</label>
+                    <input type="text" id="ai-chat-input" class="flex-1 bg-surface-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-arena-400 focus:ring-1 focus:ring-arena-400" placeholder="Ask something..." autocomplete="off">
+                    <button type="submit" class="bg-arena-500 hover:bg-arena-600 text-white rounded-lg px-3 py-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white" aria-label="Send message">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                     </button>
                 </form>
             </div>
         </div>
         
         <!-- Toggle Button -->
-        <button id="ai-chat-toggle" class="w-14 h-14 rounded-full bg-gradient-to-r from-arena-500 to-neon-blue shadow-glow flex items-center justify-center text-2xl hover:scale-110 transition-transform focus:outline-none ml-auto">
-            🤖
+        <button id="ai-chat-toggle" class="w-14 h-14 rounded-full bg-gradient-to-r from-arena-500 to-neon-blue shadow-glow flex items-center justify-center text-2xl hover:scale-110 transition-transform focus:outline-none focus:ring-4 focus:ring-arena-500 ml-auto" aria-label="Open AI Assistant Chat" aria-expanded="false" aria-controls="ai-chat-window">
+            <span aria-hidden="true">🤖</span>
         </button>
     </div>
 
@@ -386,7 +388,13 @@
                 const chatMessages = document.getElementById('ai-chat-messages');
 
                 if (chatToggle) {
-                    const toggleChat = () => chatWindow.classList.toggle('hidden');
+                    const toggleChat = () => {
+                        const isHidden = chatWindow.classList.toggle('hidden');
+                        chatToggle.setAttribute('aria-expanded', !isHidden);
+                        if (!isHidden) {
+                            chatInput.focus();
+                        }
+                    };
                     chatToggle.addEventListener('click', toggleChat);
                     chatClose.addEventListener('click', toggleChat);
 

@@ -25,7 +25,7 @@ def classify_incident(description: str) -> dict:
     if not _init_gemini():
         return fallback
 
-    model = genai.GenerativeModel('gemini-3.5-flash')
+    model = genai.GenerativeModel('gemini-1.5-flash')
     prompt = f"""
     You are an AI Incident Manager for a smart stadium.
     Analyze the following incident report and respond ONLY with a raw JSON object containing these keys:
@@ -38,14 +38,11 @@ def classify_incident(description: str) -> dict:
     """
     
     try:
-        response = model.generate_content(prompt)
-        text = response.text.strip()
-        if text.startswith("```json"):
-            text = text.replace("```json", "").replace("```", "").strip()
-        elif text.startswith("```"):
-            text = text.replace("```", "").strip()
-            
-        return json.loads(text)
+        response = model.generate_content(
+            prompt,
+            generation_config={"response_mime_type": "application/json"}
+        )
+        return json.loads(response.text)
     except Exception as e:
         logger.error("Gemini incident classification failed: %s", str(e))
         return fallback
@@ -61,7 +58,7 @@ def analyze_crowd_data(zones_data: list) -> dict:
     if not _init_gemini():
         return fallback
 
-    model = genai.GenerativeModel('gemini-3.5-flash')
+    model = genai.GenerativeModel('gemini-1.5-flash')
     prompt = f"""
     You are the AI Crowd Intelligence system for a smart stadium.
     Analyze the following real-time zone data and respond ONLY with a raw JSON object containing:
@@ -73,14 +70,11 @@ def analyze_crowd_data(zones_data: list) -> dict:
     """
     
     try:
-        response = model.generate_content(prompt)
-        text = response.text.strip()
-        if text.startswith("```json"):
-            text = text.replace("```json", "").replace("```", "").strip()
-        elif text.startswith("```"):
-            text = text.replace("```", "").strip()
-            
-        return json.loads(text)
+        response = model.generate_content(
+            prompt,
+            generation_config={"response_mime_type": "application/json"}
+        )
+        return json.loads(response.text)
     except Exception as e:
         logger.error("Gemini crowd analysis failed: %s", str(e))
         return fallback
@@ -96,7 +90,7 @@ def assign_volunteer_task(location: str) -> dict:
     if not _init_gemini():
         return fallback
 
-    model = genai.GenerativeModel('gemini-3.5-flash')
+    model = genai.GenerativeModel('gemini-1.5-flash')
     prompt = f"""
     You are an AI Volunteer Coordinator for a smart stadium.
     A volunteer is currently located at: "{location}".
@@ -108,14 +102,11 @@ def assign_volunteer_task(location: str) -> dict:
     """
     
     try:
-        response = model.generate_content(prompt)
-        text = response.text.strip()
-        if text.startswith("```json"):
-            text = text.replace("```json", "").replace("```", "").strip()
-        elif text.startswith("```"):
-            text = text.replace("```", "").strip()
-            
-        return json.loads(text)
+        response = model.generate_content(
+            prompt,
+            generation_config={"response_mime_type": "application/json"}
+        )
+        return json.loads(response.text)
     except Exception as e:
         logger.error("Gemini volunteer assignment failed: %s", str(e))
         return fallback
@@ -130,7 +121,7 @@ def optimize_sustainability(metrics: dict) -> dict:
     if not _init_gemini():
         return fallback
 
-    model = genai.GenerativeModel('gemini-3.5-flash')
+    model = genai.GenerativeModel('gemini-1.5-flash')
     prompt = f"""
     You are an AI Sustainability Engine for a smart stadium.
     Analyze the current usage metrics: {json.dumps(metrics)}
@@ -139,13 +130,11 @@ def optimize_sustainability(metrics: dict) -> dict:
     - "recommendations": (A list of 2 actionable steps to reduce carbon footprint right now)
     """
     try:
-        response = model.generate_content(prompt)
-        text = response.text.strip()
-        if text.startswith("```json"):
-            text = text.replace("```json", "").replace("```", "").strip()
-        elif text.startswith("```"):
-            text = text.replace("```", "").strip()
-        return json.loads(text)
+        response = model.generate_content(
+            prompt,
+            generation_config={"response_mime_type": "application/json"}
+        )
+        return json.loads(response.text)
     except Exception as e:
         logger.error("Gemini sustainability failed: %s", str(e))
         return fallback
@@ -155,7 +144,7 @@ def ask_assistant(query: str, context: dict) -> str:
     if not _init_gemini():
         return "I am currently offline. Please try again later."
         
-    model = genai.GenerativeModel('gemini-3.5-flash')
+    model = genai.GenerativeModel('gemini-1.5-flash')
     prompt = f"""
     You are 'ArenaBot', the highly intelligent AI assistant for SmartArena AI.
     Answer the user's question concisely based on the following real-time stadium context (if relevant). If the context doesn't have the answer, use your best judgement or ask for clarification. Keep answers under 3 sentences.
