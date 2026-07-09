@@ -39,14 +39,22 @@ def init_firebase(app: Flask) -> None:
         return
 
     project_id: str = app.config.get("FIREBASE_PROJECT_ID", "")
-    cred_path: str = app.config.get("FIREBASE_CREDENTIALS_PATH", "")
+    client_email: str = os.getenv("FIREBASE_CLIENT_EMAIL", "")
+    private_key: str = os.getenv("FIREBASE_PRIVATE_KEY", "")
 
     try:
-        if cred_path and os.path.exists(cred_path):
-            # Development: Use service account JSON
-            cred = credentials.Certificate(cred_path)
+        if client_email and private_key:
+            # Development: Use service account dict from env vars
+            cred_dict = {
+                "type": "service_account",
+                "project_id": project_id,
+                "private_key": private_key.replace("\\n", "\n"),
+                "client_email": client_email,
+                "token_uri": "https://oauth2.googleapis.com/token",
+            }
+            cred = credentials.Certificate(cred_dict)
             firebase_admin.initialize_app(cred, {"projectId": project_id})
-            logger.info("Firebase initialized with service account credentials")
+            logger.info("Firebase initialized with service account env credentials")
         elif project_id:
             # Production: Use Application Default Credentials
             firebase_admin.initialize_app(options={"projectId": project_id})
@@ -54,7 +62,7 @@ def init_firebase(app: Flask) -> None:
         else:
             logger.warning(
                 "Firebase not configured — set FIREBASE_PROJECT_ID "
-                "and/or FIREBASE_CREDENTIALS_PATH"
+                "and FIREBASE_CLIENT_EMAIL/PRIVATE_KEY"
             )
             return
 

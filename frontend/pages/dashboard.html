@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartArena AI — Dashboard">
+    <title>Dashboard — SmartArena AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/output.css">
+    
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/firebase-init.js"></script>
+    <script src="../js/auth.js"></script>
+</head>
+<body class="bg-surface-950 min-h-screen text-white">
+
+    <!-- Navbar -->
+    <nav class="border-b border-white/10 bg-surface-900/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-arena-500 to-neon-green flex items-center justify-center text-sm">🏟️</div>
+                    <span class="text-xl font-display font-bold">Smart<span class="gradient-text">Arena</span></span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span id="user-name" class="text-sm font-medium text-surface-200">Loading...</span>
+                    <span id="user-role-badge" class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-800 text-surface-200 border border-white/10 capitalize hidden"></span>
+                    <button id="logout-btn" class="text-sm text-surface-200 hover:text-white transition-colors">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Loading State -->
+        <div id="loading-state" class="flex justify-center items-center h-64">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-arena-500"></div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboard-content" class="hidden">
+            <header class="mb-8">
+                <h1 class="text-2xl font-display font-bold mb-2">Welcome to your Dashboard</h1>
+                <p class="text-surface-200/60" id="welcome-message">Here's an overview of the stadium.</p>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Role Specific Cards -->
+                <div id="admin-panel" class="hidden col-span-full mb-6">
+                    <div class="glass-card p-6 border-arena-500/30">
+                        <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-arena-400">
+                            👑 Admin Controls
+                        </h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <button class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-white/5 transition-colors">Manage Gates</button>
+                            <button class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-white/5 transition-colors">Broadcast Announcement</button>
+                            <button class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-white/5 transition-colors">View Security Logs</button>
+                            <button class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-white/5 transition-colors">Sustainability Report</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="volunteer-panel" class="hidden col-span-full mb-6">
+                    <div class="glass-card p-6 border-neon-blue/30">
+                        <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-neon-blue">
+                            🤝 Volunteer Tasks
+                        </h2>
+                        <ul class="space-y-3">
+                            <li class="flex items-center justify-between p-3 bg-surface-800 rounded-lg border border-white/5">
+                                <span>Guide crowd at Gate A</span>
+                                <span class="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded">High Priority</span>
+                            </li>
+                            <li class="flex items-center justify-between p-3 bg-surface-800 rounded-lg border border-white/5">
+                                <span>Check ticket scanners at Section 12</span>
+                                <span class="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded">Medium</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="fan-panel" class="hidden col-span-full mb-6">
+                    <div class="glass-card p-6 border-neon-green/30">
+                        <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-neon-green">
+                            🎟️ Fan Experience
+                        </h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-surface-800 p-4 rounded-xl border border-white/5">
+                                <h3 class="font-medium mb-1">Fastest Route to Seat</h3>
+                                <p class="text-sm text-surface-200/60">Enter via Gate C (2 min wait)</p>
+                            </div>
+                            <div class="bg-surface-800 p-4 rounded-xl border border-white/5">
+                                <h3 class="font-medium mb-1">Food Pre-order</h3>
+                                <p class="text-sm text-surface-200/60">Ready for pickup at Kiosk 4</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generic Stats -->
+                <div class="glass-card p-6">
+                    <h3 class="text-sm font-medium text-surface-200/60 mb-2">Current Occupancy</h3>
+                    <p class="text-3xl font-display font-bold">45,231</p>
+                    <div class="w-full bg-surface-800 h-2 rounded-full mt-4">
+                        <div class="bg-arena-500 h-2 rounded-full" style="width: 75%"></div>
+                    </div>
+                </div>
+                <div class="glass-card p-6">
+                    <h3 class="text-sm font-medium text-surface-200/60 mb-2">Active Incidents</h3>
+                    <p class="text-3xl font-display font-bold text-yellow-400">3</p>
+                    <p class="text-sm mt-2 text-surface-200/60">Medical (1), Security (2)</p>
+                </div>
+                <div class="glass-card p-6">
+                    <h3 class="text-sm font-medium text-surface-200/60 mb-2">Energy Usage</h3>
+                    <p class="text-3xl font-display font-bold text-neon-green">Optimized</p>
+                    <p class="text-sm mt-2 text-surface-200/60">-12% vs expected</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const userNameEl = document.getElementById('user-name');
+            const userRoleBadge = document.getElementById('user-role-badge');
+            const logoutBtn = document.getElementById('logout-btn');
+            const loadingState = document.getElementById('loading-state');
+            const dashboardContent = document.getElementById('dashboard-content');
+            
+            // Panels
+            const adminPanel = document.getElementById('admin-panel');
+            const volunteerPanel = document.getElementById('volunteer-panel');
+            const fanPanel = document.getElementById('fan-panel');
+
+            try {
+                await initFirebase();
+
+                Auth.initAuthListener(async (user) => {
+                    if (!user) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
+                    // Display user basic info
+                    userNameEl.textContent = user.displayName || user.email;
+
+                    try {
+                        // Fetch the session cookie profile from the backend to verify 
+                        // full auth works and to get the role securely
+                        const res = await fetch(CONFIG.apiUrl("/auth/me"), {
+                            method: "GET"
+                        });
+                        
+                        if (!res.ok) throw new Error("Failed to fetch backend profile");
+                        const profile = await res.json();
+                        const role = profile.data?.role || 'fan';
+
+                        // Show role badge
+                        userRoleBadge.textContent = role;
+                        userRoleBadge.classList.remove('hidden');
+                        
+                        // Show Role-specific content
+                        if (role === 'admin') adminPanel.classList.remove('hidden');
+                        if (role === 'volunteer') volunteerPanel.classList.remove('hidden');
+                        if (role === 'fan') fanPanel.classList.remove('hidden');
+
+                        // Show Dashboard
+                        loadingState.classList.add('hidden');
+                        dashboardContent.classList.remove('hidden');
+
+                    } catch (err) {
+                        console.error("Backend auth failed:", err);
+                        // If backend rejects the session (or it's missing), logout to reset state
+                        Auth.logout();
+                    }
+                });
+
+                logoutBtn.addEventListener('click', () => {
+                    Auth.logout();
+                });
+
+            } catch (err) {
+                console.error("Initialization failed:", err);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartArena AI — Sign up for a new account.">
+    <title>Sign Up — SmartArena AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/output.css">
+    
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/firebase-init.js"></script>
+    <script src="../js/auth.js"></script>
+</head>
+<body class="bg-surface-950 bg-mesh min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <a href="../index.html" class="inline-flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-arena-500 to-neon-green flex items-center justify-center text-2xl">
+                    🏟️
+                </div>
+                <span class="text-2xl font-display font-bold text-white">Smart<span class="gradient-text">Arena</span></span>
+            </a>
+        </div>
+
+        <!-- Signup Card -->
+        <div class="glass-card p-8">
+            <h1 class="text-xl font-display font-bold text-white mb-2 text-center">Create an Account</h1>
+            <p class="text-sm text-surface-200/50 text-center mb-8">Join the intelligent stadium network</p>
+
+            <div id="error-message" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3 rounded-xl mb-4 text-center"></div>
+
+            <!-- Signup Form -->
+            <form id="signup-form" class="space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-surface-200/60 mb-2">Full Name</label>
+                    <input type="text" id="name" required class="w-full bg-surface-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-arena-500 focus:ring-1 focus:ring-arena-500" placeholder="Jane Doe">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-surface-200/60 mb-2">Email</label>
+                    <input type="email" id="email" required class="w-full bg-surface-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-arena-500 focus:ring-1 focus:ring-arena-500" placeholder="jane@smartarena.ai">
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-surface-200/60 mb-2">Password</label>
+                    <input type="password" id="password" required minlength="6" class="w-full bg-surface-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-arena-500 focus:ring-1 focus:ring-arena-500" placeholder="••••••••">
+                </div>
+                <div>
+                    <label for="role" class="block text-sm font-medium text-surface-200/60 mb-2">Role</label>
+                    <select id="role" class="w-full bg-surface-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-arena-500 focus:ring-1 focus:ring-arena-500">
+                        <option value="fan">Fan</option>
+                        <option value="volunteer">Volunteer</option>
+                        <!-- Admin role should typically not be self-selectable, but included for demo -->
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <button type="submit" id="signup-btn" class="w-full bg-arena-500 hover:bg-arena-600 text-white font-medium py-3 rounded-xl transition-colors mt-2">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="text-center mt-6">
+                <p class="text-sm text-surface-200/60">
+                    Already have an account? <a href="login.html" class="text-arena-400 hover:text-arena-300 font-medium">Sign in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const signupForm = document.getElementById('signup-form');
+            const errorMsg = document.getElementById('error-message');
+            const signupBtn = document.getElementById('signup-btn');
+
+            function showError(msg) {
+                errorMsg.textContent = msg;
+                errorMsg.classList.remove('hidden');
+            }
+
+            try {
+                await initFirebase();
+
+                Auth.initAuthListener((user) => {
+                    if (user) {
+                        window.location.href = 'dashboard.html';
+                    }
+                });
+
+                signupForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    errorMsg.classList.add('hidden');
+                    signupBtn.disabled = true;
+                    signupBtn.textContent = 'Creating Account...';
+
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    const role = document.getElementById('role').value;
+
+                    try {
+                        await Auth.signup(name, email, password, role);
+                        // Listener will redirect on success
+                    } catch (error) {
+                        showError(error.message);
+                        signupBtn.disabled = false;
+                        signupBtn.textContent = 'Create Account';
+                    }
+                });
+            } catch (err) {
+                showError("Failed to initialize app.");
+            }
+        });
+    </script>
+</body>
+</html>

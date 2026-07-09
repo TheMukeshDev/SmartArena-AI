@@ -12,6 +12,7 @@ from app.config.settings import get_config
 from app.config.firebase import init_firebase
 from app.config.logging import setup_logging
 from app.middleware.cors import init_cors
+from app.middleware.ratelimit import init_ratelimit
 from app.routes import register_blueprints
 from app.routes.errors import register_error_handlers
 
@@ -49,6 +50,9 @@ def create_app(config_name: str | None = None) -> Flask:
 
     # ── Initialize CORS ─────────────────────────────────────────────────
     init_cors(app)
+
+    # ── Initialize Rate Limiter ─────────────────────────────────────────
+    init_ratelimit(app)
 
     # ── Register Blueprints ─────────────────────────────────────────────
     register_blueprints(app)
