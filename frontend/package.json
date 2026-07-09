@@ -1,0 +1,16 @@
+{
+  "name": "smartarena-ai-frontend",
+  "version": "1.0.0",
+  "description": "SmartArena AI — AI-Powered Smart Stadium Operations Platform",
+  "scripts": {
+    "dev": "npx tailwindcss -i ./css/main.css -o ./css/output.css --watch",
+    "build": "npx tailwindcss -i ./css/main.css -o ./css/output.css --minify",
+    "serve": "npx live-server --port=3000 --no-browser"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  },
+  "dependencies": {
+    "gsap": "^3.12.7"
+  }
+}

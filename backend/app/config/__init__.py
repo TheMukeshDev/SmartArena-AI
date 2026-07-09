@@ -1,0 +1,1 @@
+"""SmartArena AI — Configuration package."""
