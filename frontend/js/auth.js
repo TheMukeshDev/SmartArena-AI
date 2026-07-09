@@ -122,7 +122,8 @@ const Auth = {
       
       // Clear backend session
       await fetch(CONFIG.apiUrl("/auth/sessionLogout"), {
-        method: "POST"
+        method: "POST",
+        credentials: "include"
       });
       
       this.user = null;
@@ -143,6 +144,7 @@ const Auth = {
       
       const response = await fetch(CONFIG.apiUrl("/auth/sessionLogin"), {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
           // CSRF token would go here if implemented via header

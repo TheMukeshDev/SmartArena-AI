@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <!-- TailwindCSS (compiled) -->
-    <link rel="stylesheet" href="css/output.css">
+    <link rel="stylesheet" href="/css/main.css">
 
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏟️</text></svg>">
@@ -28,8 +28,8 @@
             <div class="flex items-center justify-between h-16 lg:h-20">
                 <!-- Logo -->
                 <a href="/" class="flex items-center gap-3 group" id="nav-logo">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-arena-500 to-neon-green flex items-center justify-center text-xl transition-transform duration-300 group-hover:scale-110">
-                        🏟️
+                    <div class="w-10 h-10 rounded-xl overflow-hidden transition-transform duration-300 group-hover:scale-110 shadow-glow">
+                        <img src="/assets/images/logo.png" alt="SmartArena Logo" class="w-full h-full object-cover">
                     </div>
                     <div>
                         <span class="text-lg font-display font-bold text-white">Smart<span class="gradient-text">Arena</span></span>
@@ -362,7 +362,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-2">
-                    <span class="text-lg">🏟️</span>
+                    <div class="w-8 h-8 rounded-lg overflow-hidden shadow-glow">
+                        <img src="/assets/images/logo.png" alt="SmartArena Logo" class="w-full h-full object-cover">
+                    </div>
                     <span class="text-sm font-display font-semibold text-white">SmartArena AI</span>
                 </div>
                 <p class="text-sm text-surface-200/40">
