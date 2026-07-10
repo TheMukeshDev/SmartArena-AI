@@ -1,4 +1,4 @@
-const CACHE_NAME = "smartarena-v1";
+const CACHE_NAME = "smartarena-v2";
 const SHELL_URLS = [
   "/",
   "/index.html",
@@ -17,7 +17,15 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
-      await cache.addAll(SHELL_URLS);
+      await Promise.allSettled(
+        SHELL_URLS.map(url => 
+          fetch(url)
+            .then(res => {
+              if (res.ok) cache.put(url, res);
+            })
+            .catch(err => console.warn('[SW] Failed to cache', url, err))
+        )
+      );
     })()
   );
   self.skipWaiting();
