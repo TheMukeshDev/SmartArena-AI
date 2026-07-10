@@ -4,7 +4,7 @@
   "description": "SmartArena AI — AI-Powered Smart Stadium Operations Platform",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && cp -r js dist/ && cp -r assets dist/",
     "serve": "vite preview",
     "test:rules": "node tests/run-rules-test.js"
   },
