@@ -20,6 +20,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏟️</text></svg>">
 </head>
 <body class="bg-surface-950 bg-mesh bg-grid min-h-screen">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-arena-500 text-white px-4 py-2 rounded z-[100]">Skip to main content</a>
 
     <!-- Offline Banner -->
     <div id="offline-banner" class="hidden fixed top-0 left-0 right-0 z-[100] bg-yellow-600/90 text-white text-center text-sm py-2 px-4 backdrop-blur-sm">
@@ -75,9 +76,13 @@
     </nav>
 
     <!-- ═══════════════════════════════════════════════════════════════════
-         HERO SECTION
+         MAIN CONTENT
          ═══════════════════════════════════════════════════════════════════ -->
-    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden" id="hero">
+    <main id="main-content">
+        <!-- ═══════════════════════════════════════════════════════════════════
+             HERO SECTION
+             ═══════════════════════════════════════════════════════════════════ -->
+        <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden" id="hero">
         <!-- Animated Background Orbs -->
         <div class="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
             <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-arena-500/10 rounded-full blur-3xl animate-float"></div>
@@ -360,6 +365,7 @@
             </div>
         </div>
     </section>
+    </main>
 
     <!-- ═══════════════════════════════════════════════════════════════════
          FOOTER
