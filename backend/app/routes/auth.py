@@ -53,9 +53,7 @@ def session_login() -> tuple[Response, int]:
                 {"success": True, "message": "Session created successfully"}
             )
 
-            from flask import current_app
 
-            is_secure = current_app.config.get("FORCE_HTTPS", False)
             # Set HttpOnly cookie
             response.set_cookie(
                 "session",
@@ -82,12 +80,9 @@ def session_logout() -> tuple[Response, int]:
     session_cookie = request.cookies.get("session")
 
     response = jsonify({"success": True, "message": "Logged out successfully"})
-    
-    from flask import current_app
-    is_secure = current_app.config.get("FORCE_HTTPS", False)
-    
+
     response.set_cookie(
-        "session", 
+        "session",
         expires=0,
         httponly=True,
         samesite="None",
