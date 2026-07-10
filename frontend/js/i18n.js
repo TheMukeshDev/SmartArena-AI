@@ -45,6 +45,12 @@ const translations = {
     "features.assistant.desc": "Ask anything about stadium operations. Generate reports, announcements, and summaries with natural language.",
     "tech.title": "Built with Modern Tech",
     "tech.subtitle": "Enterprise-grade architecture designed for scale, security, and performance.",
+    "tech.flask": "Flask",
+    "tech.firebase": "Firebase",
+    "tech.gemini": "Gemini AI",
+    "tech.tailwind": "TailwindCSS",
+    "tech.chartjs": "Chart.js",
+    "tech.docker": "Docker",
     "footer.copyright": "© 2026 SmartArena AI. AI-Powered Stadium Intelligence Platform.",
     "dash.welcome": "Welcome to your",
     "dash.subtitle": "Here's a real-time overview of the stadium.",
@@ -104,7 +110,21 @@ const translations = {
     "vol.sample_desc": "Help direct incoming fans to the express lanes.",
     "vol.no_active_task": "No active task to complete.",
     "vol.task_completed": "Task completed",
-    "vol.error_task": "Failed to get task from AI."
+    "vol.error_task": "Failed to get task from AI.",
+    "dash.incident.analyzing": "AI Analyzing...",
+    "dash.priority.suffix": " Priority",
+    "dash.incident.no_announcement": "No announcement needed.",
+    "dash.incident.error": "AI failed to process incident.",
+    "dash.incident.network_error": "Error contacting AI service.",
+    "dash.volunteer.ai_prefix": "AI: ",
+    "dash.fan.planning": "Planning...",
+    "dash.fan.backup": "Backup: ",
+    "dash.fan.error": "Failed to plan route.",
+    "dash.chat.listening": "Listening...",
+    "dash.chat.typing": "ArenaBot is typing...",
+    "dash.chat.error": "Sorry, I encountered an error.",
+    "dash.chat.network_error": "Network error. Please try again.",
+    "dash.loading": "Loading..."
   },
   es: {
     "nav.features": "Características",
@@ -152,6 +172,12 @@ const translations = {
     "features.assistant.desc": "Generación de reportes y respuestas en lenguaje natural.",
     "tech.title": "Construido con Tecnología Moderna",
     "tech.subtitle": "Arquitectura empresarial diseñada para escala y seguridad.",
+    "tech.flask": "Flask",
+    "tech.firebase": "Firebase",
+    "tech.gemini": "Gemini AI",
+    "tech.tailwind": "TailwindCSS",
+    "tech.chartjs": "Chart.js",
+    "tech.docker": "Docker",
     "footer.copyright": "© 2026 SmartArena AI. Plataforma de Inteligencia de Estadios con IA.",
     "dash.welcome": "Bienvenido a su",
     "dash.subtitle": "Aquí hay una visión general en tiempo real del estadio.",
@@ -211,7 +237,21 @@ const translations = {
     "vol.sample_desc": "Ayude a dirigir a los aficionados a las filas rápidas.",
     "vol.no_active_task": "No hay tarea activa para completar.",
     "vol.task_completed": "Tarea completada",
-    "vol.error_task": "Error al obtener tarea de la IA."
+    "vol.error_task": "Error al obtener tarea de la IA.",
+    "dash.incident.analyzing": "IA Analizando...",
+    "dash.priority.suffix": " Prioridad",
+    "dash.incident.no_announcement": "No se necesita anuncio.",
+    "dash.incident.error": "Error de IA al procesar el incidente.",
+    "dash.incident.network_error": "Error al contactar el servicio de IA.",
+    "dash.volunteer.ai_prefix": "IA: ",
+    "dash.fan.planning": "Planificando...",
+    "dash.fan.backup": "Alternativa: ",
+    "dash.fan.error": "Error al planificar la ruta.",
+    "dash.chat.listening": "Escuchando...",
+    "dash.chat.typing": "ArenaBot escribiendo...",
+    "dash.chat.error": "Lo siento, encontré un error.",
+    "dash.chat.network_error": "Error de red. Por favor, intente de nuevo.",
+    "dash.loading": "Cargando..."
   },
   fr: {
     "nav.features": "Fonctionnalités",
@@ -259,6 +299,12 @@ const translations = {
     "features.assistant.desc": "Rapports et assistance en langage naturel.",
     "tech.title": "Technologies Modernes",
     "tech.subtitle": "Architecture robuste conçue pour la performance.",
+    "tech.flask": "Flask",
+    "tech.firebase": "Firebase",
+    "tech.gemini": "Gemini AI",
+    "tech.tailwind": "TailwindCSS",
+    "tech.chartjs": "Chart.js",
+    "tech.docker": "Docker",
     "footer.copyright": "© 2026 SmartArena AI. Plateforme d'Intelligence de Stades propulsée par l'IA.",
     "dash.welcome": "Bienvenue sur votre",
     "dash.subtitle": "Voici un aperçu en temps réel du stade.",
@@ -318,7 +364,21 @@ const translations = {
     "vol.sample_desc": "Aidez à diriger les supporters vers les files express.",
     "vol.no_active_task": "Aucune tâche active à terminer.",
     "vol.task_completed": "Tâche terminée",
-    "vol.error_task": "Échec de l'obtention de la tâche IA."
+    "vol.error_task": "Échec de l'obtention de la tâche IA.",
+    "dash.incident.analyzing": "IA Analyse...",
+    "dash.priority.suffix": " Priorité",
+    "dash.incident.no_announcement": "Aucun announcement nécessaire.",
+    "dash.incident.error": "Échec du traitement de l'incident par l'IA.",
+    "dash.incident.network_error": "Erreur de connexion au service IA.",
+    "dash.volunteer.ai_prefix": "IA : ",
+    "dash.fan.planning": "Planification...",
+    "dash.fan.backup": "Alternative : ",
+    "dash.fan.error": "Échec de la planification de l'itinéraire.",
+    "dash.chat.listening": "Écoute...",
+    "dash.chat.typing": "ArenaBot écrit...",
+    "dash.chat.error": "Désolé, j'ai rencontré une erreur.",
+    "dash.chat.network_error": "Erreur réseau. Veuillez réessayer.",
+    "dash.loading": "Chargement..."
   },
   ar: {
     "nav.features": "الميزات",
@@ -366,6 +426,12 @@ const translations = {
     "features.assistant.desc": "توليد التقارير والإجابة على استفسارات التشغيل باللغة الطبيعية.",
     "tech.title": "بني بأحدث التقنيات",
     "tech.subtitle": "بنية تحتية قوية مصممة للأداء العالي والأمان.",
+    "tech.flask": "Flask",
+    "tech.firebase": "Firebase",
+    "tech.gemini": "Gemini AI",
+    "tech.tailwind": "TailwindCSS",
+    "tech.chartjs": "Chart.js",
+    "tech.docker": "Docker",
     "footer.copyright": "© 2026 SmartArena AI. منصة ذكاء الملاعب بالذكاء الاصطناعي.",
     "dash.welcome": "مرحبًا بك في",
     "dash.subtitle": "إليك نظرة عامة في الوقت الفعلي على الملعب.",
@@ -425,7 +491,21 @@ const translations = {
     "vol.sample_desc": "ساعد في توجيه المشجعين إلى الخطوط السريعة.",
     "vol.no_active_task": "لا توجد مهمة نشطة لإتمامها.",
     "vol.task_completed": "تم إتمام المهمة",
-    "vol.error_task": "فشل في الحصول على المهمة من الذكاء."
+    "vol.error_task": "فشل في الحصول على المهمة من الذكاء.",
+    "dash.incident.analyzing": "جاري تحليل الذكاء...",
+    "dash.priority.suffix": " أولوية",
+    "dash.incident.no_announcement": "لا حاجة لإعلان.",
+    "dash.incident.error": "فشل الذكاء في معالجة الحادث.",
+    "dash.incident.network_error": "خطأ في الاتصال بخدمة الذكاء.",
+    "dash.volunteer.ai_prefix": "ذكاء: ",
+    "dash.fan.planning": "جاري التخطيط...",
+    "dash.fan.backup": "بديل: ",
+    "dash.fan.error": "فشل في تخطيط المسار.",
+    "dash.chat.listening": "جاري الاستماع...",
+    "dash.chat.typing": "ArenaBot يكتب...",
+    "dash.chat.error": "عذراً، واجهت خطأ.",
+    "dash.chat.network_error": "خطأ في الشبكة. يرجى المحاولة مرة أخرى.",
+    "dash.loading": "جاري التحميل..."
   },
   hi: {
     "nav.features": "विशेषताएं",
@@ -473,6 +553,12 @@ const translations = {
     "features.assistant.desc": "स्टेडियम संचालन के बारे में कुछ भी पूछें। प्राकृतिक भाषा के साथ रिपोर्ट, घोषणाएं और सारांश तैयार करें।",
     "tech.title": "आधुनिक तकनीक से निर्मित",
     "tech.subtitle": "स्केल, सुरक्षा और प्रदर्शन के लिए डिज़ाइन किया गया एंटरप्राइज-ग्रेड आर्किटेक्चर।",
+    "tech.flask": "Flask",
+    "tech.firebase": "Firebase",
+    "tech.gemini": "Gemini AI",
+    "tech.tailwind": "TailwindCSS",
+    "tech.chartjs": "Chart.js",
+    "tech.docker": "Docker",
     "footer.copyright": "© 2026 SmartArena AI. एआई-संचालित स्टेडियम इंटेलिजेंस प्लेटफ़ॉर्म।",
     "dash.welcome": "आपके",
     "dash.subtitle": "यहाँ स्टेडियम का रीयल-टाइम अवलोकन है।",
@@ -532,7 +618,21 @@ const translations = {
     "vol.sample_desc": "प्रशंसकों को एक्सप्रेस लेन तक पहुँचाने में मदद करें।",
     "vol.no_active_task": "पूरा करने के लिए कोई सक्रिय कार्य नहीं।",
     "vol.task_completed": "कार्य पूरा हुआ",
-    "vol.error_task": "एआई से कार्य प्राप्त करने में विफल।"
+    "vol.error_task": "एआई से कार्य प्राप्त करने में विफल।",
+    "dash.incident.analyzing": "एआई विश्लेषण...",
+    "dash.priority.suffix": " प्राथमिकता",
+    "dash.incident.no_announcement": "की घोषणा की आवश्यकता नहीं।",
+    "dash.incident.error": "घटना को संसाधित करने में एआई विफल।",
+    "dash.incident.network_error": "एआई सेवा से संपर्क करने में त्रुटि।",
+    "dash.volunteer.ai_prefix": "एआई: ",
+    "dash.fan.planning": "योजना बना रहे हैं...",
+    "dash.fan.backup": "वैकल्पिक: ",
+    "dash.fan.error": "मार्ग की योजना बनाने में विफल।",
+    "dash.chat.listening": "सुन रहे हैं...",
+    "dash.chat.typing": "एरेनाबॉट टाइप कर रहा है...",
+    "dash.chat.error": "क्षमा करें, मुझे एक त्रुटि हुई।",
+    "dash.chat.network_error": "नेटवर्क त्रुटि। कृपया पुनः प्रयास करें।",
+    "dash.loading": "लोड हो रहा है..."
   }
 };
 
@@ -577,6 +677,13 @@ const I18N = {
 
   getStoredLanguage() {
     return localStorage.getItem('preferred_language') || 'en';
+  },
+
+  t(key) {
+    const lang = this.getStoredLanguage();
+    return (this.translations[lang] && this.translations[lang][key])
+      || (this.translations['en'] && this.translations['en'][key])
+      || key;
   },
 
   renderLanguageSwitcher(elementId) {

@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
+    function t(key) {
+        return window.I18N ? window.I18N.t(key) : key;
+    }
+
     const userNameEl = document.getElementById('user-name');
     const userRoleBadge = document.getElementById('user-role-badge');
     const logoutBtn = document.getElementById('logout-btn');
@@ -71,7 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             incidentForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 incidentSubmit.disabled = true;
-                incidentSubmit.textContent = 'AI Analyzing...';
+                incidentSubmit.textContent = t('dash.incident.analyzing');
                 aiResult.classList.add('hidden');
 
                 const desc = document.getElementById('incident-desc').value;
@@ -88,24 +92,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (res.ok) {
                         const c = data.data.classification;
                         aiCategory.textContent = c.category;
-                        aiPriority.textContent = c.priority + " Priority";
+                        aiPriority.textContent = c.priority + t('dash.priority.suffix');
                         
                         // Set color based on priority
                         aiPriority.className = 'badge ' + (c.priority === 'High' || c.priority === 'Critical' ? 'badge-danger' : 'badge-warning');
                         
                         aiAction.textContent = c.action;
-                        aiAnnouncement.textContent = c.announcement || "No announcement needed.";
+                        aiAnnouncement.textContent = c.announcement || t('dash.incident.no_announcement');
                         aiResult.classList.remove('hidden');
                         document.getElementById('incident-desc').value = '';
                     } else {
-                        alert("AI failed to process incident.");
+                        alert(t('dash.incident.error'));
                     }
                 } catch (err) {
                     console.error(err);
-                    alert("Error contacting AI service.");
+                    alert(t('dash.incident.network_error'));
                 } finally {
                     incidentSubmit.disabled = false;
-                    incidentSubmit.textContent = 'Report to AI';
+                    incidentSubmit.textContent = t('dash.incident.submit');
                 }
             });
         }
@@ -117,7 +121,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (reqTaskBtn) {
             reqTaskBtn.addEventListener('click', async () => {
                 reqTaskBtn.disabled = true;
-                reqTaskBtn.textContent = 'Thinking...';
+                reqTaskBtn.textContent = t('vol.thinking');
                 
                 const loc = document.getElementById('vol-location').value;
                 
@@ -131,12 +135,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     const data = await res.json();
                     if (res.ok) {
-                        const t = data.data;
+                        const task = data.data;
                         
                         const li = document.createElement('li');
                         li.className = 'flex flex-col p-4 bg-surface-800 rounded-lg border border-neon-blue/30 animate-pulse';
                         
-                        const pClass = t.priority === 'High' || t.priority === 'Critical' 
+                        const pClass = task.priority === 'High' || task.priority === 'Critical' 
                             ? 'bg-red-500/20 text-red-400' 
                             : 'bg-yellow-500/20 text-yellow-400';
 
@@ -145,18 +149,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                         const taskLabel = document.createElement('span');
                         taskLabel.className = 'font-medium text-neon-blue';
-                        taskLabel.textContent = 'AI: ' + t.task;
+                        taskLabel.textContent = t('dash.volunteer.ai_prefix') + task.task;
 
                         const priorityBadge = document.createElement('span');
                         priorityBadge.className = 'text-xs ' + pClass + ' px-2 py-1 rounded';
-                        priorityBadge.textContent = t.priority + ' Priority';
+                        priorityBadge.textContent = task.priority + t('dash.priority.suffix');
 
                         header.appendChild(taskLabel);
                         header.appendChild(priorityBadge);
 
                         const desc = document.createElement('p');
                         desc.className = 'text-sm text-surface-200/80';
-                        desc.textContent = t.description;
+                        desc.textContent = task.description;
 
                         li.appendChild(header);
                         li.appendChild(desc);
@@ -166,10 +170,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 } catch (err) {
                     console.error(err);
-                    alert("Failed to get task from AI.");
+                    alert(t('vol.error_task'));
                 } finally {
                     reqTaskBtn.disabled = false;
-                    reqTaskBtn.textContent = 'Ask AI for Task';
+                    reqTaskBtn.textContent = t('vol.ask');
                 }
             });
         }
@@ -182,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const time = document.getElementById('fan-time').value || '18:00';
                 
                 fanPlanBtn.disabled = true;
-                fanPlanBtn.textContent = 'Planning...';
+                fanPlanBtn.textContent = t('dash.fan.planning');
                 const resultDiv = document.getElementById('fan-route-result');
                 const titleEl = document.getElementById('fan-route-title');
 
@@ -206,7 +210,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const altP = document.createElement('p');
                         altP.className = 'text-xs';
                         const altStrong = document.createElement('strong');
-                        altStrong.textContent = 'Backup: ';
+                        altStrong.textContent = t('dash.fan.backup');
                         altP.appendChild(altStrong);
                         altP.appendChild(document.createTextNode(data.alternative));
 
@@ -216,11 +220,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     console.error(err);
                     const errP = document.createElement('p');
                     errP.className = 'text-red-400';
-                    errP.textContent = 'Failed to plan route.';
+                    errP.textContent = t('dash.fan.error');
                     resultDiv.replaceChildren(errP);
                 } finally {
                     fanPlanBtn.disabled = false;
-                    fanPlanBtn.textContent = 'Get AI Route';
+                    fanPlanBtn.textContent = t('dash.fan.route');
                 }
             });
         }
@@ -310,7 +314,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 recognition.onstart = () => {
                     micBtn.classList.add('text-neon-pink', 'animate-pulse');
-                    chatInput.placeholder = "Listening...";
+                    chatInput.placeholder = t('dash.chat.listening');
                 };
 
                 recognition.onresult = (event) => {
@@ -326,7 +330,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 recognition.onend = () => {
                     micBtn.classList.remove('text-neon-pink', 'animate-pulse');
-                    chatInput.placeholder = "Ask something...";
+                    chatInput.placeholder = t('dash.chat.placeholder');
                 };
 
                 micBtn.addEventListener('click', () => {
@@ -355,7 +359,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const typingDiv = document.createElement('div');
                 typingDiv.id = typingId;
                 typingDiv.className = 'text-xs text-surface-200 italic ml-2';
-                typingDiv.textContent = 'ArenaBot is typing...';
+                typingDiv.textContent = t('dash.chat.typing');
                 chatMessages.appendChild(typingDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
 
@@ -380,11 +384,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                             previousInteractionId = data.data.interaction_id;
                         }
                     } else {
-                        appendMessage("Sorry, I encountered an error.");
+                        appendMessage(t('dash.chat.error'));
                     }
                 } catch (err) {
                     document.getElementById(typingId)?.remove();
-                    appendMessage("Network error. Please try again.");
+                    appendMessage(t('dash.chat.network_error'));
                 }
             });
         }

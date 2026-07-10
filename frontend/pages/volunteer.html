@@ -149,9 +149,7 @@
 
     function initVolunteerPage() {
         function t(key) {
-            const lang = window.I18N ? window.I18N.getStoredLanguage() : 'en';
-            const langMap = window.I18N ? window.I18N.translations : {};
-            return (langMap[lang] && langMap[lang][key]) || (langMap['en'] && langMap['en'][key]) || key;
+            return window.I18N ? window.I18N.t(key) : key;
         }
         const taskHistory = [];
         const reqTaskBtn = document.getElementById('req-task-btn');
