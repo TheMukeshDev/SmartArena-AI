@@ -5,17 +5,106 @@ const translations = {
     "nav.tech": "Technology",
     "nav.login": "Login",
     "nav.dashboard": "Dashboard",
+    "nav.volunteer_hub": "Volunteer Hub",
     "hero.badge": "FIFA World Cup 2026™ AI Intelligence",
     "hero.title1": "Smarter Stadiums.",
     "hero.title2": "Powered by AI.",
     "hero.subtitle": "Real-time crowd intelligence, predictive incident management, and sustainability tracking for the FIFA World Cup 2026™ — all from one intelligent command center.",
+    "hero.cta.launch": "🚀 Launch Dashboard",
+    "hero.cta.explore": "Explore Features",
+    "preview.attendance": "Attendance",
+    "preview.crowd": "Crowd Flow",
+    "preview.incidents": "Incidents",
+    "preview.score": "AI Score",
+    "preview.insights": "AI Insights",
+    "preview.normal": "Normal",
+    "preview.stable": "Stable",
+    "preview.active": "Active",
+    "preview.excellent": "Excellent",
+    "preview.gate_a": "Gate A optimal",
+    "preview.gate_c": "Gate C congested",
+    "preview.deploy": "Deploy 3 volunteers",
+    "stats.capacity": "Max Capacity",
+    "stats.accuracy": "AI Accuracy",
+    "stats.response": "Response Time",
+    "stats.monitoring": "Monitoring",
+    "features.badge": "Powered by Gemini AI",
+    "features.title": "Intelligent Stadium Operations",
+    "features.subtitle": "Every aspect of stadium management enhanced by artificial intelligence and real-time analytics.",
+    "features.crowd.title": "Crowd Intelligence",
+    "features.crowd.desc": "AI-powered crowd density analysis with real-time predictions for congestion, wait times, and optimal gate routing.",
+    "features.incident.title": "Incident Management",
+    "features.incident.desc": "Gemini classifies, prioritizes, and auto-assigns incidents with real-time AI announcements and volunteer dispatch.",
+    "features.map.title": "Interactive Stadium Map",
+    "features.map.desc": "SVG-based interactive stadium layout with occupancy heatmaps, clickable zones, and live crowd flow visualization.",
+    "features.volunteer.title": "Volunteer Management",
+    "features.volunteer.desc": "Track volunteer locations, manage assignments, and let AI recommend optimal deployments in real-time.",
+    "features.sustainability.title": "Sustainability Dashboard",
+    "features.sustainability.desc": "Monitor energy, water, waste, and carbon metrics with AI-generated optimization recommendations.",
+    "features.assistant.title": "AI Assistant",
+    "features.assistant.desc": "Ask anything about stadium operations. Generate reports, announcements, and summaries with natural language.",
+    "tech.title": "Built with Modern Tech",
+    "tech.subtitle": "Enterprise-grade architecture designed for scale, security, and performance.",
+    "footer.copyright": "© 2026 SmartArena AI. AI-Powered Stadium Intelligence Platform.",
     "dash.welcome": "Welcome to your",
     "dash.subtitle": "Here's a real-time overview of the stadium.",
-    "dash.admin.title": "Admin Operations",
+    "dash.badge": "FIFA World Cup 2026™ Operations Center",
+    "dash.admin.title": "Admin Controls",
+    "dash.admin.gates": "Manage Gates",
+    "dash.admin.gates.desc": "Open, close, adjust capacity",
+    "dash.admin.map": "🗺️ Open Live Map",
+    "dash.admin.map.desc": "Real-time crowd heatmap",
+    "dash.admin.announcements": "Broadcast Announcement",
+    "dash.admin.announcements.desc": "Send stadium-wide alerts",
+    "dash.admin.security": "View Security Logs",
+    "dash.admin.security.desc": "Audit trail & admin events",
+    "dash.admin.sustainability": "Sustainability Report",
+    "dash.admin.sustainability.desc": "Energy & environmental data",
     "dash.volunteer.title": "Volunteer Tasks",
+    "dash.volunteer.location": "Select volunteer location",
+    "dash.volunteer.ask": "Ask AI for Task",
+    "dash.volunteer.hub": "Open Volunteer Hub →",
+    "dash.volunteer.map": "Open Live Map →",
     "dash.fan.title": "Fan Experience",
+    "dash.fan.arrival": "Plan Arrival",
+    "dash.fan.placeholder.gate": "Target Gate (e.g., Gate C)",
+    "dash.fan.route": "Get AI Route",
+    "dash.fan.suggested": "AI Suggested Route",
+    "dash.fan.initial": "Enter your target gate and time to get a smart route.",
+    "dash.occupancy.title": "Current Occupancy",
+    "dash.incidents.title": "Active Incidents",
+    "dash.incidents.detail": "Medical (1), Security (2)",
+    "dash.energy.title": "Energy Usage",
+    "dash.energy.status": "Optimized",
+    "dash.energy.detail": "-12% vs expected",
+    "dash.incident.reporter": "AI Incident Reporter",
+    "dash.incident.label": "Describe the incident (AI will classify and prioritize it)",
+    "dash.incident.placeholder": "E.g. A fan spilled a large drink in Section 12, creating a slipping hazard...",
+    "dash.incident.submit": "Report to AI",
+    "dash.incident.action": "Recommended Action",
+    "dash.incident.announcement": "Public Announcement Draft",
+    "dash.chat.placeholder": "Ask something...",
+    "dash.chat.title": "ArenaBot",
+    "dash.chat.greeting": "Hi! I'm your SmartArena AI Assistant. How can I help you manage the stadium today?",
     "dash.logout": "Logout",
-    "dash.chat.placeholder": "Ask something..."
+    "vol.title": "Volunteer",
+    "vol.subtitle": "Hub",
+    "vol.desc": "Manage your tasks, navigate zones, and report completions.",
+    "vol.ai_tasks": "AI Task Assignment",
+    "vol.ask": "Ask AI for Task",
+    "vol.thinking": "Thinking...",
+    "vol.quick": "Quick Actions",
+    "vol.live_map": "🗺️ Open Live Map",
+    "vol.navigate": "🧭 Navigate to Selected Zone",
+    "vol.complete": "✅ Mark Task Complete",
+    "vol.history": "Task History",
+    "vol.no_tasks": "No completed tasks yet.",
+    "vol.sample_task": "Guide crowd at Gate A",
+    "vol.high_priority": "High Priority",
+    "vol.sample_desc": "Help direct incoming fans to the express lanes.",
+    "vol.no_active_task": "No active task to complete.",
+    "vol.task_completed": "Task completed",
+    "vol.error_task": "Failed to get task from AI."
   },
   es: {
     "nav.features": "Características",
@@ -23,17 +112,106 @@ const translations = {
     "nav.tech": "Tecnología",
     "nav.login": "Acceso",
     "nav.dashboard": "Panel",
+    "nav.volunteer_hub": "Centro de Voluntarios",
     "hero.badge": "Inteligencia AI - Copa Mundial de la FIFA 2026™",
     "hero.title1": "Estadios Inteligentes.",
     "hero.title2": "Impulsados por IA.",
     "hero.subtitle": "Inteligencia de multitudes en tiempo real, gestión predictiva de incidentes y seguimiento de sostenibilidad para la Copa Mundial de la FIFA 2026™: todo desde un centro de mando inteligente.",
+    "hero.cta.launch": "🚀 Iniciar Panel",
+    "hero.cta.explore": "Explorar Características",
+    "preview.attendance": "Asistencia",
+    "preview.crowd": "Flujo",
+    "preview.incidents": "Incidentes",
+    "preview.score": "Puntuación IA",
+    "preview.insights": "Información IA",
+    "preview.normal": "Normal",
+    "preview.stable": "Estable",
+    "preview.active": "Activo",
+    "preview.excellent": "Excelente",
+    "preview.gate_a": "Puerta A óptima",
+    "preview.gate_c": "Puerta C congestionada",
+    "preview.deploy": "Desplegar 3 voluntarios",
+    "stats.capacity": "Capacidad Máx",
+    "stats.accuracy": "Precisión IA",
+    "stats.response": "Resp. Rápida",
+    "stats.monitoring": "Monitoreo",
+    "features.badge": "Impulsado por Gemini AI",
+    "features.title": "Operaciones Inteligentes",
+    "features.subtitle": "Cada aspecto de la gestión del estadio mejorado por IA y análisis en tiempo real.",
+    "features.crowd.title": "Inteligencia de Multitudes",
+    "features.crowd.desc": "Análisis de densidad de multitud con predicciones de congestión y rutas óptimas.",
+    "features.incident.title": "Gestión de Incidentes",
+    "features.incident.desc": "Gemini clasifica y asigna incidentes con anuncios de IA y despacho.",
+    "features.map.title": "Mapa Interactivo",
+    "features.map.desc": "Diseño SVG con mapas de calor y flujo de multitud en vivo.",
+    "features.volunteer.title": "Gestión de Bénévoles",
+    "features.volunteer.desc": "Seguimiento y recomendación de despliegues óptimos en tiempo real.",
+    "features.sustainability.title": "Sostenibilidad",
+    "features.sustainability.desc": "Monitoreo de energía y agua con recomendaciones ecológicas.",
+    "features.assistant.title": "Asistente IA",
+    "features.assistant.desc": "Generación de reportes y respuestas en lenguaje natural.",
+    "tech.title": "Construido con Tecnología Moderna",
+    "tech.subtitle": "Arquitectura empresarial diseñada para escala y seguridad.",
+    "footer.copyright": "© 2026 SmartArena AI. Plataforma de Inteligencia de Estadios con IA.",
     "dash.welcome": "Bienvenido a su",
     "dash.subtitle": "Aquí hay una visión general en tiempo real del estadio.",
-    "dash.admin.title": "Operaciones de Administración",
-    "dash.volunteer.title": "Tareas de Voluntarios",
-    "dash.fan.title": "Experiencia del Aficionado",
+    "dash.badge": "Centro de Operaciones Copa Mundial 2026™",
+    "dash.admin.title": "Controles de Admin",
+    "dash.admin.gates": "Gestionar Puertas",
+    "dash.admin.gates.desc": "Abrir, cerrar, capacidad",
+    "dash.admin.map": "🗺️ Ver Mapa en Vivo",
+    "dash.admin.map.desc": "Mapa de calor en tiempo real",
+    "dash.admin.announcements": "Transmitir Anuncio",
+    "dash.admin.announcements.desc": "Alertas a todo el estadio",
+    "dash.admin.security": "Ver Logs de Seguridad",
+    "dash.admin.security.desc": "Auditoría y eventos admin",
+    "dash.admin.sustainability": "Reporte Sostenible",
+    "dash.admin.sustainability.desc": "Datos de energía y agua",
+    "dash.volunteer.title": "Tareas de Voluntario",
+    "dash.volunteer.location": "Seleccionar ubicación",
+    "dash.volunteer.ask": "Pedir Tarea a IA",
+    "dash.volunteer.hub": "Ir al Hub de Voluntarios →",
+    "dash.volunteer.map": "Ver Mapa en Vivo →",
+    "dash.fan.title": "Experiencia del Fan",
+    "dash.fan.arrival": "Planear Llegada",
+    "dash.fan.placeholder.gate": "Puerta Destino (ej. Puerta C)",
+    "dash.fan.route": "Obtener Ruta IA",
+    "dash.fan.suggested": "Ruta Sugerida por IA",
+    "dash.fan.initial": "Ingrese su puerta y hora para una ruta inteligente.",
+    "dash.occupancy.title": "Ocupación Actual",
+    "dash.incidents.title": "Incidentes Activos",
+    "dash.incidents.detail": "Médico (1), Seguridad (2)",
+    "dash.energy.title": "Uso de Energía",
+    "dash.energy.status": "Optimizado",
+    "dash.energy.detail": "-12% vs esperado",
+    "dash.incident.reporter": "Reportar Incidente con IA",
+    "dash.incident.label": "Describa el incidente (la IA lo clasificará)",
+    "dash.incident.placeholder": "Ej. Ventilador derramó bebida en Sección 12, peligro...",
+    "dash.incident.submit": "Reportar a IA",
+    "dash.incident.action": "Acción Recomendada",
+    "dash.incident.announcement": "Borrador de Anuncio Público",
+    "dash.chat.placeholder": "Pregunta algo...",
+    "dash.chat.title": "ArenaBot",
+    "dash.chat.greeting": "¡Hola! Soy tu asistente de SmartArena AI. ¿Cómo puedo ayudarte a gestionar el estadio hoy?",
     "dash.logout": "Cerrar sesión",
-    "dash.chat.placeholder": "Pregunta algo..."
+    "vol.title": "Voluntario",
+    "vol.subtitle": "Centro",
+    "vol.desc": "Gestione sus tareas, navegue zonas y reporte progresos.",
+    "vol.ai_tasks": "Asignación de Tareas por IA",
+    "vol.ask": "Pedir Tarea a IA",
+    "vol.thinking": "Pensando...",
+    "vol.quick": "Acciones Rápidas",
+    "vol.live_map": "🗺️ Ver Mapa en Vivo",
+    "vol.navigate": "🧭 Navegar a la Zona",
+    "vol.complete": "✅ Marcar como Completado",
+    "vol.history": "Historial de Tareas",
+    "vol.no_tasks": "No hay tareas completadas.",
+    "vol.sample_task": "Guiar multitud en Puerta A",
+    "vol.high_priority": "Alta Prioridad",
+    "vol.sample_desc": "Ayude a dirigir a los aficionados a las filas rápidas.",
+    "vol.no_active_task": "No hay tarea activa para completar.",
+    "vol.task_completed": "Tarea completada",
+    "vol.error_task": "Error al obtener tarea de la IA."
   },
   fr: {
     "nav.features": "Fonctionnalités",
@@ -41,17 +219,106 @@ const translations = {
     "nav.tech": "Technologie",
     "nav.login": "Connexion",
     "nav.dashboard": "Tableau de bord",
+    "nav.volunteer_hub": "Hub Bénévoles",
     "hero.badge": "Intelligence IA - Coupe du Monde de la FIFA 2026™",
     "hero.title1": "Stades Intelligents.",
     "hero.title2": "Propulsés par l'IA.",
     "hero.subtitle": "Intelligence des foules en temps réel, gestion prédictive des incidents et suivi du développement durable pour la Coupe du Monde de la FIFA 2026™ - le tout depuis un centre de commande intelligent.",
+    "hero.cta.launch": "🚀 Lancer le Tableau",
+    "hero.cta.explore": "Découvrir",
+    "preview.attendance": "Affluence",
+    "preview.crowd": "Flux",
+    "preview.incidents": "Incidents",
+    "preview.score": "Score IA",
+    "preview.insights": "Analyses IA",
+    "preview.normal": "Normal",
+    "preview.stable": "Stable",
+    "preview.active": "Actif",
+    "preview.excellent": "Excellent",
+    "preview.gate_a": "Porte A optimale",
+    "preview.gate_c": "Porte C encombrée",
+    "preview.deploy": "Déployer 3 bénévoles",
+    "stats.capacity": "Capacité Max",
+    "stats.accuracy": "Précision IA",
+    "stats.response": "Temps Réaction",
+    "stats.monitoring": "Surveillance",
+    "features.badge": "Propulsé par Gemini AI",
+    "features.title": "Gestion Intelligente",
+    "features.subtitle": "Chaque aspect de la gestion optimisé par l'IA et l'analyse de données.",
+    "features.crowd.title": "Intelligence des Foules",
+    "features.crowd.desc": "Analyse de la densité de la foule avec prévisions des congestions.",
+    "features.incident.title": "Gestion des Incidents",
+    "features.incident.desc": "Gemini classe et résout les incidents de manière autonome.",
+    "features.map.title": "Carte Interactive",
+    "features.map.desc": "Visualisation en direct du flux et de l'occupation.",
+    "features.volunteer.title": "Gestion des Bénévoles",
+    "features.volunteer.desc": "Optimisation des déploiements et affectations.",
+    "features.sustainability.title": "Développement Durable",
+    "features.sustainability.desc": "Suivi des ressources et recommandations écologiques.",
+    "features.assistant.title": "Assistant IA",
+    "features.assistant.desc": "Rapports et assistance en langage naturel.",
+    "tech.title": "Technologies Modernes",
+    "tech.subtitle": "Architecture robuste conçue pour la performance.",
+    "footer.copyright": "© 2026 SmartArena AI. Plateforme d'Intelligence de Stades propulsée par l'IA.",
     "dash.welcome": "Bienvenue sur votre",
     "dash.subtitle": "Voici un aperçu en temps réel du stade.",
-    "dash.admin.title": "Opérations d'administration",
-    "dash.volunteer.title": "Tâches des Bénévoles",
-    "dash.fan.title": "Expérience des Fans",
+    "dash.badge": "Centre d'Opérations Coupe du Monde 2026™",
+    "dash.admin.title": "Contrôles Administrateur",
+    "dash.admin.gates": "Gérer les Portes",
+    "dash.admin.gates.desc": "Ouvrir, fermer, capacité",
+    "dash.admin.map": "🗺️ Ouvrir la Carte",
+    "dash.admin.map.desc": "Carte de chaleur en temps réel",
+    "dash.admin.announcements": "Diffuser une Annonce",
+    "dash.admin.announcements.desc": "Alertes globales",
+    "dash.admin.security": "Journaux de Sécurité",
+    "dash.admin.security.desc": "Audit et événements admin",
+    "dash.admin.sustainability": "Rapport Écologique",
+    "dash.admin.sustainability.desc": "Énergie et eau",
+    "dash.volunteer.title": "Tâches Bénévoles",
+    "dash.volunteer.location": "Choisir le lieu",
+    "dash.volunteer.ask": "Demander tâche à l'IA",
+    "dash.volunteer.hub": "Ouvrir le Hub →",
+    "dash.volunteer.map": "Ouvrir la Carte →",
+    "dash.fan.title": "Expérience Supporter",
+    "dash.fan.arrival": "Planifier l'Arrivée",
+    "dash.fan.placeholder.gate": "Porte Ciblée (ex. Porte C)",
+    "dash.fan.route": "Calculer l'Itinéraire",
+    "dash.fan.suggested": "Itinéraire Conseillé",
+    "dash.fan.initial": "Entrez votre porte et heure d'arrivée.",
+    "dash.occupancy.title": "Affluence Actuelle",
+    "dash.incidents.title": "Incidents Actifs",
+    "dash.incidents.detail": "Médical (1), Sécurité (2)",
+    "dash.energy.title": "Consommation Énergie",
+    "dash.energy.status": "Optimisée",
+    "dash.energy.detail": "-12% vs prévu",
+    "dash.incident.reporter": "Déclarer un Incident",
+    "dash.incident.label": "Décrivez l'incident pour classification IA",
+    "dash.incident.placeholder": "Ex: Un liquide renversé dans la section 12, glissant...",
+    "dash.incident.submit": "Envoyer à l'IA",
+    "dash.incident.action": "Action Recommandée",
+    "dash.incident.announcement": "Brouillon de l'Annonce",
+    "dash.chat.placeholder": "Demandez quelque chose...",
+    "dash.chat.title": "ArenaBot",
+    "dash.chat.greeting": "Bonjour ! Je suis votre assistant SmartArena AI. Comment puis-je vous aider à gérer le stade aujourd'hui ?",
     "dash.logout": "Déconnexion",
-    "dash.chat.placeholder": "Demandez quelque chose..."
+    "vol.title": "Bénévole",
+    "vol.subtitle": "Hub",
+    "vol.desc": "Gérez vos tâches, naviguez et validez vos interventions.",
+    "vol.ai_tasks": "Affectation de Tâches IA",
+    "vol.ask": "Demander tâche à l'IA",
+    "vol.thinking": "Réflexion...",
+    "vol.quick": "Actions Rapides",
+    "vol.live_map": "🗺️ Ouvrir la Carte",
+    "vol.navigate": "🧭 Naviguer vers la Zone",
+    "vol.complete": "✅ Marquer Terminée",
+    "vol.history": "Historique des Tâches",
+    "vol.no_tasks": "Aucune tâche terminée.",
+    "vol.sample_task": "Guider la foule à la Porte A",
+    "vol.high_priority": "Haute Priorité",
+    "vol.sample_desc": "Aidez à diriger les supporters vers les files express.",
+    "vol.no_active_task": "Aucune tâche active à terminer.",
+    "vol.task_completed": "Tâche terminée",
+    "vol.error_task": "Échec de l'obtention de la tâche IA."
   },
   ar: {
     "nav.features": "الميزات",
@@ -59,17 +326,106 @@ const translations = {
     "nav.tech": "التكنولوجيا",
     "nav.login": "تسجيل الدخول",
     "nav.dashboard": "لوحة القيادة",
+    "nav.volunteer_hub": "مركز المتطوعين",
     "hero.badge": "ذكاء اصطناعي - كأس العالم لكرة القدم 2026™",
     "hero.title1": "ملاعب أذكى.",
     "hero.title2": "مدعومة بالذكاء الاصطناعي.",
     "hero.subtitle": "ذكاء الحشود في الوقت الفعلي، الإدارة التنبؤية للحوادث، وتتبع الاستدامة لكأس العالم 2026™ — كل ذلك من مركز قيادة ذكي واحد.",
+    "hero.cta.launch": "🚀 إطلاق لوحة القيادة",
+    "hero.cta.explore": "استكشاف الميزات",
+    "preview.attendance": "الحضور",
+    "preview.crowd": "تدفق الحشود",
+    "preview.incidents": "الحوادث",
+    "preview.score": "درجة الذكاء",
+    "preview.insights": "رؤى الذكاء",
+    "preview.normal": "عادي",
+    "preview.stable": "مستقر",
+    "preview.active": "نشط",
+    "preview.excellent": "ممتاز",
+    "preview.gate_a": "البوابة A مثالية",
+    "preview.gate_c": "البوابة C مزدحمة",
+    "preview.deploy": "نشر 3 متطوعين",
+    "stats.capacity": "السعة القصوى",
+    "stats.accuracy": "دقة الذكاء",
+    "stats.response": "زمن الاستجابة",
+    "stats.monitoring": "المراقبة",
+    "features.badge": "مدعوم من Gemini AI",
+    "features.title": "عمليات الملعب الذكية",
+    "features.subtitle": "كل جانب من جوانب إدارة الملعب معزز بالذكاء الاصطناعي والتحليلات الفورية.",
+    "features.crowd.title": "ذكاء الحشود",
+    "features.crowd.desc": "تحليل كثافة الحشود بالذكاء الاصطناعي مع توقعات الازدحام ومسارات البوابة المثلى.",
+    "features.incident.title": "إدارة الحوادث",
+    "features.incident.desc": "يصنف Gemini الحوادث ويوجه المتطوعين مع إعلانات آلية فورية.",
+    "features.map.title": "خريطة الملعب التفاعلية",
+    "features.map.desc": "مخطط تفاعلي مع خرائط الحرارة وتدفق الحشود الفعلي.",
+    "features.volunteer.title": "إدارة المتطوعين",
+    "features.volunteer.desc": "تتبع مواقع المتطوعين وتوصيات التوزيع الفعال.",
+    "features.sustainability.title": "لوحة الاستدامة",
+    "features.sustainability.desc": "مراقبة استهلاك الطاقة والمياه مع توصيات تحسين بيئية.",
+    "features.assistant.title": "مساعد الذكاء الاصطناعي",
+    "features.assistant.desc": "توليد التقارير والإجابة على استفسارات التشغيل باللغة الطبيعية.",
+    "tech.title": "بني بأحدث التقنيات",
+    "tech.subtitle": "بنية تحتية قوية مصممة للأداء العالي والأمان.",
+    "footer.copyright": "© 2026 SmartArena AI. منصة ذكاء الملاعب بالذكاء الاصطناعي.",
     "dash.welcome": "مرحبًا بك في",
     "dash.subtitle": "إليك نظرة عامة في الوقت الفعلي على الملعب.",
-    "dash.admin.title": "عمليات الإدارة",
+    "dash.badge": "مركز عمليات كأس العالم 2026™",
+    "dash.admin.title": "تحكم الإدارة",
+    "dash.admin.gates": "إدارة البوابات",
+    "dash.admin.gates.desc": "فتح، إغلاق وتعديل السعة",
+    "dash.admin.map": "🗺️ فتح الخريطة الحية",
+    "dash.admin.map.desc": "خريطة حرارة الحشود",
+    "dash.admin.announcements": "بث إعلان",
+    "dash.admin.announcements.desc": "تنبيهات للملعب بأكمله",
+    "dash.admin.security": "سجلات الأمن",
+    "dash.admin.security.desc": "سجل المراجعة وأحداث الإدارة",
+    "dash.admin.sustainability": "تقرير الاستدامة",
+    "dash.admin.sustainability.desc": "بيانات الطاقة والبيئة",
     "dash.volunteer.title": "مهام المتطوعين",
-    "dash.fan.title": "تجربة المشجعين",
-    "dash.logout": "تسجيل خروج",
-    "dash.chat.placeholder": "اسأل عن شيء..."
+    "dash.volunteer.location": "اختر الموقع",
+    "dash.volunteer.ask": "طلب مهمة من الذكاء",
+    "dash.volunteer.hub": "فتح مركز المتطوعين ←",
+    "dash.volunteer.map": "فتح الخريطة الحية ←",
+    "dash.fan.title": "تجربة المشجع",
+    "dash.fan.arrival": "التخطيط للوصول",
+    "dash.fan.placeholder.gate": "البوابة المستهدفة (مثلاً البوابة C)",
+    "dash.fan.route": "احصل على مسار الذكاء",
+    "dash.fan.suggested": "المسار المقترح من الذكاء",
+    "dash.fan.initial": "أدخل البوابة والوقت للحصول على مسار ذكي.",
+    "dash.occupancy.title": "الحضور الحالي",
+    "dash.incidents.title": "الحوادث النشطة",
+    "dash.incidents.detail": "طبي (1)، أمن (2)",
+    "dash.energy.title": "استهلاك الطاقة",
+    "dash.energy.status": "مُحسّن",
+    "dash.energy.detail": "-12% مقارنة بالمتوقع",
+    "dash.incident.reporter": "مبلغ الحوادث بالذكاء",
+    "dash.incident.label": "وصف الحادث (سيقوم الذكاء بتصنيفه)",
+    "dash.incident.placeholder": "مثال: انسكب مشروب كبير في القسم 12 مما يشكل خطر انزلاق...",
+    "dash.incident.submit": "إبلاغ الذكاء",
+    "dash.incident.action": "الإجراء الموصى به",
+    "dash.incident.announcement": "مسودة الإعلان العام",
+    "dash.chat.placeholder": "اسأل عن شيء...",
+    "dash.chat.title": "روبوت أرينا",
+    "dash.chat.greeting": "مرحبًا! أنا مساعد SmartArena AI. كيف يمكنني مساعدتك في إدارة الملعب اليوم؟",
+    "dash.logout": "تسجيل الخروج",
+    "vol.title": "المتطوعين",
+    "vol.subtitle": "مركز",
+    "vol.desc": "إدارة المهام الخاصة بك، التنقل في المناطق، والتبليغ عن الإنجاز.",
+    "vol.ai_tasks": "توزيع المهام بالذكاء الاصطناعي",
+    "vol.ask": "طلب مهمة من الذكاء",
+    "vol.thinking": "جاري التفكير...",
+    "vol.quick": "إجراءات سريعة",
+    "vol.live_map": "🗺️ فتح الخريطة الحية",
+    "vol.navigate": "🧭 الانتقال إلى المنطقة",
+    "vol.complete": "✅ تحديد كمكتمل",
+    "vol.history": "سجل المهام",
+    "vol.no_tasks": "لا يوجد مهام مكتملة بعد.",
+    "vol.sample_task": "توجيه الحشود عند البوابة A",
+    "vol.high_priority": "أولوية عالية",
+    "vol.sample_desc": "ساعد في توجيه المشجعين إلى الخطوط السريعة.",
+    "vol.no_active_task": "لا توجد مهمة نشطة لإتمامها.",
+    "vol.task_completed": "تم إتمام المهمة",
+    "vol.error_task": "فشل في الحصول على المهمة من الذكاء."
   },
   hi: {
     "nav.features": "विशेषताएं",
@@ -77,59 +433,212 @@ const translations = {
     "nav.tech": "तकनीक",
     "nav.login": "लॉगिन",
     "nav.dashboard": "डैशबोर्ड",
+    "nav.volunteer_hub": "स्वयंसेवक हब",
     "hero.badge": "फीफा विश्व कप 2026™ एआई इंटेलिजेंस",
     "hero.title1": "स्मार्टर स्टेडियम।",
     "hero.title2": "एआई द्वारा संचालित।",
     "hero.subtitle": "रीयल-टाइम क्राउड इंटेलिजेंस, प्रेडिक्टिव इंसिडेंट मैनेजमेंट, और फीफा विश्व कप 2026™ के लिए सस्टेनेबिलिटी ट्रैकिंग — सब एक ही स्मार्ट कमांड सेंटर से।",
+    "hero.cta.launch": "🚀 डैशबोर्ड लॉन्च करें",
+    "hero.cta.explore": "सुविधाओं का अन्वेषण करें",
+    "preview.attendance": "उपस्थिति",
+    "preview.crowd": "भीड़ का प्रवाह",
+    "preview.incidents": "घटनाएं",
+    "preview.score": "एआई स्कोर",
+    "preview.insights": "एआई अंतर्दृष्टि",
+    "preview.normal": "सामान्य",
+    "preview.stable": "स्थिर",
+    "preview.active": "सक्रिय",
+    "preview.excellent": "उत्कृष्ट",
+    "preview.gate_a": "गेट A इष्टतम",
+    "preview.gate_c": "गेट C भीड़भाड़",
+    "preview.deploy": "3 स्वयंसेवक तैनात करें",
+    "stats.capacity": "अधिकतम क्षमता",
+    "stats.accuracy": "एआई सटीकता",
+    "stats.response": "प्रतिक्रिया समय",
+    "stats.monitoring": "निगरानी",
+    "features.badge": "जेमिनी एआई द्वारा संचालित",
+    "features.title": "इंटेलिजेंट स्टेडियम संचालन",
+    "features.subtitle": "कृत्रिम बुद्धिमत्ता और रीयल-टाइम एनालिटिक्स द्वारा उन्नत स्टेडियम प्रबंधन का हर पहलू।",
+    "features.crowd.title": "भीड़ की जानकारी (क्राउड इंटेलिजेंस)",
+    "features.crowd.desc": "भीड़ की सघनता का एआई-संचालित विश्लेषण, भीड़भाड़, प्रतीक्षा समय और इष्टतम गेट रूटिंग के रीयल-टाइम पूर्वानुमान के साथ।",
+    "features.incident.title": "घटना प्रबंधन",
+    "features.incident.desc": "जेमिनी घटनाओं को वर्गीकृत और प्राथमिकता देता है, और रीयल-टाइम एआई घोषणाओं और स्वयंसेवक प्रेषण के साथ स्वचालित रूप से कार्य सौंपता है।",
+    "features.map.title": "इंटरएक्टिव स्टेडियम मैप",
+    "features.map.desc": "भीड़ के घनत्व के हीटमैप, क्लिक करने योग्य क्षेत्रों और लाइव भीड़ प्रवाह के दृश्य प्रतिनिधित्व के साथ एसवीजी-आधारित इंटरैक्टिव स्टेडियम लेआउट।",
+    "features.volunteer.title": "स्वयंसेवक प्रबंधन",
+    "features.volunteer.desc": "स्वयंसेवकों के स्थानों को ट्रैक करें, कार्यों को प्रबंधित करें, और एआई को वास्तविक समय में इष्टतम तैनाती की सिफारिश करने दें।",
+    "features.sustainability.title": "सस्टेनेबिलिटी डैशबोर्ड",
+    "features.sustainability.desc": "एआई-जनित अनुकूलन अनुशंसाओं के साथ ऊर्जा, पानी, अपशिष्ट और कार्बन मेट्रिक्स की निगरानी करें।",
+    "features.assistant.title": "एआई सहायक (असिस्टेंट)",
+    "features.assistant.desc": "स्टेडियम संचालन के बारे में कुछ भी पूछें। प्राकृतिक भाषा के साथ रिपोर्ट, घोषणाएं और सारांश तैयार करें।",
+    "tech.title": "आधुनिक तकनीक से निर्मित",
+    "tech.subtitle": "स्केल, सुरक्षा और प्रदर्शन के लिए डिज़ाइन किया गया एंटरप्राइज-ग्रेड आर्किटेक्चर।",
+    "footer.copyright": "© 2026 SmartArena AI. एआई-संचालित स्टेडियम इंटेलिजेंस प्लेटफ़ॉर्म।",
     "dash.welcome": "आपके",
     "dash.subtitle": "यहाँ स्टेडियम का रीयल-टाइम अवलोकन है।",
+    "dash.badge": "फीफा विश्व कप 2026™ संचालन केंद्र",
     "dash.admin.title": "व्यवस्थापक संचालन",
+    "dash.admin.gates": "गेट प्रबंधित करें",
+    "dash.admin.gates.desc": "गेट खोलें, बंद करें, क्षमता समायोजित करें",
+    "dash.admin.map": "🗺️ लाइव मैप खोलें",
+    "dash.admin.map.desc": "रियल-टाइम भीड़ का हीटमैप",
+    "dash.admin.announcements": "घोषणा प्रसारित करें",
+    "dash.admin.announcements.desc": "पूरे स्टेडियम में अलर्ट भेजें",
+    "dash.admin.security": "सुरक्षा लॉग देखें",
+    "dash.admin.security.desc": "ऑडिट ट्रेल और व्यवस्थापक घटनाएं",
+    "dash.admin.sustainability": "सस्टेनेबिलिटी रिपोर्ट",
+    "dash.admin.sustainability.desc": "ऊर्जा और पर्यावरणीय डेटा",
     "dash.volunteer.title": "स्वयंसेवक कार्य",
+    "dash.volunteer.location": "स्वयंसेवक का स्थान चुनें",
+    "dash.volunteer.ask": "एआई से कार्य मांगें",
+    "dash.volunteer.hub": "स्वयंसेवक हब खोलें →",
+    "dash.volunteer.map": "लाइव मैप खोलें →",
     "dash.fan.title": "प्रशंसक अनुभव",
+    "dash.fan.arrival": "आगमन की योजना",
+    "dash.fan.placeholder.gate": "लक्षित गेट (जैसे गेट सी)",
+    "dash.fan.route": "एआई मार्ग प्राप्त करें",
+    "dash.fan.suggested": "एआई द्वारा सुझाया गया मार्ग",
+    "dash.fan.initial": "एक स्मार्ट मार्ग प्राप्त करने के लिए अपना लक्षित गेट और समय दर्ज करें।",
+    "dash.occupancy.title": "वर्तमान उपस्थिति",
+    "dash.incidents.title": "सक्रिय घटनाएं",
+    "dash.incidents.detail": "चिकित्सा (1), सुरक्षा (2)",
+    "dash.energy.title": "ऊर्जा का उपयोग",
+    "dash.energy.status": "अनुकूलित",
+    "dash.energy.detail": "-12% अनुमानित से कम",
+    "dash.incident.reporter": "एआई घटना रिपोर्टर",
+    "dash.incident.label": "घटना का वर्णन करें (एआई इसे वर्गीकृत और प्राथमिकता देगा)",
+    "dash.incident.placeholder": "जैसे: सेक्शन 12 में एक प्रशंसक ने ड्रिंक गिरा दी, जिससे फिसलने का खतरा पैदा हो गया...",
+    "dash.incident.submit": "एआई को रिपोर्ट करें",
+    "dash.incident.action": "सुझाई गई कार्रवाई",
+    "dash.incident.announcement": "सार्वजनिक घोषणा का मसौदा",
+    "dash.chat.placeholder": "कुछ पूछें...",
+    "dash.chat.title": "एरेनाबॉट",
+    "dash.chat.greeting": "नमस्ते! मैं आपका SmartArena AI सहायक हूँ। आज स्टेडियम प्रबंधन में मैं आपकी कैसे मदद कर सकता हूँ?",
     "dash.logout": "लॉग आउट",
-    "dash.chat.placeholder": "कुछ पूछें..."
+    "vol.title": "स्वयंसेवक",
+    "vol.subtitle": "हब",
+    "vol.desc": "अपने कार्यों को प्रबंधित करें, क्षेत्रों को नेविगेट करें, और काम पूरा होने की रिपोर्ट करें।",
+    "vol.ai_tasks": "एआई कार्य असाइनमेंट",
+    "vol.ask": "एआई से कार्य मांगें",
+    "vol.thinking": "सोच रहा है...",
+    "vol.quick": "त्वरित कार्रवाई",
+    "vol.live_map": "🗺️ लाइव मैप खोलें",
+    "vol.navigate": "🧭 चयनित क्षेत्र पर नेविगेट करें",
+    "vol.complete": "✅ कार्य पूरा हुआ चिह्नित करें",
+    "vol.history": "कार्य इतिहास",
+    "vol.no_tasks": "अभी तक कोई पूर्ण कार्य नहीं है।",
+    "vol.sample_task": "गेट A पर भीड़ का मार्गदर्शन करें",
+    "vol.high_priority": "उच्च प्राथमिकता",
+    "vol.sample_desc": "प्रशंसकों को एक्सप्रेस लेन तक पहुँचाने में मदद करें।",
+    "vol.no_active_task": "पूरा करने के लिए कोई सक्रिय कार्य नहीं।",
+    "vol.task_completed": "कार्य पूरा हुआ",
+    "vol.error_task": "एआई से कार्य प्राप्त करने में विफल।"
   }
 };
 
-function updateLanguage(lang) {
-  localStorage.setItem('preferred_language', lang);
-  
-  if (lang === 'ar') {
-    document.documentElement.dir = 'rtl';
-    document.documentElement.lang = 'ar';
-  } else {
-    document.documentElement.dir = 'ltr';
-    document.documentElement.lang = lang;
-  }
+const I18N = {
+  translations,
 
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (translations[lang] && translations[lang][key]) {
-      if (el.tagName === 'INPUT' && el.type === 'text') {
-        el.placeholder = translations[lang][key];
-      } else {
-        el.textContent = translations[lang][key];
-      }
+  updateLanguage(lang) {
+    localStorage.setItem('preferred_language', lang);
+    
+    if (lang === 'ar') {
+      document.documentElement.dir = 'rtl';
+      document.documentElement.lang = 'ar';
+    } else {
+      document.documentElement.dir = 'ltr';
+      document.documentElement.lang = lang;
     }
-  });
-}
 
-function getStoredLanguage() {
-  return localStorage.getItem('preferred_language') || 'en';
-}
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const i18nType = el.getAttribute('data-i18n-type');
+      if (this.translations[lang] && this.translations[lang][key]) {
+        if (i18nType === 'placeholder') {
+          el.placeholder = this.translations[lang][key];
+        } else if (el.tagName === 'INPUT' && el.type === 'text' && !i18nType) {
+          el.placeholder = this.translations[lang][key];
+        } else {
+          el.textContent = this.translations[lang][key];
+        }
+      }
+    });
+
+    // Sync any select elements
+    const langSelector = document.getElementById('lang-selector');
+    if (langSelector) {
+      langSelector.value = lang;
+    }
+    const selectInSwitcher = document.querySelector('#language-switcher select');
+    if (selectInSwitcher) {
+      selectInSwitcher.value = lang;
+    }
+  },
+
+  getStoredLanguage() {
+    return localStorage.getItem('preferred_language') || 'en';
+  },
+
+  renderLanguageSwitcher(elementId) {
+    const container = document.getElementById(elementId);
+    if (!container) return;
+
+    const languages = [
+      { code: 'en', name: 'English', flag: '🇺🇸' },
+      { code: 'es', name: 'Español', flag: '🇪🇸' },
+      { code: 'fr', name: 'Français', flag: '🇫🇷' },
+      { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+      { code: 'hi', name: 'हिंदी', flag: '🇮🇳' }
+    ];
+
+    const currentLang = this.getStoredLanguage();
+
+    const select = document.createElement('select');
+    select.className = 'bg-surface-900 border border-white/10 rounded-lg px-2 py-1 text-sm text-white focus:outline-none focus:border-arena-400';
+    select.ariaLabel = 'Select Language';
+
+    languages.forEach(lang => {
+      const option = document.createElement('option');
+      option.value = lang.code;
+      option.textContent = `${lang.flag} ${lang.name}`;
+      if (lang.code === currentLang) {
+        option.selected = true;
+      }
+      select.appendChild(option);
+    });
+
+    select.addEventListener('change', (e) => {
+      this.updateLanguage(e.target.value);
+    });
+
+    container.innerHTML = '';
+    container.appendChild(select);
+  }
+};
+
+// Expose functions globally for backward compatibility
+window.updateLanguage = I18N.updateLanguage.bind(I18N);
+window.getStoredLanguage = I18N.getStoredLanguage.bind(I18N);
+window.I18N = I18N;
 
 document.addEventListener('DOMContentLoaded', () => {
-  const currentLang = getStoredLanguage();
+  const currentLang = I18N.getStoredLanguage();
   
-  // Setup language selector if it exists
+  // Setup standard language selector if it exists
   const langSelector = document.getElementById('lang-selector');
   if (langSelector) {
     langSelector.value = currentLang;
     langSelector.addEventListener('change', (e) => {
-      updateLanguage(e.target.value);
+      I18N.updateLanguage(e.target.value);
     });
   }
 
+  // Setup language switcher if it exists
+  const langSwitcher = document.getElementById('language-switcher');
+  if (langSwitcher) {
+    I18N.renderLanguageSwitcher('language-switcher');
+  }
+
   // Initial translation
-  updateLanguage(currentLang);
+  I18N.updateLanguage(currentLang);
 });

@@ -87,9 +87,31 @@
 
     <script src="../js/admin.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('logout-btn').addEventListener('click', () => Auth.logout());
-            Admin.initGatesPage();
+            try {
+                await initFirebase();
+                Auth.initAuthListener(async (user) => {
+                    if (!user) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    try {
+                        const res = await fetch(CONFIG.apiUrl("/auth/me"), { credentials: "include" });
+                        if (!res.ok) throw new Error();
+                        const profile = await res.json();
+                        if (profile.data?.role !== 'admin') {
+                            window.location.href = 'dashboard.html';
+                            return;
+                        }
+                        Admin.initGatesPage();
+                    } catch (e) {
+                        window.location.href = 'login.html';
+                    }
+                });
+            } catch (err) {
+                console.error(err);
+            }
         });
     </script>
 </body>

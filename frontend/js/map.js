@@ -2,7 +2,22 @@
  * SmartArena AI — Map Interactivity Logic
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await initFirebase();
+        Auth.initAuthListener(async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            initMapPage();
+        });
+    } catch (err) {
+        console.error("Firebase init failed in map:", err);
+    }
+});
+
+function initMapPage() {
     const zones = document.querySelectorAll('path[data-zone]');
     
     // Panel Elements
@@ -197,4 +212,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-});
+}

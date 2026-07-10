@@ -23,6 +23,7 @@
 
 
     <link rel="icon" href="/favicon.ico">
+    <script src="js/i18n.js" defer></script>
 </head>
 <body class="bg-surface-950 bg-mesh bg-grid min-h-screen">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-arena-500 text-white px-4 py-2 rounded z-[100]">Skip to main content</a>
@@ -51,13 +52,14 @@
 
                 <!-- Desktop Nav Links -->
                 <div class="hidden md:flex items-center gap-8">
-                    <a href="#features" class="text-sm text-surface-200/60 hover:text-white transition-colors">Features</a>
-                    <a href="#stats" class="text-sm text-surface-200/60 hover:text-white transition-colors">Stats</a>
-                    <a href="#tech" class="text-sm text-surface-200/60 hover:text-white transition-colors">Technology</a>
+                    <a href="#features" class="text-sm text-surface-200/60 hover:text-white transition-colors" data-i18n="nav.features">Features</a>
+                    <a href="#stats" class="text-sm text-surface-200/60 hover:text-white transition-colors" data-i18n="nav.stats">Stats</a>
+                    <a href="#tech" class="text-sm text-surface-200/60 hover:text-white transition-colors" data-i18n="nav.tech">Technology</a>
                     <div class="flex items-center gap-2">
                         <span id="api-status" class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" title="Checking..."></span>
                         <span class="text-xs text-surface-200/40 font-mono">API</span>
                     </div>
+                    <div id="language-switcher" class="flex items-center gap-1"></div>
                     <a href="pages/login.html" class="btn-ghost text-sm !px-4 !py-2" id="nav-login" data-i18n="nav.login">Login</a>
                     <a href="pages/login.html" class="btn-neon text-sm !px-5 !py-2" id="nav-dashboard" data-i18n="nav.dashboard">Dashboard</a>
                 </div>
@@ -72,10 +74,10 @@
 
             <!-- Mobile Menu -->
             <div id="mobile-menu" class="hidden flex-col gap-4 pb-6 md:hidden">
-                <a href="#features" class="text-sm text-surface-200/60 hover:text-white transition-colors py-2">Features</a>
-                <a href="#stats" class="text-sm text-surface-200/60 hover:text-white transition-colors py-2">Stats</a>
-                <a href="#tech" class="text-sm text-surface-200/60 hover:text-white transition-colors py-2">Technology</a>
-                <a href="pages/login.html" class="btn-neon text-sm text-center !py-2">Launch Dashboard</a>
+                <a href="#features" class="text-sm text-surface-200/60 hover:text-white transition-colors py-2" data-i18n="nav.features">Features</a>
+                <a href="#stats" class="text-sm text-surface-200/60 hover:text-white transition-colors py-2" data-i18n="nav.stats">Stats</a>
+                <a href="#tech" class="text-sm text-surface-200/60 hover:text-white transition-colors py-2" data-i18n="nav.tech">Technology</a>
+                <a href="pages/login.html" class="btn-neon text-sm text-center !py-2" data-i18n="nav.dashboard">Launch Dashboard</a>
             </div>
         </div>
     </nav>
@@ -106,23 +108,23 @@
 
             <!-- Main Heading -->
             <h1 data-animate="hero" class="text-4xl sm:text-5xl md:text-7xl font-display font-extrabold leading-tight mb-6">
-                <span class="text-white">Smarter Stadiums.</span><br>
-                <span class="gradient-text text-glow">Powered by AI.</span>
+                <span class="text-white" data-i18n="hero.title1">Smarter Stadiums.</span><br>
+                <span class="gradient-text text-glow" data-i18n="hero.title2">Powered by AI.</span>
             </h1>
 
             <!-- Subheading -->
-            <p data-animate="hero" class="text-lg sm:text-xl text-surface-200/60 max-w-2xl mx-auto mb-10 leading-relaxed">
+            <p data-animate="hero" class="text-lg sm:text-xl text-surface-200/60 max-w-2xl mx-auto mb-10 leading-relaxed" data-i18n="hero.subtitle">
                 Real-time crowd intelligence, predictive incident management, 
                 and sustainability tracking for the FIFA World Cup 2026™ — all from one 
-                <span class="text-arena-400 font-medium">intelligent command center</span>.
+                intelligent command center.
             </p>
 
             <!-- CTA Buttons -->
             <div data-animate="hero" class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-                <a href="pages/login.html" class="btn-neon text-base w-full sm:w-auto" id="hero-cta-primary">
+                <a href="pages/login.html" class="btn-neon text-base w-full sm:w-auto" id="hero-cta-primary" data-i18n="hero.cta.launch">
                     🚀 Launch Dashboard
                 </a>
-                <a href="#features" class="btn-ghost text-base w-full sm:w-auto" id="hero-cta-secondary">
+                <a href="#features" class="btn-ghost text-base w-full sm:w-auto" id="hero-cta-secondary" data-i18n="hero.cta.explore">
                     Explore Features
                 </a>
             </div>
@@ -145,24 +147,24 @@
                         <!-- Mock Dashboard Grid -->
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4">
                             <div class="bg-surface-800/60 rounded-lg p-3 sm:p-4 border border-white/5">
-                                <div class="text-xs text-surface-200/40 mb-1">Attendance</div>
+                                <div class="text-xs text-surface-200/40 mb-1" data-i18n="preview.attendance">Attendance</div>
                                 <div class="text-lg sm:text-xl font-display font-bold text-white">45,230</div>
                                 <div class="text-xs text-neon-green mt-1">↑ 12%</div>
                             </div>
                             <div class="bg-surface-800/60 rounded-lg p-3 sm:p-4 border border-white/5">
-                                <div class="text-xs text-surface-200/40 mb-1">Crowd Flow</div>
-                                <div class="text-lg sm:text-xl font-display font-bold text-white">Normal</div>
-                                <div class="text-xs text-neon-blue mt-1">● Stable</div>
+                                <div class="text-xs text-surface-200/40 mb-1" data-i18n="preview.crowd">Crowd Flow</div>
+                                <div class="text-lg sm:text-xl font-display font-bold text-white" data-i18n="preview.normal">Normal</div>
+                                <div class="text-xs text-neon-blue mt-1" data-i18n="preview.stable">● Stable</div>
                             </div>
                             <div class="bg-surface-800/60 rounded-lg p-3 sm:p-4 border border-white/5">
-                                <div class="text-xs text-surface-200/40 mb-1">Incidents</div>
+                                <div class="text-xs text-surface-200/40 mb-1" data-i18n="preview.incidents">Incidents</div>
                                 <div class="text-lg sm:text-xl font-display font-bold text-neon-orange">3</div>
-                                <div class="text-xs text-surface-200/40 mt-1">Active</div>
+                                <div class="text-xs text-surface-200/40 mt-1" data-i18n="preview.active">Active</div>
                             </div>
                             <div class="bg-surface-800/60 rounded-lg p-3 sm:p-4 border border-white/5">
-                                <div class="text-xs text-surface-200/40 mb-1">AI Score</div>
+                                <div class="text-xs text-surface-200/40 mb-1" data-i18n="preview.score">AI Score</div>
                                 <div class="text-lg sm:text-xl font-display font-bold gradient-text">98.5</div>
-                                <div class="text-xs text-neon-green mt-1">Excellent</div>
+                                <div class="text-xs text-neon-green mt-1" data-i18n="preview.excellent">Excellent</div>
                             </div>
                         </div>
                         <!-- Mock Chart Area -->
@@ -178,19 +180,19 @@
                                 <div class="w-full bg-neon-green/40 rounded-t" style="height: 75%"></div>
                             </div>
                             <div class="bg-surface-800/60 rounded-lg p-4 border border-white/5">
-                                <div class="text-xs text-surface-200/40 mb-2">AI Insights</div>
+                                <div class="text-xs text-surface-200/40 mb-2" data-i18n="preview.insights">AI Insights</div>
                                 <div class="space-y-2">
                                     <div class="flex items-center gap-2">
                                         <div class="w-1.5 h-1.5 rounded-full bg-neon-green"></div>
-                                        <span class="text-xs text-surface-200/60">Gate A optimal</span>
+                                        <span class="text-xs text-surface-200/60" data-i18n="preview.gate_a">Gate A optimal</span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <div class="w-1.5 h-1.5 rounded-full bg-neon-orange"></div>
-                                        <span class="text-xs text-surface-200/60">Gate C congested</span>
+                                        <span class="text-xs text-surface-200/60" data-i18n="preview.gate_c">Gate C congested</span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <div class="w-1.5 h-1.5 rounded-full bg-arena-400"></div>
-                                        <span class="text-xs text-surface-200/60">Deploy 3 volunteers</span>
+                                        <span class="text-xs text-surface-200/60" data-i18n="preview.deploy">Deploy 3 volunteers</span>
                                     </div>
                                 </div>
                             </div>
@@ -216,19 +218,19 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div class="stat-card text-center" data-animate="card">
                     <div class="stat-value gradient-text" data-count="50000" data-suffix="+">0</div>
-                    <div class="stat-label">Max Capacity</div>
+                    <div class="stat-label" data-i18n="stats.capacity">Max Capacity</div>
                 </div>
                 <div class="stat-card text-center" data-animate="card">
                     <div class="stat-value text-neon-green" data-count="99" data-suffix="%">0</div>
-                    <div class="stat-label">AI Accuracy</div>
+                    <div class="stat-label" data-i18n="stats.accuracy">AI Accuracy</div>
                 </div>
                 <div class="stat-card text-center" data-animate="card">
                     <div class="stat-value text-neon-blue" data-count="15" data-suffix="ms">0</div>
-                    <div class="stat-label">Response Time</div>
+                    <div class="stat-label" data-i18n="stats.response">Response Time</div>
                 </div>
                 <div class="stat-card text-center" data-animate="card">
                     <div class="stat-value text-neon-purple" data-count="24" data-suffix="/7">0</div>
-                    <div class="stat-label">Monitoring</div>
+                    <div class="stat-label" data-i18n="stats.monitoring">Monitoring</div>
                 </div>
             </div>
         </div>
@@ -241,11 +243,11 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Section Header -->
             <div class="text-center mb-16" data-animate="card">
-                <span class="badge mb-4">Powered by Gemini AI</span>
-                <h2 class="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white mb-4">
-                    Intelligent Stadium <span class="gradient-text">Operations</span>
+                <span class="badge mb-4" data-i18n="features.badge">Powered by Gemini AI</span>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white mb-4" data-i18n="features.title">
+                    Intelligent Stadium Operations
                 </h2>
-                <p class="text-surface-200/60 max-w-2xl mx-auto text-lg">
+                <p class="text-surface-200/60 max-w-2xl mx-auto text-lg" data-i18n="features.subtitle">
                     Every aspect of stadium management enhanced by artificial intelligence 
                     and real-time analytics.
                 </p>
@@ -258,8 +260,8 @@
                     <div class="w-12 h-12 rounded-xl bg-arena-500/10 border border-arena-500/20 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
                         👥
                     </div>
-                    <h3 class="text-lg font-display font-semibold text-white mb-2">Crowd Intelligence</h3>
-                    <p class="text-sm text-surface-200/50 leading-relaxed">
+                    <h3 class="text-lg font-display font-semibold text-white mb-2" data-i18n="features.crowd.title">Crowd Intelligence</h3>
+                    <p class="text-sm text-surface-200/50 leading-relaxed" data-i18n="features.crowd.desc">
                         AI-powered crowd density analysis with real-time predictions for congestion, 
                         wait times, and optimal gate routing.
                     </p>
@@ -270,8 +272,8 @@
                     <div class="w-12 h-12 rounded-xl bg-neon-pink/10 border border-neon-pink/20 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
                         🚨
                     </div>
-                    <h3 class="text-lg font-display font-semibold text-white mb-2">Incident Management</h3>
-                    <p class="text-sm text-surface-200/50 leading-relaxed">
+                    <h3 class="text-lg font-display font-semibold text-white mb-2" data-i18n="features.incident.title">Incident Management</h3>
+                    <p class="text-sm text-surface-200/50 leading-relaxed" data-i18n="features.incident.desc">
                         Gemini classifies, prioritizes, and auto-assigns incidents with 
                         real-time AI announcements and volunteer dispatch.
                     </p>
@@ -282,8 +284,8 @@
                     <div class="w-12 h-12 rounded-xl bg-neon-blue/10 border border-neon-blue/20 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
                         🗺️
                     </div>
-                    <h3 class="text-lg font-display font-semibold text-white mb-2">Interactive Stadium Map</h3>
-                    <p class="text-sm text-surface-200/50 leading-relaxed">
+                    <h3 class="text-lg font-display font-semibold text-white mb-2" data-i18n="features.map.title">Interactive Stadium Map</h3>
+                    <p class="text-sm text-surface-200/50 leading-relaxed" data-i18n="features.map.desc">
                         SVG-based interactive stadium layout with occupancy heatmaps, 
                         clickable zones, and live crowd flow visualization.
                     </p>
@@ -294,8 +296,8 @@
                     <div class="w-12 h-12 rounded-xl bg-neon-green/10 border border-neon-green/20 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
                         🤝
                     </div>
-                    <h3 class="text-lg font-display font-semibold text-white mb-2">Volunteer Management</h3>
-                    <p class="text-sm text-surface-200/50 leading-relaxed">
+                    <h3 class="text-lg font-display font-semibold text-white mb-2" data-i18n="features.volunteer.title">Volunteer Management</h3>
+                    <p class="text-sm text-surface-200/50 leading-relaxed" data-i18n="features.volunteer.desc">
                         Track volunteer locations, manage assignments, and let AI 
                         recommend optimal deployments in real-time.
                     </p>
@@ -306,8 +308,8 @@
                     <div class="w-12 h-12 rounded-xl bg-neon-green/10 border border-neon-green/20 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
                         🌱
                     </div>
-                    <h3 class="text-lg font-display font-semibold text-white mb-2">Sustainability Dashboard</h3>
-                    <p class="text-sm text-surface-200/50 leading-relaxed">
+                    <h3 class="text-lg font-display font-semibold text-white mb-2" data-i18n="features.sustainability.title">Sustainability Dashboard</h3>
+                    <p class="text-sm text-surface-200/50 leading-relaxed" data-i18n="features.sustainability.desc">
                         Monitor energy, water, waste, and carbon metrics with AI-generated 
                         optimization recommendations.
                     </p>
@@ -318,8 +320,8 @@
                     <div class="w-12 h-12 rounded-xl bg-neon-purple/10 border border-neon-purple/20 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
                         🤖
                     </div>
-                    <h3 class="text-lg font-display font-semibold text-white mb-2">AI Assistant</h3>
-                    <p class="text-sm text-surface-200/50 leading-relaxed">
+                    <h3 class="text-lg font-display font-semibold text-white mb-2" data-i18n="features.assistant.title">AI Assistant</h3>
+                    <p class="text-sm text-surface-200/50 leading-relaxed" data-i18n="features.assistant.desc">
                         Ask anything about stadium operations. Generate reports, 
                         announcements, and summaries with natural language.
                     </p>
@@ -334,10 +336,10 @@
     <section class="py-24 border-t border-white/5" id="tech">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16" data-animate="card">
-                <h2 class="text-3xl sm:text-4xl font-display font-bold text-white mb-4">
-                    Built with <span class="gradient-text">Modern Tech</span>
+                <h2 class="text-3xl sm:text-4xl font-display font-bold text-white mb-4" data-i18n="tech.title">
+                    Built with Modern Tech
                 </h2>
-                <p class="text-surface-200/60 max-w-xl mx-auto">
+                <p class="text-surface-200/60 max-w-xl mx-auto" data-i18n="tech.subtitle">
                     Enterprise-grade architecture designed for scale, security, and performance.
                 </p>
             </div>
@@ -384,7 +386,7 @@
                     </div>
                     <span class="text-sm font-display font-semibold text-white">SmartArena AI</span>
                 </div>
-                <p class="text-sm text-surface-200/40">
+                <p class="text-sm text-surface-200/40" data-i18n="footer.copyright">
                     &copy; 2026 SmartArena AI. AI-Powered Stadium Intelligence Platform.
                 </p>
                 <div class="flex items-center gap-4">

@@ -70,7 +70,7 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-surface-900 to-transparent"></div>
                 </div>
                 <div class="relative z-10 p-8 sm:p-12 text-center sm:text-left">
-                    <span class="badge mb-3">FIFA World Cup 2026™ Operations Center</span>
+                    <span class="badge mb-3" data-i18n="dash.badge">FIFA World Cup 2026™ Operations Center</span>
                     <h1 class="text-3xl sm:text-4xl font-display font-bold mb-2"><span data-i18n="dash.welcome">Welcome to your</span> <span class="gradient-text">Dashboard</span></h1>
                     <p class="text-surface-200" id="welcome-message" data-i18n="dash.subtitle">Here's a real-time overview of the stadium.</p>
                 </div>
@@ -85,24 +85,24 @@
                         </h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             <a href="admin-gates.html" id="admin-gates-btn" class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-arena-500/50 transition-colors block">
-                                <span class="font-medium">Manage Gates</span>
-                                <span class="text-xs text-surface-200/40 block mt-1">Open, close, adjust capacity</span>
+                                <span class="font-medium" data-i18n="dash.admin.gates">Manage Gates</span>
+                                <span class="text-xs text-surface-200/40 block mt-1" data-i18n="dash.admin.gates.desc">Open, close, adjust capacity</span>
                             </a>
                             <a href="map.html" class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-arena-500/50 transition-colors block">
-                                <span class="font-medium">🗺️ Open Live Map</span>
-                                <span class="text-xs text-surface-200/40 block mt-1">Real-time crowd heatmap</span>
+                                <span class="font-medium" data-i18n="dash.admin.map">🗺️ Open Live Map</span>
+                                <span class="text-xs text-surface-200/40 block mt-1" data-i18n="dash.admin.map.desc">Real-time crowd heatmap</span>
                             </a>
                             <a href="admin-announcements.html" id="admin-announcements-btn" class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-arena-500/50 transition-colors block">
-                                <span class="font-medium">Broadcast Announcement</span>
-                                <span class="text-xs text-surface-200/40 block mt-1">Send stadium-wide alerts</span>
+                                <span class="font-medium" data-i18n="dash.admin.announcements">Broadcast Announcement</span>
+                                <span class="text-xs text-surface-200/40 block mt-1" data-i18n="dash.admin.announcements.desc">Send stadium-wide alerts</span>
                             </a>
                             <a href="admin-security.html" id="admin-security-btn" class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-arena-500/50 transition-colors block">
-                                <span class="font-medium">View Security Logs</span>
-                                <span class="text-xs text-surface-200/40 block mt-1">Audit trail & admin events</span>
+                                <span class="font-medium" data-i18n="dash.admin.security">View Security Logs</span>
+                                <span class="text-xs text-surface-200/40 block mt-1" data-i18n="dash.admin.security.desc">Audit trail & admin events</span>
                             </a>
                             <a href="sustainability.html" class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-white/5 transition-colors block">
-                                <span class="font-medium">Sustainability Report</span>
-                                <span class="text-xs text-surface-200/40 block mt-1">Energy & environmental data</span>
+                                <span class="font-medium" data-i18n="dash.admin.sustainability">Sustainability Report</span>
+                                <span class="text-xs text-surface-200/40 block mt-1" data-i18n="dash.admin.sustainability.desc">Energy & environmental data</span>
                             </a>
                         </div>
                     </div>
@@ -121,7 +121,7 @@
                                     <option value="West VIP Entrance">West VIP Entrance</option>
                                     <option value="East Stand Food Court">East Stand Food Court</option>
                                 </select>
-                                <button id="req-task-btn" class="bg-neon-blue hover:bg-blue-600 text-white text-sm font-medium py-1.5 px-4 rounded-lg transition-colors">
+                                <button id="req-task-btn" class="bg-neon-blue hover:bg-blue-600 text-white text-sm font-medium py-1.5 px-4 rounded-lg transition-colors" data-i18n="dash.volunteer.ask">
                                     Ask AI for Task
                                 </button>
                             </div>
@@ -129,15 +129,15 @@
                         <ul id="vol-task-list" class="space-y-3">
                             <li class="flex flex-col p-4 bg-surface-800 rounded-lg border border-white/5">
                                 <div class="flex items-center justify-between mb-1">
-                                    <span class="font-medium">Guide crowd at Gate A</span>
-                                    <span class="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded">High Priority</span>
+                                    <span class="font-medium" data-i18n="vol.sample_task">Guide crowd at Gate A</span>
+                                    <span class="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded" data-i18n="vol.high_priority">High Priority</span>
                                 </div>
-                                <p class="text-sm text-surface-200/60">Help direct incoming fans to the express lanes.</p>
+                                <p class="text-sm text-surface-200/60" data-i18n="vol.sample_desc">Help direct incoming fans to the express lanes.</p>
                             </li>
                         </ul>
                         <div class="mt-4 pt-4 border-t border-white/5 flex items-center gap-3">
-                            <a href="volunteer.html" class="text-sm text-neon-blue hover:text-blue-400 font-medium transition-colors">Open Volunteer Hub →</a>
-                            <a href="map.html" class="text-sm text-surface-200/60 hover:text-white transition-colors">Open Live Map →</a>
+                            <a href="volunteer.html" class="text-sm text-neon-blue hover:text-blue-400 font-medium transition-colors" data-i18n="dash.volunteer.hub">Open Volunteer Hub →</a>
+                            <a href="map.html" class="text-sm text-surface-200/60 hover:text-white transition-colors" data-i18n="dash.volunteer.map">Open Live Map →</a>
                         </div>
                     </div>
                 </div>
@@ -150,19 +150,19 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div class="bg-surface-800 p-4 rounded-xl border border-white/5 flex flex-col justify-between">
                                 <div>
-                                    <h3 class="font-medium mb-3">Plan Arrival</h3>
+                                    <h3 class="font-medium mb-3" data-i18n="dash.fan.arrival">Plan Arrival</h3>
                                     <div class="space-y-3 mb-4">
-                                        <input type="text" id="fan-gate" aria-label="Target Gate" placeholder="Target Gate (e.g., Gate C)" class="w-full bg-surface-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-neon-green outline-none">
+                                        <input type="text" id="fan-gate" aria-label="Target Gate" placeholder="Target Gate (e.g., Gate C)" class="w-full bg-surface-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-neon-green outline-none" data-i18n="dash.fan.placeholder.gate" data-i18n-type="placeholder">
                                         <input type="time" id="fan-time" aria-label="Arrival Time" class="w-full bg-surface-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-neon-green outline-none">
                                     </div>
                                 </div>
-                                <button id="fan-plan-btn" class="w-full bg-neon-green hover:bg-green-600 text-surface-950 font-bold py-2 rounded-lg transition-colors text-sm">Get AI Route</button>
+                                <button id="fan-plan-btn" class="w-full bg-neon-green hover:bg-green-600 text-surface-950 font-bold py-2 rounded-lg transition-colors text-sm" data-i18n="dash.fan.route">Get AI Route</button>
                             </div>
                             
                             <div class="bg-surface-800 p-4 rounded-xl border border-white/5 flex flex-col justify-center items-center text-center">
-                                <h3 class="font-medium mb-2" id="fan-route-title">AI Suggested Route</h3>
+                                <h3 class="font-medium mb-2" id="fan-route-title" data-i18n="dash.fan.suggested">AI Suggested Route</h3>
                                 <div id="fan-route-result" class="text-sm text-surface-200/60 w-full h-full flex flex-col justify-center">
-                                    <p>Enter your target gate and time to get a smart route.</p>
+                                    <p data-i18n="dash.fan.initial">Enter your target gate and time to get a smart route.</p>
                                 </div>
                             </div>
                         </div>
@@ -171,33 +171,33 @@
 
                 <!-- Generic Stats -->
                 <div class="glass-card p-6" role="region" aria-label="Current stadium occupancy">
-                    <h3 class="text-sm font-medium text-surface-200/60 mb-2">Current Occupancy</h3>
+                    <h3 class="text-sm font-medium text-surface-200/60 mb-2" data-i18n="dash.occupancy.title">Current Occupancy</h3>
                     <p class="text-3xl font-display font-bold">45,231</p>
                     <div class="w-full bg-surface-800 h-2 rounded-full mt-4" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="75 percent capacity">
                         <div class="bg-arena-500 h-2 rounded-full" style="width: 75%"></div>
                     </div>
                 </div>
                 <div class="glass-card p-6" role="region" aria-label="Active incidents overview">
-                    <h3 class="text-sm font-medium text-surface-200/60 mb-2">Active Incidents</h3>
+                    <h3 class="text-sm font-medium text-surface-200/60 mb-2" data-i18n="dash.incidents.title">Active Incidents</h3>
                     <p class="text-3xl font-display font-bold text-yellow-400">3</p>
-                    <p class="text-sm mt-2 text-surface-200/60">Medical (1), Security (2)</p>
+                    <p class="text-sm mt-2 text-surface-200/60" data-i18n="dash.incidents.detail">Medical (1), Security (2)</p>
                 </div>
                 <div class="glass-card p-6" role="region" aria-label="Energy usage status">
-                    <h3 class="text-sm font-medium text-surface-200/60 mb-2">Energy Usage</h3>
-                    <p class="text-3xl font-display font-bold text-neon-green">Optimized</p>
-                    <p class="text-sm mt-2 text-surface-200/60">-12% vs expected</p>
+                    <h3 class="text-sm font-medium text-surface-200/60 mb-2" data-i18n="dash.energy.title">Energy Usage</h3>
+                    <p class="text-3xl font-display font-bold text-neon-green" data-i18n="dash.energy.status">Optimized</p>
+                    <p class="text-sm mt-2 text-surface-200/60" data-i18n="dash.energy.detail">-12% vs expected</p>
                 </div>
                 <!-- Phase 6: AI Incident Reporting -->
                 <div class="col-span-full glass-card p-6 border-neon-pink/30 mt-4">
                     <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-neon-pink">
-                         <span aria-hidden="true">🚨</span> AI Incident Reporter
+                         <span aria-hidden="true">🚨</span> <span data-i18n="dash.incident.reporter">AI Incident Reporter</span>
                     </h2>
                     <form id="incident-form" class="space-y-4 max-w-2xl">
                         <div>
-                            <label for="incident-desc" class="block text-sm font-medium text-surface-200/60 mb-2">Describe the incident (AI will classify and prioritize it)</label>
-                            <textarea id="incident-desc" required rows="3" class="w-full bg-surface-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-neon-pink focus:ring-1 focus:ring-neon-pink" placeholder="E.g. A fan spilled a large drink in Section 12, creating a slipping hazard..."></textarea>
+                            <label for="incident-desc" class="block text-sm font-medium text-surface-200/60 mb-2" data-i18n="dash.incident.label">Describe the incident (AI will classify and prioritize it)</label>
+                            <textarea id="incident-desc" required rows="3" class="w-full bg-surface-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-neon-pink focus:ring-1 focus:ring-neon-pink" placeholder="E.g. A fan spilled a large drink in Section 12, creating a slipping hazard..." data-i18n="dash.incident.placeholder" data-i18n-type="placeholder"></textarea>
                         </div>
-                        <button type="submit" id="incident-submit" class="bg-neon-pink hover:bg-pink-600 text-white font-medium py-2 px-6 rounded-xl transition-colors">
+                        <button type="submit" id="incident-submit" class="bg-neon-pink hover:bg-pink-600 text-white font-medium py-2 px-6 rounded-xl transition-colors" data-i18n="dash.incident.submit">
                             Report to AI
                         </button>
                     </form>
@@ -208,10 +208,10 @@
                             <span id="ai-category" class="badge badge-warning">...</span>
                             <span id="ai-priority" class="badge">...</span>
                         </div>
-                        <h4 class="text-sm font-bold text-white mb-1">Recommended Action</h4>
+                        <h4 class="text-sm font-bold text-white mb-1" data-i18n="dash.incident.action">Recommended Action</h4>
                         <p id="ai-action" class="text-surface-200/80 text-sm mb-4">...</p>
                         
-                        <h4 class="text-sm font-bold text-white mb-1">Public Announcement Draft</h4>
+                        <h4 class="text-sm font-bold text-white mb-1" data-i18n="dash.incident.announcement">Public Announcement Draft</h4>
                         <p id="ai-announcement" class="text-surface-200/60 text-sm italic bg-surface-900 p-3 rounded-lg border border-white/5">...</p>
                     </div>
                 </div>
@@ -226,13 +226,13 @@
             <div class="bg-surface-800 p-4 border-b border-white/10 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="text-xl" aria-hidden="true">🤖</span>
-                    <h3 class="font-bold text-white">ArenaBot</h3>
+                    <h3 class="font-bold text-white" data-i18n="dash.chat.title">ArenaBot</h3>
                 </div>
                 <button id="ai-chat-close" class="text-surface-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white rounded" aria-label="Close chat window">&times;</button>
             </div>
             
             <div id="ai-chat-messages" aria-live="polite" aria-atomic="false" class="h-64 overflow-y-auto p-4 space-y-3 bg-surface-900/50">
-                <div class="bg-surface-800 text-sm text-surface-200 p-3 rounded-xl rounded-tl-none border border-white/5 self-start w-10/12">
+                <div class="bg-surface-800 text-sm text-surface-200 p-3 rounded-xl rounded-tl-none border border-white/5 self-start w-10/12" data-i18n="dash.chat.greeting">
                     Hi! I'm your SmartArena AI Assistant. How can I help you manage the stadium today?
                 </div>
             </div>

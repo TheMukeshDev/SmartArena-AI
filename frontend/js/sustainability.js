@@ -1,4 +1,19 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await initFirebase();
+        Auth.initAuthListener(async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            initSustainabilityPage();
+        });
+    } catch (err) {
+        console.error("Firebase init failed in sustainability:", err);
+    }
+});
+
+function initSustainabilityPage() {
     // Chart.js Configuration
     Chart.defaults.color = '#94a3b8'; // text-surface-400
     Chart.defaults.font.family = 'Inter, sans-serif';
@@ -131,4 +146,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-});
+}
