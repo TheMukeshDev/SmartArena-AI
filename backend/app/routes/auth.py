@@ -82,7 +82,17 @@ def session_logout() -> tuple[Response, int]:
     session_cookie = request.cookies.get("session")
 
     response = jsonify({"success": True, "message": "Logged out successfully"})
-    response.set_cookie("session", expires=0)
+    
+    from flask import current_app
+    is_secure = current_app.config.get("FORCE_HTTPS", False)
+    
+    response.set_cookie(
+        "session", 
+        expires=0,
+        httponly=True,
+        samesite="None",
+        secure=True
+    )
 
     if session_cookie:
         try:

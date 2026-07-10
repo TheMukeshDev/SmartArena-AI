@@ -69,6 +69,7 @@ class BaseConfig:
 
     # ── Security ────────────────────────────────────────────────────────
     FORCE_HTTPS: bool = os.getenv("FORCE_HTTPS", "1") == "1"
+    WTF_CSRF_SSL_STRICT: bool = False  # Disable strict referer check for cross-origin frontend
 
     # ── Logging ─────────────────────────────────────────────────────────
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
