@@ -36,6 +36,7 @@ def sanitize_user_input(text: str, max_length: int = 500) -> str:
 
 _client = None
 
+
 def _get_client():
     global _client
     if _client is None:
@@ -65,7 +66,7 @@ async def classify_incident(description: str) -> dict:
         response = client.models.generate_content(
             model="gemini-3.5-flash",
             contents=prompt,
-            config={"response_mime_type": "application/json"}
+            config={"response_mime_type": "application/json"},
         )
         return json.loads(response.text)
     except Exception as e:
@@ -98,7 +99,7 @@ async def analyze_crowd_data(
         response = client.models.generate_content(
             model="gemini-3.5-flash",
             contents=prompt,
-            config={"response_mime_type": "application/json"}
+            config={"response_mime_type": "application/json"},
         )
         return json.loads(response.text)
     except Exception as e:
@@ -123,7 +124,7 @@ async def assign_volunteer_task(location: str) -> dict:
         response = client.models.generate_content(
             model="gemini-3.5-flash",
             contents=prompt,
-            config={"response_mime_type": "application/json"}
+            config={"response_mime_type": "application/json"},
         )
         return json.loads(response.text)
     except Exception as e:
@@ -148,7 +149,7 @@ async def optimize_sustainability(metrics: dict, weather: str = "Unknown") -> di
         response = client.models.generate_content(
             model="gemini-3.5-flash",
             contents=prompt,
-            config={"response_mime_type": "application/json"}
+            config={"response_mime_type": "application/json"},
         )
         return json.loads(response.text)
     except Exception as e:
@@ -156,7 +157,12 @@ async def optimize_sustainability(metrics: dict, weather: str = "Unknown") -> di
         return fallback
 
 
-async def ask_assistant(query: str, context: dict, language: str = "English", previous_interaction_id: str = None) -> tuple:
+async def ask_assistant(
+    query: str,
+    context: dict,
+    language: str = "English",
+    previous_interaction_id: str = None,
+) -> tuple:
     client = _get_client()
     if not client:
         return "I am currently offline. Please try again later.", None
@@ -168,13 +174,10 @@ async def ask_assistant(query: str, context: dict, language: str = "English", pr
     )
 
     try:
-        kwargs = {
-            "model": "gemini-3.5-flash",
-            "input": prompt
-        }
+        kwargs = {"model": "gemini-3.5-flash", "input": prompt}
         if previous_interaction_id:
             kwargs["previous_interaction_id"] = previous_interaction_id
-            
+
         interaction = client.interactions.create(**kwargs)
         return interaction.output_text.strip(), interaction.id
     except Exception as e:
@@ -206,7 +209,7 @@ async def suggest_transport(
         response = client.models.generate_content(
             model="gemini-3.5-flash",
             contents=prompt,
-            config={"response_mime_type": "application/json"}
+            config={"response_mime_type": "application/json"},
         )
         return json.loads(response.text)
     except Exception as e:

@@ -80,7 +80,8 @@ def test_weather_endpoint_returns_data(app, client):
 def _push_via_app_subprocess(db_path, incident):
     """Spawn a subprocess that calls the real push_incident() with a Flask
     app context, writing to *db_path*."""
-    code = textwrap.dedent(f"""\
+    code = textwrap.dedent(
+        f"""\
         import sys, os, json
         sys.path.insert(0, {os.path.dirname(os.path.dirname(os.path.abspath(__file__)))!r})
         os.environ["EVENTS_DB_PATH"] = {db_path!r}
@@ -91,7 +92,8 @@ def _push_via_app_subprocess(db_path, incident):
         app.config["EVENTS_DB_PATH"] = {db_path!r}
         with app.app_context():
             push_incident({json.dumps(incident)})
-    """)
+    """
+    )
     subprocess.run(
         [sys.executable, "-c", code],
         check=True,

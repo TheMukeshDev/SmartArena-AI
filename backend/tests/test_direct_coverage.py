@@ -71,18 +71,20 @@ def test_error_handlers(app, client):
 from werkzeug.exceptions import NotImplemented
 from app.routes.errors import _error_response
 
+
 def test_error_handlers_extra(app):
     from werkzeug.exceptions import NotImplemented
-    
+
     @app.route("/test_501")
     def t501():
         raise NotImplemented("test 501")
-        
+
     @app.route("/test_500_err")
     def t500_err():
         from flask import abort
+
         try:
-            1/0
+            1 / 0
         except:
             abort(500)
 
@@ -134,8 +136,13 @@ def test_auth_direct(app):
             r, c = register_user()
             assert c in [401, 500]
 
-    with app.test_request_context(json={"uid": "", "email": ""}, headers={"Authorization": "Bearer test"}):
-        with patch("app.routes.auth.auth.verify_id_token", return_value={"uid": "123", "auth_time": 9999999999}):
+    with app.test_request_context(
+        json={"uid": "", "email": ""}, headers={"Authorization": "Bearer test"}
+    ):
+        with patch(
+            "app.routes.auth.auth.verify_id_token",
+            return_value={"uid": "123", "auth_time": 9999999999},
+        ):
             r, c = register_user()
             assert c == 400
 

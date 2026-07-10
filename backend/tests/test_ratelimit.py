@@ -58,9 +58,10 @@ class TestRateLimit:
                 if i >= 5:
                     assert res.status_code == 429, f"Request {i} should be 429"
                 else:
-                    assert res.status_code in (200, 429), (
-                        f"Request {i} unexpected status"
-                    )
+                    assert res.status_code in (
+                        200,
+                        429,
+                    ), f"Request {i} unexpected status"
 
     def test_rate_limit_has_correct_error_shape(self, rl_client):
         rl_client.set_cookie("session", "fake")

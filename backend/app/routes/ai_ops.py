@@ -107,13 +107,15 @@ def chat():
     }
     reply, interaction_id = _run(
         AIService.process_chat(
-            data.query, 
-            enhanced_context, 
+            data.query,
+            enhanced_context,
             language=data.preferred_language,
-            previous_interaction_id=data.previous_interaction_id
+            previous_interaction_id=data.previous_interaction_id,
         )
     )
-    return success_response({"reply": reply, "interaction_id": interaction_id}, "Chat response.")
+    return success_response(
+        {"reply": reply, "interaction_id": interaction_id}, "Chat response."
+    )
 
 
 @ai_ops_bp.route("/transport/suggest", methods=["POST"])

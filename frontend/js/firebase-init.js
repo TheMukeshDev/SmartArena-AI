@@ -31,7 +31,7 @@ async function initFirebase() {
     firebaseAuth = firebase.auth();
     firebaseDb = firebase.firestore();
 
-    console.log("[SmartArena] Firebase initialized successfully");
+    console.debug("[SmartArena] Firebase initialized successfully");
     return firebaseApp;
   } catch (error) {
     console.error("[SmartArena] Firebase initialization failed:", error);

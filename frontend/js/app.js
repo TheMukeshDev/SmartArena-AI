@@ -190,7 +190,7 @@ function registerSW() {
     navigator.serviceWorker
       .register("/js/sw.js")
       .then((reg) => {
-        console.log("SW registered:", reg.scope);
+        console.debug("SW registered:", reg.scope);
       })
       .catch((err) => {
         console.warn("SW registration failed:", err);

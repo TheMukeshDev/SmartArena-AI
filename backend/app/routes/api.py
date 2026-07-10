@@ -24,16 +24,21 @@ def api_index() -> tuple[Response, int]:
     Returns:
         JSON response with API metadata.
     """
-    return jsonify({
-        "success": True,
-        "data": {
-            "service": "SmartArena AI API",
-            "version": "1.0.0",
-            "endpoints": {
-                "health": "/health",
-                "readiness": "/health/ready",
-                "api_root": "/api/v1/",
-            },
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-        },
-    }), 200
+    return (
+        jsonify(
+            {
+                "success": True,
+                "data": {
+                    "service": "SmartArena AI API",
+                    "version": "1.0.0",
+                    "endpoints": {
+                        "health": "/health",
+                        "readiness": "/health/ready",
+                        "api_root": "/api/v1/",
+                    },
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                },
+            }
+        ),
+        200,
+    )

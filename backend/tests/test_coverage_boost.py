@@ -53,9 +53,7 @@ def test_find_accessible_path_inaccessible_edges():
 async def test_assign_volunteer_task_exception():
     from app.ai.gemini import assign_volunteer_task
 
-    with (
-        patch("app.ai.gemini._get_client") as mock_get_client,
-    ):
+    with (patch("app.ai.gemini._get_client") as mock_get_client,):
         mock_client = MagicMock()
         mock_client.models.generate_content.side_effect = Exception("Gemini API error")
         mock_get_client.return_value = mock_client
@@ -67,9 +65,7 @@ async def test_assign_volunteer_task_exception():
 async def test_optimize_sustainability_exception():
     from app.ai.gemini import optimize_sustainability
 
-    with (
-        patch("app.ai.gemini._get_client") as mock_get_client,
-    ):
+    with (patch("app.ai.gemini._get_client") as mock_get_client,):
         mock_client = MagicMock()
         mock_client.models.generate_content.side_effect = Exception("Gemini API error")
         mock_get_client.return_value = mock_client

@@ -25,7 +25,12 @@ def init_cors(app: Flask) -> None:
         app,
         origins=origins,
         supports_credentials=True,
-        allow_headers=["Content-Type", "Authorization", "X-Requested-With", "X-CSRFToken"],
+        allow_headers=[
+            "Content-Type",
+            "Authorization",
+            "X-Requested-With",
+            "X-CSRFToken",
+        ],
         methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     )
 

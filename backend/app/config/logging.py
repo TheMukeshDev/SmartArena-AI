@@ -64,10 +64,10 @@ class ConsoleFormatter(logging.Formatter):
     """Human-readable colored console formatter for development."""
 
     COLORS = {
-        "DEBUG": "\033[36m",     # Cyan
-        "INFO": "\033[32m",      # Green
-        "WARNING": "\033[33m",   # Yellow
-        "ERROR": "\033[31m",     # Red
+        "DEBUG": "\033[36m",  # Cyan
+        "INFO": "\033[32m",  # Green
+        "WARNING": "\033[33m",  # Yellow
+        "ERROR": "\033[31m",  # Red
         "CRITICAL": "\033[35m",  # Magenta
     }
     RESET = "\033[0m"
@@ -124,4 +124,6 @@ def setup_logging(app: Flask) -> None:
     app.logger.addHandler(handler)
     app.logger.propagate = False
 
-    app.logger.debug("Logging configured: level=%s, format=%s", log_level_name, log_format)
+    app.logger.debug(
+        "Logging configured: level=%s, format=%s", log_level_name, log_format
+    )

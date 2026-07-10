@@ -71,7 +71,7 @@ def require_auth(func: Callable[..., Any]) -> Callable[..., Any]:
                 error_type="Unauthorized",
                 status_code=401,
             )
-            
+
         # Store user claims in Flask global context
         g.user = decoded_claims
         return func(*args, **kwargs)

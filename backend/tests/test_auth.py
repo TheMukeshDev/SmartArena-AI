@@ -110,7 +110,7 @@ with (
         # a. Call GET /api/v1/csrf-token
         csrf_res = client.get("/api/v1/csrf-token")
         assert csrf_res.status_code == 200
-        
+
         csrf_set_cookies = " ".join(csrf_res.headers.get_all("Set-Cookie"))
         # Flask's internal session cookie for CSRF should now use the new name from settings
         assert "smartarena_csrf_token=" in csrf_set_cookies
@@ -122,6 +122,7 @@ with (
             patch("app.routes.auth.auth.create_session_cookie") as create_mock,
         ):
             import datetime
+
             verify_mock.return_value = {
                 "auth_time": datetime.datetime.now().timestamp() - 60
             }
@@ -131,7 +132,7 @@ with (
                 "/api/v1/auth/sessionLogin", json={"idToken": "fake_token"}
             )
             assert auth_res.status_code == 200
-            
+
             auth_set_cookies = " ".join(auth_res.headers.get_all("Set-Cookie"))
             # Firebase auth session cookie should be exactly "session="
             assert "session=" in auth_set_cookies

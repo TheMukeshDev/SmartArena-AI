@@ -26,17 +26,20 @@ def health_check() -> tuple[Response, int]:
     Returns:
         JSON response with application status and timestamp.
     """
-    return jsonify(
-        {
-            "success": True,
-            "data": {
-                "status": "healthy",
-                "service": "SmartArena AI",
-                "version": "1.0.0",
-                "timestamp": datetime.now(timezone.utc).isoformat(),
-            },
-        }
-    ), 200
+    return (
+        jsonify(
+            {
+                "success": True,
+                "data": {
+                    "status": "healthy",
+                    "service": "SmartArena AI",
+                    "version": "1.0.0",
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                },
+            }
+        ),
+        200,
+    )
 
 
 @health_bp.route("/health/ready", methods=["GET"])
@@ -54,16 +57,19 @@ def readiness_check() -> tuple[Response, int]:
     all_ready = all(checks.values())
     status_code = 200 if all_ready else 503
 
-    return jsonify(
-        {
-            "success": all_ready,
-            "data": {
-                "status": "ready" if all_ready else "degraded",
-                "checks": checks,
-                "timestamp": datetime.now(timezone.utc).isoformat(),
-            },
-        }
-    ), status_code
+    return (
+        jsonify(
+            {
+                "success": all_ready,
+                "data": {
+                    "status": "ready" if all_ready else "degraded",
+                    "checks": checks,
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                },
+            }
+        ),
+        status_code,
+    )
 
 
 def _check_firebase() -> bool:

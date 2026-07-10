@@ -58,9 +58,9 @@ class AIService:
                         "description": description,
                         "classification": classification,
                         "reporter_uid": uid,
-                        "doc_id": doc_ref[1].id
-                        if hasattr(doc_ref, "__len__")
-                        else None,
+                        "doc_id": (
+                            doc_ref[1].id if hasattr(doc_ref, "__len__") else None
+                        ),
                     }
                 )
             except Exception:
@@ -133,7 +133,12 @@ class AIService:
         return optimization
 
     @staticmethod
-    async def process_chat(query: str, context: dict, language: str = "en", previous_interaction_id: str = None) -> tuple:
+    async def process_chat(
+        query: str,
+        context: dict,
+        language: str = "en",
+        previous_interaction_id: str = None,
+    ) -> tuple:
         lang_name = {
             "en": "English",
             "es": "Spanish",
@@ -142,10 +147,17 @@ class AIService:
         }.get(language, "English")
         key = _cache_key(query, context, language)
         cached = _cache.get(key)
-        if cached is not None and not previous_interaction_id: # Only use cache for new interactions
+        if (
+            cached is not None and not previous_interaction_id
+        ):  # Only use cache for new interactions
             return cached, None
 
-        reply, interaction_id = await ask_assistant(query, context, language=lang_name, previous_interaction_id=previous_interaction_id)
+        reply, interaction_id = await ask_assistant(
+            query,
+            context,
+            language=lang_name,
+            previous_interaction_id=previous_interaction_id,
+        )
         if not previous_interaction_id:
             _cache.set(key, reply)
         return reply, interaction_id

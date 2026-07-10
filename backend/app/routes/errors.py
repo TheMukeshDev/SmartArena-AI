@@ -30,7 +30,9 @@ def register_error_handlers(app: Flask) -> None:
         return _error_response(
             status_code=400,
             error_type="Bad Request",
-            message=str(error.description) if error.description else "Invalid request data",
+            message=(
+                str(error.description) if error.description else "Invalid request data"
+            ),
         )
 
     @app.errorhandler(401)
