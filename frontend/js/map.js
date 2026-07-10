@@ -64,7 +64,7 @@ function initMapPage() {
     };
 
     // Live Map Simulation Interval
-    setInterval(() => {
+    const _mapInterval = setInterval(() => {
         zones.forEach(zone => {
             const data = generateSimData(zone.dataset.zone);
             // Add a slight transparency to the hex color for the SVG fill
@@ -76,6 +76,10 @@ function initMapPage() {
             zone.setAttribute('aria-label', label);
         });
     }, 5000); // Update every 5 seconds
+
+    // Clean up interval on page unload to prevent memory leaks
+    window.addEventListener("pagehide", () => clearInterval(_mapInterval));
+    window.addEventListener("beforeunload", () => clearInterval(_mapInterval));
 
     // Select a zone and update panel
     const selectZone = (zone) => {

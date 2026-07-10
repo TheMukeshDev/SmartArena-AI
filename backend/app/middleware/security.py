@@ -23,6 +23,10 @@ CSP_POLICY = {
     ],
     "style-src": [
         "'self'",
+        # 'unsafe-inline' is required for Tailwind CSS inline style attributes
+        # (e.g. style="width: 75%" on progress bars). These are CSS-only and
+        # non-executable — they cannot run JavaScript. This is the standard
+        # approach for Tailwind-based projects.
         "'unsafe-inline'",
         "https://fonts.googleapis.com",
         "https://cdn.jsdelivr.net",
