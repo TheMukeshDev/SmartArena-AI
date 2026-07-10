@@ -14,6 +14,17 @@ const CONFIG = {
       ? "http://localhost:5000"
       : "https://smartarena-ai.onrender.com", // Production Render URL
 
+  // Firebase Client Config (public by design — used by Firebase JS SDK)
+  FIREBASE_CONFIG: {
+    apiKey: "AIzaSyBs9C08RY28LxkTAwYCraMEDqGNOeFnykM",
+    authDomain: "smartarena-ai-eaa94.firebaseapp.com",
+    projectId: "smartarena-ai-eaa94",
+    storageBucket: "smartarena-ai-eaa94.firebasestorage.app",
+    messagingSenderId: "568517956898",
+    appId: "1:568517956898:web:ae14a05e7b07177f89417b",
+    measurementId: "G-J63FCNYD3E",
+  },
+
   // API Version
   API_VERSION: "v1",
 

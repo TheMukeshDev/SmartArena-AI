@@ -70,6 +70,7 @@ class BaseConfig:
     # ── Security ────────────────────────────────────────────────────────
     FORCE_HTTPS: bool = os.getenv("FORCE_HTTPS", "1") == "1"
     WTF_CSRF_SSL_STRICT: bool = False  # Disable strict referer check for cross-origin frontend
+    WTF_CSRF_CHECK_DEFAULT: bool = False  # Disable CSRF checks by default (redundant with Bearer tokens & breaks without 3rd-party cookies)
 
     # ── Logging ─────────────────────────────────────────────────────────
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")

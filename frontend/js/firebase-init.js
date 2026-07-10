@@ -5,8 +5,9 @@
  * Initializes Firebase client-side SDK for Authentication,
  * Firestore, and Analytics.
  *
- * Config values are loaded from the backend /api/v1/config/firebase
- * endpoint to avoid hardcoding in the frontend.
+ * Config values are defined in config.js (FIREBASE_CONFIG).
+ * Firebase client config is public by design — security is
+ * enforced by Firebase Security Rules and Auth, not by hiding config.
  */
 
 let firebaseApp = null;
@@ -15,26 +16,15 @@ let firebaseDb = null;
 
 /**
  * Initialize Firebase client SDK.
- * Fetches config from backend API to avoid hardcoding credentials.
+ * Uses inline config from config.js to eliminate the critical request
+ * chain to the backend, improving page load performance.
  * @returns {Promise<object>} Firebase app instance
  */
 async function initFirebase() {
   if (firebaseApp) return firebaseApp;
 
   try {
-    // Fetch Firebase config from backend
-    const response = await fetch(CONFIG.apiUrl("/config/firebase"), {
-      method: "GET",
-      headers: { Accept: "application/json" },
-      signal: AbortSignal.timeout(60000), // Increased to 60s for Render cold start
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch Firebase config: ${response.status}`);
-    }
-
-    const result = await response.json();
-    const firebaseConfig = result.data;
+    const firebaseConfig = CONFIG.FIREBASE_CONFIG;
 
     // Initialize Firebase
     firebaseApp = firebase.initializeApp(firebaseConfig);
