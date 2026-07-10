@@ -12,6 +12,7 @@ import json
 import logging
 import os
 import threading
+from collections import deque
 from typing import Any
 
 from app.ai.gemini import (
@@ -34,7 +35,7 @@ _cache = SQLiteCache(
 )
 
 CROWD_HISTORY_MAX = 6
-_crowd_history: list[dict[str, Any]] = []
+_crowd_history: deque[dict[str, Any]] = deque(maxlen=CROWD_HISTORY_MAX)
 _crowd_history_lock = threading.Lock()
 
 
@@ -113,8 +114,6 @@ class AIService:
         }
         with _crowd_history_lock:
             _crowd_history.append(history_snapshot)
-            if len(_crowd_history) > CROWD_HISTORY_MAX:
-                _crowd_history.pop(0)
             history_copy = list(_crowd_history)
 
         weather = await fetch_weather()

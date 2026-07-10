@@ -46,6 +46,20 @@ def _ensure_db(app: Flask) -> sqlite3.Connection:
     return g.ratelimit_db
 
 
+def _cleanup_expired_windows(app: Flask) -> None:
+    """Remove rate limit windows older than 2x the window duration."""
+    try:
+        db_path = _get_db_path(app)
+        conn = sqlite3.connect(db_path)
+        window = app.config.get("RATE_LIMIT_WINDOW_SECONDS", 3600)
+        cutoff = int(time.time()) - (2 * window)
+        conn.execute("DELETE FROM rate_limit_windows WHERE window_start < ?", (cutoff,))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        logger.warning("Rate limiter cleanup failed: %s", str(e))
+
+
 def init_ratelimit(app: Flask) -> None:
     db_path = _get_db_path(app)
     conn = sqlite3.connect(db_path)
@@ -54,6 +68,8 @@ def init_ratelimit(app: Flask) -> None:
     conn.commit()
     conn.close()
     logger.info("Rate limiter initialized (SQLite, db=%s)", db_path)
+
+    _cleanup_expired_windows(app)
 
     @app.before_request
     def _check_rate_limit():  # type: ignore[return]

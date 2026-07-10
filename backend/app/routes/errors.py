@@ -7,7 +7,6 @@ responses across the entire application.
 """
 
 import logging
-import traceback
 from typing import Any
 
 from flask import Flask, jsonify
@@ -83,11 +82,7 @@ def register_error_handlers(app: Flask) -> None:
     @app.errorhandler(500)
     def internal_error(error: Exception) -> tuple[Response, int]:
         """Handle 500 Internal Server errors."""
-        logger.error(
-            "Internal server error: %s\n%s",
-            str(error),
-            traceback.format_exc(),
-        )
+        logger.error("Internal server error: %s", str(error), exc_info=True)
         return _error_response(
             status_code=500,
             error_type="Internal Server Error",
@@ -104,11 +99,7 @@ def register_error_handlers(app: Flask) -> None:
                 message=str(error.description),
             )
 
-        logger.critical(
-            "Unhandled exception: %s\n%s",
-            str(error),
-            traceback.format_exc(),
-        )
+        logger.critical("Unhandled exception: %s", str(error), exc_info=True)
         return _error_response(
             status_code=500,
             error_type="Internal Server Error",

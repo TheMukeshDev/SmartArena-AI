@@ -5,7 +5,7 @@ from unittest.mock import patch
 def test_incident_classification(client):
     with (
         patch("app.services.ai_service.AIService.process_incident") as mock_process,
-        patch("app.services.ai_service.get_firestore_client") as mock_fs,
+        patch("app.services.ai_service.get_firestore_client"),
     ):
         mock_process.return_value = {
             "category": "Medical",
@@ -33,7 +33,7 @@ def test_crowd_analysis(client):
         patch(
             "app.services.ai_service.AIService.process_crowd_analysis"
         ) as mock_process,
-        patch("app.services.ai_service.get_firestore_client") as mock_fs,
+        patch("app.services.ai_service.get_firestore_client"),
     ):
         mock_process.return_value = {
             "global_status": "Congested",
@@ -57,7 +57,7 @@ def test_volunteer_assign(client):
         patch(
             "app.services.ai_service.AIService.process_volunteer_assignment"
         ) as mock_process,
-        patch("app.services.ai_service.get_firestore_client") as mock_fs,
+        patch("app.services.ai_service.get_firestore_client"),
     ):
         mock_process.return_value = {
             "task": "Clean spill",
@@ -83,7 +83,7 @@ def test_sustainability_optimize(client):
         patch(
             "app.services.ai_service.AIService.process_sustainability"
         ) as mock_process,
-        patch("app.services.ai_service.get_firestore_client") as mock_fs,
+        patch("app.services.ai_service.get_firestore_client"),
     ):
         mock_process.return_value = {
             "status": "Good",

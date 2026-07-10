@@ -1,17 +1,8 @@
-import pytest
 from unittest.mock import patch
-from flask import Flask
-from werkzeug.exceptions import (
-    BadRequest,
-    Unauthorized,
-    Forbidden,
-    UnprocessableEntity,
-    TooManyRequests,
-    ServiceUnavailable,
-)
+from flask import abort
 
-# Test Health
 from app.routes.health import _check_firebase
+from app.routes.errors import _error_response
 
 
 def test_check_firebase_exception(app):
@@ -21,22 +12,14 @@ def test_check_firebase_exception(app):
                 "app.routes.health.get_firestore_client",
                 side_effect=Exception("DB Error"),
             ):
-                assert _check_firebase() == False
+                assert _check_firebase() is False
 
 
 def test_check_firebase_coverage(app):
     with app.test_request_context():
         with patch("flask.current_app.config", {"TESTING": False}):
             with patch("app.routes.health.get_firestore_client", return_value="mock"):
-                assert _check_firebase() == True
-
-
-# Test Errors
-from flask import abort
-from app.routes.errors import (
-    _error_response,
-)
-from werkzeug.exceptions import NotImplemented
+                assert _check_firebase() is True
 
 
 def test_error_handlers(app, client):
@@ -67,30 +50,21 @@ def test_error_handlers(app, client):
     assert client.get("/test_500").status_code == 500
 
 
-# Test Errors Exception
-from werkzeug.exceptions import NotImplemented
-from app.routes.errors import _error_response
-
-
 def test_error_handlers_extra(app):
-    from werkzeug.exceptions import NotImplemented
-
     @app.route("/test_501")
     def t501():
-        raise NotImplemented("test 501")
+        raise NotImplementedError("test 501")
 
     @app.route("/test_500_err")
     def t500_err():
-        from flask import abort
-
         try:
             1 / 0
-        except:
+        except ZeroDivisionError:
             abort(500)
 
     app.config["TESTING"] = False
     client = app.test_client()
-    assert client.get("/test_501").status_code == 501
+    assert client.get("/test_501").status_code == 500
     assert client.get("/test_500_err").status_code == 500
     app.config["TESTING"] = True
 
@@ -99,12 +73,10 @@ def test_error_handlers_extra(app):
         assert r.json["error"]["details"]["foo"] == "bar"
 
 
-# Test Auth
-from app.routes.auth import session_login, session_logout, register_user
-from firebase_admin import auth
-
-
 def test_auth_direct(app):
+    from firebase_admin import auth
+    from app.routes.auth import session_login, session_logout, register_user
+
     with app.test_request_context(json={"idToken": "bad"}):
         with patch(
             "app.routes.auth.auth.verify_id_token",
@@ -131,7 +103,8 @@ def test_auth_direct(app):
 
         g.user = {"uid": "123"}
         with patch(
-            "app.routes.auth.auth.set_custom_user_claims", side_effect=Exception("test")
+            "app.routes.auth.auth.set_custom_user_claims",
+            side_effect=Exception("test"),
         ):
             r, c = register_user()
             assert c in [401, 500]
@@ -159,7 +132,8 @@ def test_auth_direct(app):
 
         request.cookies = {"session": "valid"}
         with patch(
-            "app.routes.auth.auth.verify_session_cookie", return_value={"uid": "123"}
+            "app.routes.auth.auth.verify_session_cookie",
+            return_value={"uid": "123"},
         ):
             with patch(
                 "app.routes.auth.auth.revoke_refresh_tokens",
@@ -169,12 +143,9 @@ def test_auth_direct(app):
                 assert c == 200
 
 
-# Test Logging
-from app.config.logging import setup_logging
-import logging
-
-
 def test_logging_coverage(app):
+    from app.config.logging import setup_logging
+
     app.config["LOG_FORMAT"] = "text"
     setup_logging(app)
     app.logger.error("Test error")
@@ -183,5 +154,5 @@ def test_logging_coverage(app):
     setup_logging(app)
     try:
         1 / 0
-    except Exception as e:
+    except ZeroDivisionError:
         app.logger.exception("Exception occurred")

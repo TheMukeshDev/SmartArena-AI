@@ -146,13 +146,24 @@
                         ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400';
                     const li = document.createElement('li');
                     li.className = 'flex flex-col p-4 bg-surface-800 rounded-lg border border-neon-blue/30 animate-pulse';
-                    li.innerHTML = `
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="font-medium text-neon-blue">AI: ${t.task}</span>
-                            <span class="text-xs ${pClass} px-2 py-1 rounded">${t.priority} Priority</span>
-                        </div>
-                        <p class="text-sm text-surface-200/80">${t.description}</p>
-                    `;
+
+                    const row = document.createElement('div');
+                    row.className = 'flex items-center justify-between mb-1';
+                    const taskSpan = document.createElement('span');
+                    taskSpan.className = 'font-medium text-neon-blue';
+                    taskSpan.textContent = 'AI: ' + t.task;
+                    const prioritySpan = document.createElement('span');
+                    prioritySpan.className = 'text-xs ' + pClass + ' px-2 py-1 rounded';
+                    prioritySpan.textContent = t.priority + ' Priority';
+                    row.appendChild(taskSpan);
+                    row.appendChild(prioritySpan);
+
+                    const descP = document.createElement('p');
+                    descP.className = 'text-sm text-surface-200/80';
+                    descP.textContent = t.description;
+
+                    li.appendChild(row);
+                    li.appendChild(descP);
                     volTaskList.prepend(li);
                     setTimeout(() => li.classList.remove('animate-pulse'), 2000);
                     taskHistory.unshift({ task: t.task, location: loc, time: new Date().toLocaleTimeString() });
@@ -182,16 +193,27 @@
         });
 
         function renderHistory() {
+            taskHistoryEl.textContent = '';
             if (!taskHistory.length) {
-                taskHistoryEl.innerHTML = '<p class="text-surface-200/40 text-sm text-center py-4">No completed tasks yet.</p>';
+                const p = document.createElement('p');
+                p.className = 'text-surface-200/40 text-sm text-center py-4';
+                p.textContent = 'No completed tasks yet.';
+                taskHistoryEl.appendChild(p);
                 return;
             }
-            taskHistoryEl.innerHTML = taskHistory.slice(0, 10).map(h => `
-                <div class="flex items-center justify-between text-xs p-2 bg-surface-800 rounded-lg">
-                    <span class="text-surface-200/80">${h.task}</span>
-                    <span class="text-surface-200/40">${h.time}</span>
-                </div>
-            `).join('');
+            taskHistory.slice(0, 10).forEach(h => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between text-xs p-2 bg-surface-800 rounded-lg';
+                const taskSpan = document.createElement('span');
+                taskSpan.className = 'text-surface-200/80';
+                taskSpan.textContent = h.task;
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'text-surface-200/40';
+                timeSpan.textContent = h.time;
+                div.appendChild(taskSpan);
+                div.appendChild(timeSpan);
+                taskHistoryEl.appendChild(div);
+            });
         }
     });
     </script>

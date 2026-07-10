@@ -26,12 +26,15 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 mypy bandit pytest pytest-cov
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; else pip install -r requirements.txt; fi
         
-    - name: Run flake8
+    - name: Run flake8 (app)
       run: |
         flake8 app --max-line-length=110
+
+    - name: Run flake8 (tests)
+      run: |
+        flake8 tests --max-line-length=110
         
     - name: Run mypy
       run: |
@@ -43,7 +46,7 @@ jobs:
         
     - name: Run pytest
       run: |
-        pytest tests/ --cov=app --cov-report=term-missing
+        pytest tests/ --cov=app --cov-report=term-missing --cov-fail-under=80
 
   frontend-checks:
     name: Frontend Build

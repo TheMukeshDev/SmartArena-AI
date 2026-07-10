@@ -1,5 +1,4 @@
 import json
-import pytest
 from unittest.mock import patch, MagicMock
 
 # Mock firebase_admin before the app imports it
@@ -106,7 +105,7 @@ with (
             assert data["data"]["role"] == "admin"
 
     def test_cookie_name_collision(client):
-        """Regression test to ensure Flask CSRF session cookie and Firebase auth session cookie use different names."""
+        """Ensure Flask CSRF session cookie and Firebase auth session cookie use different names."""
         # a. Call GET /api/v1/csrf-token
         csrf_res = client.get("/api/v1/csrf-token")
         assert csrf_res.status_code == 200

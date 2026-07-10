@@ -1,6 +1,5 @@
-import pytest
-from app.middleware.auth import require_auth, require_role
-from flask import Flask, jsonify, g
+from app.middleware.auth import require_role
+from flask import g
 from unittest.mock import patch
 from firebase_admin import auth
 
