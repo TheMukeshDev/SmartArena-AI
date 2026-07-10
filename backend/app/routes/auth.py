@@ -62,8 +62,8 @@ def session_login() -> tuple[Response, int]:
                 session_cookie,
                 max_age=int(SESSION_EXPIRES_IN.total_seconds()),
                 httponly=True,
-                samesite="None" if is_secure else "Lax",
-                secure=is_secure,
+                samesite="None",
+                secure=True,
             )
             return response, 200
         else:
