@@ -76,7 +76,11 @@ def _call_gemini_json(prompt: str, fallback: dict, label: str) -> dict:
             contents=prompt,
             config={"response_mime_type": "application/json"},
         )
-        return json.loads(response.text)
+        text: str | None = response.text
+        if not text:
+            logger.error("Gemini %s returned empty response", label)
+            return fallback
+        return json.loads(text)
     except Exception as e:
         logger.error("Gemini %s failed: %s", label, str(e))
         return fallback
@@ -106,7 +110,13 @@ async def analyze_crowd_data(
         "insights": ["Crowd flow is normal across most zones."],
         "routing_advice": "Proceed to designated gates.",
         "predicted_status_15min": {},
-        "recommended_action": "Continue normal operations.",
+        "recommended_action": {
+            "en": "Continue normal operations.",
+            "es": "Continuar operaciones normales.",
+            "fr": "Continuer les opérations normales.",
+            "ar": "استمر في العمليات الطبيعية.",
+            "hi": "सामान्य संचालन जारी रखें।",
+        },
     }
     safe_data = json.dumps(zones_data, default=str)[:5000]
     history_str = json.dumps(history or [], default=str)[:3000]
@@ -162,12 +172,14 @@ async def ask_assistant(
     )
 
     try:
-        kwargs = {"model": GEMINI_MODEL, "input": prompt}
-        if previous_interaction_id:
-            kwargs["previous_interaction_id"] = previous_interaction_id
-
-        interaction = client.interactions.create(**kwargs)
-        return interaction.output_text.strip(), interaction.id
+        interaction = client.interactions.create(  # type: ignore
+            model=GEMINI_MODEL,
+            input=prompt,
+            previous_interaction_id=previous_interaction_id
+            if previous_interaction_id
+            else None,
+        )
+        return interaction.output_text.strip(), interaction.id  # type: ignore
     except Exception as e:
         logger.error("Gemini assistant failed: %s", str(e))
         return "I'm having trouble processing that right now.", None

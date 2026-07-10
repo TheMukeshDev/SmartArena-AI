@@ -206,3 +206,126 @@ def test_security_logs_with_limit(app, client):
             data = resp.get_json()
             assert resp.status_code == 200
             assert data["success"] is True
+
+
+# ── Import Dataset Tests ─────────────────────────────────────────────────
+
+
+class TestImportDataset:
+    """Tests for POST /api/v1/admin/import-dataset."""
+
+    def test_import_json_dataset(self, app, client):
+        """Upload a JSON file and verify record counts."""
+        mock_db = MagicMock()
+        with patch("app.routes.admin._get_db", return_value=mock_db):
+            decoded = {"uid": "admin-123", "role": "admin"}
+            with patch(
+                "app.middleware.auth._authenticate_request",
+                return_value=(decoded, None),
+            ):
+                import io
+                from werkzeug.datastructures import FileStorage
+
+                records = [
+                    {"type": "zone", "name": "Gate A", "occupancy": 3200},
+                    {"type": "gate", "name": "Gate B", "status": "open"},
+                ]
+                json_bytes = io.BytesIO(
+                    __import__("json").dumps(records).encode("utf-8")
+                )
+                file = FileStorage(stream=json_bytes, filename="data.json")
+                resp = client.post(
+                    "/api/v1/admin/import-dataset",
+                    data={"file": file},
+                    content_type="multipart/form-data",
+                )
+                data = resp.get_json()
+                assert resp.status_code == 201
+                assert data["data"]["total"] == 2
+                assert data["data"]["counts"]["zone"] == 1
+                assert data["data"]["counts"]["gate"] == 1
+                assert mock_db.collection.return_value.add.call_count >= 1
+
+    def test_import_csv_dataset(self, app, client):
+        """Upload a CSV file and verify record counts."""
+        mock_db = MagicMock()
+        with patch("app.routes.admin._get_db", return_value=mock_db):
+            decoded = {"uid": "admin-123", "role": "admin"}
+            with patch(
+                "app.middleware.auth._authenticate_request",
+                return_value=(decoded, None),
+            ):
+                import io
+                from werkzeug.datastructures import FileStorage
+
+                csv_content = (
+                    "type,name,status\nzone,Gate A,open\nincident,Spill,Maintenance\n"
+                )
+                csv_bytes = io.BytesIO(csv_content.encode("utf-8"))
+                file = FileStorage(stream=csv_bytes, filename="data.csv")
+                resp = client.post(
+                    "/api/v1/admin/import-dataset",
+                    data={"file": file},
+                    content_type="multipart/form-data",
+                )
+                data = resp.get_json()
+                assert resp.status_code == 201
+                assert data["data"]["total"] == 2
+
+    def test_import_no_file(self, app, client):
+        """Request without file returns 400."""
+        decoded = {"uid": "admin-123", "role": "admin"}
+        with patch(
+            "app.middleware.auth._authenticate_request",
+            return_value=(decoded, None),
+        ):
+            resp = client.post("/api/v1/admin/import-dataset")
+            assert resp.status_code == 400
+
+    def test_import_unsupported_filetype(self, app, client):
+        """Non-CSV/JSON file returns 400."""
+        decoded = {"uid": "admin-123", "role": "admin"}
+        with patch(
+            "app.middleware.auth._authenticate_request",
+            return_value=(decoded, None),
+        ):
+            import io
+            from werkzeug.datastructures import FileStorage
+
+            txt_bytes = io.BytesIO(b"hello world")
+            file = FileStorage(stream=txt_bytes, filename="data.txt")
+            resp = client.post(
+                "/api/v1/admin/import-dataset",
+                data={"file": file},
+                content_type="multipart/form-data",
+            )
+            assert resp.status_code == 400
+
+    def test_import_invalid_json(self, app, client):
+        """Malformed JSON returns 400."""
+        decoded = {"uid": "admin-123", "role": "admin"}
+        with patch(
+            "app.middleware.auth._authenticate_request",
+            return_value=(decoded, None),
+        ):
+            import io
+            from werkzeug.datastructures import FileStorage
+
+            bad_bytes = io.BytesIO(b"{invalid json")
+            file = FileStorage(stream=bad_bytes, filename="bad.json")
+            resp = client.post(
+                "/api/v1/admin/import-dataset",
+                data={"file": file},
+                content_type="multipart/form-data",
+            )
+            assert resp.status_code == 400
+
+    def test_import_non_admin_rejected(self, app, client):
+        """Non-admin user gets 403."""
+        decoded = {"uid": "vol-123", "role": "volunteer"}
+        with patch(
+            "app.middleware.auth._authenticate_request",
+            return_value=(decoded, None),
+        ):
+            resp = client.post("/api/v1/admin/import-dataset")
+            assert resp.status_code == 403

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartArena AI — Volunteer Co-Pilot: Real-time multilingual crowd intelligence for stadium volunteers">
+    <meta name="theme-color" content="#060810">
+    <title>Volunteer Co-Pilot — SmartArena AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    </noscript>
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js" defer></script>
+    <script src="../js/config.js?v=2" defer></script>
+    <script src="../js/firebase-init.js?v=2" defer></script>
+    <script src="../js/auth.js?v=2" defer></script>
+    <link rel="icon" href="/favicon.ico">
+    <script src="../js/i18n.js" defer></script>
+    <script src="../js/toast.js" defer></script>
+</head>
+<body class="bg-surface-950 min-h-screen text-white">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-arena-500 text-white px-4 py-2 rounded z-[100]">Skip to main content</a>
+
+    <nav class="border-b border-white/10 bg-surface-900/50 backdrop-blur-md sticky top-0 z-50" aria-label="Main navigation">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-6">
+                    <a href="dashboard.html" class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg overflow-hidden shadow-glow">
+                            <img src="/assets/images/logo.webp" alt="SmartArena Logo" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-xl font-display font-bold hidden sm:block">Smart<span class="gradient-text">Arena</span></span>
+                    </a>
+                    <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
+                    <div class="flex items-center gap-4">
+                        <a href="dashboard.html" class="text-sm text-surface-200 hover:text-white transition-colors" data-i18n="nav.dashboard">Dashboard</a>
+                        <a href="volunteer-copilot.html" class="text-sm text-neon-blue font-medium border-b-2 border-neon-blue pb-5 translate-y-[10px]" aria-current="page" data-i18n="copilot.nav">Co-Pilot</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <select id="lang-selector" aria-label="Select language" class="bg-surface-800 border border-white/10 text-white text-xs rounded px-2 py-1 focus:outline-none">
+                        <option value="en">EN</option>
+                        <option value="es">ES</option>
+                        <option value="fr">FR</option>
+                        <option value="ar">AR</option>
+                        <option value="hi">HI</option>
+                    </select>
+                    <span id="user-name" class="text-sm font-medium text-surface-200 hidden sm:inline">Volunteer</span>
+                    <button id="logout-btn" class="text-sm text-surface-200 hover:text-white transition-colors" data-i18n="dash.logout">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" tabindex="-1">
+
+        <header class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+            <div>
+                <h1 class="text-3xl font-display font-bold mb-2" data-i18n="copilot.title">Volunteer <span class="text-neon-blue" data-i18n="copilot.title_span">Co-Pilot</span></h1>
+                <p class="text-surface-200 text-sm" data-i18n="copilot.subtitle">Real-time crowd intelligence in your language. Know what to do, right now.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <label for="copilot-location" class="sr-only">Select your zone</label>
+                <select id="copilot-location" aria-label="Select your current zone" class="bg-surface-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-neon-blue">
+                    <option value="North Stand Gate A">North Stand Gate A</option>
+                    <option value="North Stand Gate B">North Stand Gate B</option>
+                    <option value="South Stand Gate C">South Stand Gate C</option>
+                    <option value="South Stand Gate D">South Stand Gate D</option>
+                    <option value="West Stand VIP Entrance">West Stand VIP Entrance</option>
+                    <option value="East Stand Food Court">East Stand Food Court</option>
+                    <option value="Concourse North">Concourse North</option>
+                    <option value="Concourse South">Concourse South</option>
+                </select>
+                <button id="refresh-btn" class="bg-neon-blue hover:bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors" data-i18n="copilot.refresh">
+                    Refresh
+                </button>
+            </div>
+        </header>
+
+        <!-- Primary Action Card -->
+        <section class="mb-8 glass-card p-6 sm:p-8 border-neon-blue/30" aria-label="Primary recommended action">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-neon-blue/20 flex items-center justify-center text-xl" aria-hidden="true">
+                    <span id="action-icon">📋</span>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold" data-i18n="copilot.action_title">What should I do right now?</h2>
+                    <p class="text-xs text-surface-200/40" data-i18n="copilot.action_subtitle">AI-recommended action for your zone</p>
+                </div>
+            </div>
+            <div id="action-card" class="bg-surface-900/60 rounded-xl p-5 border border-white/5 min-h-[80px]">
+                <p class="text-surface-200/40 text-sm" data-i18n="copilot.action_loading">Analyzing your zone…</p>
+            </div>
+            <div id="action-meta" class="mt-3 flex items-center gap-4 text-xs text-surface-200/30">
+                <span id="action-status-badge" class="inline-flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-surface-200/30 animate-pulse" aria-hidden="true"></span>
+                    <span data-i18n="copilot.status.awaiting">Awaiting analysis</span>
+                </span>
+                <span id="action-timestamp"></span>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Zone Status Grid -->
+            <section class="lg:col-span-2" aria-label="Zone status overview">
+                <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+                    <span aria-hidden="true">🗺️</span> <span data-i18n="copilot.zones_title">Zone Status</span>
+                </h2>
+                <div id="zone-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="bg-surface-800/60 rounded-xl p-4 border border-white/5 text-center" data-zone="Gate A">
+                        <div class="text-xs text-surface-200/40 mb-1">Gate A</div>
+                        <div class="text-sm font-bold text-neon-green zone-status" data-i18n="copilot.status.optimal">Optimal</div>
+                    </div>
+                    <div class="bg-surface-800/60 rounded-xl p-4 border border-white/5 text-center" data-zone="Gate B">
+                        <div class="text-xs text-surface-200/40 mb-1">Gate B</div>
+                        <div class="text-sm font-bold text-neon-green zone-status" data-i18n="copilot.status.optimal">Optimal</div>
+                    </div>
+                    <div class="bg-surface-800/60 rounded-xl p-4 border border-white/5 text-center" data-zone="Gate C">
+                        <div class="text-xs text-surface-200/40 mb-1">Gate C</div>
+                        <div class="text-sm font-bold text-yellow-400 zone-status" data-i18n="copilot.status.moderate">Moderate</div>
+                    </div>
+                    <div class="bg-surface-800/60 rounded-xl p-4 border border-white/5 text-center" data-zone="Gate D">
+                        <div class="text-xs text-surface-200/40 mb-1">Gate D</div>
+                        <div class="text-sm font-bold text-neon-green zone-status" data-i18n="copilot.status.optimal">Optimal</div>
+                    </div>
+                    <div class="bg-surface-800/60 rounded-xl p-4 border border-white/5 text-center" data-zone="VIP Entrance">
+                        <div class="text-xs text-surface-200/40 mb-1">VIP</div>
+                        <div class="text-sm font-bold text-neon-green zone-status" data-i18n="copilot.status.optimal">Optimal</div>
+                    </div>
+                    <div class="bg-surface-800/60 rounded-xl p-4 border border-white/5 text-center" data-zone="Food Court">
+                        <div class="text-xs text-surface-200/40 mb-1">Food Court</div>
+                        <div class="text-sm font-bold text-yellow-400 zone-status" data-i18n="copilot.status.moderate">Moderate</div>
+                    </div>
+                    <div class="bg-surface-800/60 rounded-xl p-4 border border-white/5 text-center" data-zone="Concourse N">
+                        <div class="text-xs text-surface-200/40 mb-1">Concourse N</div>
+                        <div class="text-sm font-bold text-neon-green zone-status" data-i18n="copilot.status.optimal">Optimal</div>
+                    </div>
+                    <div class="bg-surface-800/60 rounded-xl p-4 border border-white/5 text-center" data-zone="Concourse S">
+                        <div class="text-xs text-surface-200/40 mb-1">Concourse S</div>
+                        <div class="text-sm font-bold text-neon-green zone-status" data-i18n="copilot.status.optimal">Optimal</div>
+                    </div>
+                </div>
+
+                <!-- AI Insights -->
+                <div class="mt-6 glass-card p-5 border-white/5">
+                    <h3 class="text-sm font-bold mb-3 flex items-center gap-2">
+                        <span aria-hidden="true">💡</span> <span data-i18n="copilot.insights_title">AI Insights</span>
+                    </h3>
+                    <ul id="ai-insights" class="space-y-2 text-sm text-surface-200/60">
+                        <li data-i18n="copilot.insights_loading">Loading insights…</li>
+                    </ul>
+                </div>
+
+                <!-- Routing Advice -->
+                <div class="mt-4 glass-card p-5 border-white/5">
+                    <h3 class="text-sm font-bold mb-3 flex items-center gap-2">
+                        <span aria-hidden="true">🚪</span> <span data-i18n="copilot.routing_title">Gate Routing</span>
+                    </h3>
+                    <p id="routing-advice" class="text-sm text-surface-200/60" data-i18n="copilot.routing_loading">Loading routing advice…</p>
+                </div>
+            </section>
+
+            <!-- Sidebar -->
+            <section class="space-y-6" aria-label="Quick actions and weather">
+                <!-- Global Status -->
+                <div class="glass-card p-6 border-white/5">
+                    <h2 class="text-sm font-bold mb-3" data-i18n="copilot.global_title">Global Stadium Status</h2>
+                    <div id="global-status" class="flex items-center gap-3">
+                        <span class="w-3 h-3 rounded-full bg-neon-green animate-pulse" id="global-status-dot" aria-hidden="true"></span>
+                        <span class="text-xl font-display font-bold" id="global-status-text" data-i18n="copilot.status.optimal">Optimal</span>
+                    </div>
+                    <p class="text-xs text-surface-200/30 mt-2" data-i18n="copilot.prediction_label">Predicted in 15 min:</p>
+                    <p id="predicted-status" class="text-sm font-medium text-surface-200/60 mt-1">—</p>
+                </div>
+
+                <!-- Weather -->
+                <div class="glass-card p-6 border-white/5">
+                    <h2 class="text-sm font-bold mb-3 flex items-center gap-2">
+                        <span aria-hidden="true">🌤️</span> <span data-i18n="copilot.weather_title">Weather</span>
+                    </h2>
+                    <div id="weather-info" class="text-sm text-surface-200/60">
+                        <p data-i18n="copilot.weather_loading">Loading weather…</p>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="glass-card p-6 border-white/5">
+                    <h2 class="text-sm font-bold mb-3" data-i18n="copilot.quick_title">Quick Actions</h2>
+                    <div class="space-y-3">
+                        <a href="map.html" class="block bg-surface-800 hover:bg-surface-700 p-3 rounded-xl border border-white/5 transition-colors text-sm font-medium" data-i18n="copilot.open_map">
+                            🗺️ Open Live Map
+                        </a>
+                        <a href="volunteer.html" class="block bg-surface-800 hover:bg-surface-700 p-3 rounded-xl border border-white/5 transition-colors text-sm font-medium" data-i18n="copilot.open_hub">
+                            🤝 Volunteer Hub
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Predicted Status 15min -->
+                <div class="glass-card p-6 border-white/5">
+                    <h2 class="text-sm font-bold mb-3 flex items-center gap-2">
+                        <span aria-hidden="true">🔮</span> <span data-i18n="copilot.predictions_title">Zone Predictions (15 min)</span>
+                    </h2>
+                    <div id="predictions-grid" class="space-y-2 text-sm">
+                        <p class="text-surface-200/40" data-i18n="copilot.predictions_loading">Loading predictions…</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        document.getElementById('logout-btn').addEventListener('click', () => Auth.logout());
+
+        const langSelector = document.getElementById('lang-selector');
+        if (langSelector) {
+            langSelector.value = I18N.getStoredLanguage();
+            langSelector.addEventListener('change', (e) => {
+                I18N.updateLanguage(e.target.value);
+                refreshAnalysis();
+            });
+        }
+
+        try {
+            await initFirebase();
+            Auth.initAuthListener(async (user) => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                initCopilotPage();
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    });
+
+    function initCopilotPage() {
+        let _refreshTimer = null;
+
+        function t(key) {
+            return window.I18N ? window.I18N.t(key) : key;
+        }
+
+        async function authedFetch(path, opts = {}) {
+            return fetch(CONFIG.apiUrl(path), {
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                ...opts,
+            });
+        }
+
+        const locationSelect = document.getElementById('copilot-location');
+        const refreshBtn = document.getElementById('refresh-btn');
+
+        refreshBtn.addEventListener('click', refreshAnalysis);
+        locationSelect.addEventListener('change', refreshAnalysis);
+
+        async function refreshAnalysis() {
+            const actionCard = document.getElementById('action-card');
+            const actionIcon = document.getElementById('action-icon');
+            actionCard.innerHTML = '<p class="text-neon-blue text-sm animate-pulse">' + t('copilot.analyzing') + '</p>';
+            actionIcon.textContent = '⏳';
+
+            try {
+                const zones = [
+                    { name: "Gate A", occupancy: Math.floor(Math.random() * 4000) + 500, capacity: 5000, status: "Moderate" },
+                    { name: "Gate B", occupancy: Math.floor(Math.random() * 3000) + 200, capacity: 5000, status: "Optimal" },
+                    { name: "Gate C", occupancy: Math.floor(Math.random() * 5000) + 1000, capacity: 5000, status: "Congested" },
+                    { name: "Gate D", occupancy: Math.floor(Math.random() * 2000) + 300, capacity: 5000, status: "Optimal" },
+                    { name: "VIP Entrance", occupancy: Math.floor(Math.random() * 500) + 50, capacity: 800, status: "Optimal" },
+                    { name: "Food Court", occupancy: Math.floor(Math.random() * 3000) + 1000, capacity: 4000, status: "Moderate" },
+                    { name: "Concourse North", occupancy: Math.floor(Math.random() * 2000) + 500, capacity: 3000, status: "Optimal" },
+                    { name: "Concourse South", occupancy: Math.floor(Math.random() * 1500) + 300, capacity: 3000, status: "Optimal" },
+                ];
+
+                const res = await authedFetch('/ai/crowd/analyze', {
+                    method: 'POST',
+                    body: JSON.stringify({ zones }),
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error?.message || 'Analysis failed');
+
+                const analysis = data.data;
+                renderActionCard(analysis);
+                renderZoneGrid(analysis);
+                renderInsights(analysis);
+                renderRoutingAdvice(analysis);
+                renderGlobalStatus(analysis);
+                renderPredictions(analysis);
+                loadWeather();
+            } catch (err) {
+                console.error('Copilot refresh error:', err);
+                actionIcon.textContent = '⚠️';
+                actionCard.innerHTML = '<p class="text-red-400 text-sm">' + t('copilot.error') + '</p>';
+            }
+        }
+
+        function renderActionCard(analysis) {
+            const actionCard = document.getElementById('action-card');
+            const actionIcon = document.getElementById('action-icon');
+            const actionTimestamp = document.getElementById('action-timestamp');
+            const actionStatusBadge = document.getElementById('action-status-badge');
+
+            const lang = I18N.getStoredLanguage();
+            let actionText = 'Continue normal operations.';
+
+            if (analysis.recommended_action && typeof analysis.recommended_action === 'object') {
+                actionText = analysis.recommended_action[lang]
+                    || analysis.recommended_action['en']
+                    || Object.values(analysis.recommended_action)[0]
+                    || actionText;
+            } else if (typeof analysis.recommended_action === 'string') {
+                actionText = analysis.recommended_action;
+            }
+
+            const statusMap = {
+                'Optimal': { icon: '✅', color: 'text-neon-green', i18n: 'copilot.status.optimal' },
+                'Moderate': { icon: '⚠️', color: 'text-yellow-400', i18n: 'copilot.status.moderate' },
+                'Congested': { icon: '🔴', color: 'text-red-400', i18n: 'copilot.status.congested' },
+                'Critical': { icon: '🚨', color: 'text-red-500', i18n: 'copilot.status.critical' },
+            };
+            const status = statusMap[analysis.global_status] || statusMap['Optimal'];
+
+            actionIcon.textContent = status.icon;
+            actionCard.innerHTML = '<p class="text-white text-base font-medium leading-relaxed">' + actionText + '</p>';
+
+            actionStatusBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full ' + status.color.replace('text-', 'bg-') + ' animate-pulse" aria-hidden="true"></span><span class="' + status.color + '">' + (analysis.global_status || 'Optimal') + '</span>';
+
+            const now = new Date();
+            actionTimestamp.textContent = now.toLocaleTimeString();
+        }
+
+        function renderZoneGrid(analysis) {
+            const grid = document.getElementById('zone-grid');
+            const statusColorMap = {
+                'Optimal': 'text-neon-green',
+                'Moderate': 'text-yellow-400',
+                'Congested': 'text-red-400',
+                'Critical': 'text-red-500',
+            };
+            const predictions = analysis.predicted_status_15min || {};
+            const cards = grid.querySelectorAll('[data-zone]');
+
+            cards.forEach(card => {
+                const zone = card.getAttribute('data-zone');
+                const statusEl = card.querySelector('.zone-status');
+                const predicted = predictions[zone];
+                if (predicted) {
+                    const color = statusColorMap[predicted] || 'text-neon-green';
+                    statusEl.className = 'text-sm font-bold ' + color + ' zone-status';
+                    statusEl.textContent = predicted;
+                }
+            });
+        }
+
+        function renderInsights(analysis) {
+            const insightsEl = document.getElementById('ai-insights');
+            const insights = analysis.insights || [];
+            insightsEl.innerHTML = '';
+            if (insights.length === 0) {
+                insightsEl.innerHTML = '<li class="text-surface-200/40">No insights available.</li>';
+                return;
+            }
+            insights.forEach(insight => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start gap-2';
+                li.innerHTML = '<span class="text-neon-blue mt-0.5" aria-hidden="true">→</span><span>' + insight + '</span>';
+                insightsEl.appendChild(li);
+            });
+        }
+
+        function renderRoutingAdvice(analysis) {
+            const el = document.getElementById('routing-advice');
+            el.textContent = analysis.routing_advice || 'No routing advice available.';
+        }
+
+        function renderGlobalStatus(analysis) {
+            const dot = document.getElementById('global-status-dot');
+            const text = document.getElementById('global-status-text');
+            const colorMap = {
+                'Optimal': 'bg-neon-green',
+                'Moderate': 'bg-yellow-400',
+                'Congested': 'bg-red-400',
+                'Critical': 'bg-red-500',
+            };
+            dot.className = 'w-3 h-3 rounded-full animate-pulse ' + (colorMap[analysis.global_status] || 'bg-neon-green');
+            text.textContent = analysis.global_status || 'Optimal';
+        }
+
+        function renderPredictions(analysis) {
+            const el = document.getElementById('predictions-grid');
+            const predictions = analysis.predicted_status_15min || {};
+            const colorMap = {
+                'Optimal': 'text-neon-green',
+                'Moderate': 'text-yellow-400',
+                'Congested': 'text-red-400',
+                'Critical': 'text-red-500',
+            };
+
+            const entries = Object.entries(predictions);
+            if (entries.length === 0) {
+                el.innerHTML = '<p class="text-surface-200/40">No predictions available.</p>';
+                return;
+            }
+            el.innerHTML = '';
+            entries.forEach(([zone, status]) => {
+                const color = colorMap[status] || 'text-surface-200/60';
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-2 bg-surface-800/60 rounded-lg';
+                div.innerHTML = '<span class="text-surface-200/60">' + zone + '</span><span class="font-medium ' + color + '">' + status + '</span>';
+                el.appendChild(div);
+            });
+        }
+
+        async function loadWeather() {
+            const el = document.getElementById('weather-info');
+            try {
+                const res = await authedFetch('/ai/weather');
+                const data = await res.json();
+                if (res.ok && data.data) {
+                    const w = data.data;
+                    el.innerHTML = '<p class="font-medium">' + (w.summary || 'Unknown') + '</p>' +
+                        '<p class="text-xs mt-1">' + (w.temperature_c != null ? w.temperature_c + '°C' : '') +
+                        (w.wind_speed_kmh != null ? ' · ' + w.wind_speed_kmh + ' km/h' : '') + '</p>' +
+                        (w.operational_note ? '<p class="text-xs mt-1 text-surface-200/40">' + w.operational_note + '</p>' : '');
+                }
+            } catch (e) {
+                el.innerHTML = '<p class="text-surface-200/40">Weather unavailable.</p>';
+            }
+        }
+
+        refreshAnalysis();
+    }
+    </script>
+</body>
+</html>

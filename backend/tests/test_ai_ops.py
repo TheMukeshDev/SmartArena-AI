@@ -310,3 +310,67 @@ class TestBoundaryValidation:
                 },
             )
             assert res.status_code in (400, 422)
+
+
+# ── Multilingual Crowd Analysis Tests ─────────────────────────────────────
+
+
+class TestMultilingualCrowdAnalysis:
+    """Verify multilingual recommended_action is parsed and surfaced correctly."""
+
+    def test_crowd_analysis_returns_multilingual_action(self, client):
+        """Crowd analysis endpoint returns recommended_action as a language-keyed dict."""
+        multilingual_response = {
+            "global_status": "Congested",
+            "insights": ["Gate C is overcrowded", "Food court is filling up"],
+            "routing_advice": "Redirect fans to Gate D",
+            "predicted_status_15min": {"Gate A": "Moderate", "Gate C": "Critical"},
+            "recommended_action": {
+                "en": "Open Gate D early and redirect fans from Zone 3",
+                "es": "Abre la Puerta D temprano y redirige a los aficionados de la Zona 3",
+                "fr": "Ouvrez la Porte D plus tôt et redirigez les supporters de la Zone 3",
+                "ar": "افتح البوتة D مبكراً ووجّه المشجعين من المنطقة 3",
+                "hi": "गेट D जल्दी खोलें और ज़ोन 3 से प्रशंसकों को पुनर्निर्देशित करें",
+            },
+        }
+
+        with (
+            patch(
+                "app.services.ai_service.AIService.process_crowd_analysis"
+            ) as mock_process,
+            patch("app.services.ai_service.get_firestore_client"),
+        ):
+            mock_process.return_value = multilingual_response
+
+            client.set_cookie("session", "fake")
+            with patch(
+                "app.middleware.auth.auth.verify_session_cookie",
+                return_value={"uid": "123"},
+            ):
+                res = client.post("/api/v1/ai/crowd/analyze", json={"zones": []})
+                assert res.status_code == 200
+                data = json.loads(res.data)
+
+                action = data["data"]["recommended_action"]
+                assert isinstance(action, dict)
+                assert "en" in action
+                assert "es" in action
+                assert "fr" in action
+                assert "ar" in action
+                assert "hi" in action
+                assert "Gate D" in action["en"]
+
+    def test_crowd_analysis_fallback_has_multilingual_keys(self, client):
+        """Gemini fallback dict contains all 5 language keys."""
+        from app.ai.gemini import analyze_crowd_data
+        import asyncio
+
+        async def _run():
+            return await analyze_crowd_data([])
+
+        with patch("app.ai.gemini._get_client", return_value=None):
+            result = asyncio.run(_run())
+
+        assert isinstance(result["recommended_action"], dict)
+        for lang in ["en", "es", "fr", "ar", "hi"]:
+            assert lang in result["recommended_action"]

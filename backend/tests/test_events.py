@@ -5,6 +5,7 @@ import subprocess
 import sys
 import tempfile
 import textwrap
+import time
 
 
 def test_sse_streams_incident(app, client):
@@ -138,7 +139,11 @@ def test_cross_process_incident_delivery():
 
 
 def test_cross_process_sequential_delivery():
-    """Multiple subprocesses each call push_incident(); main process sees all."""
+    """Multiple subprocesses each call push_incident(); main process sees all.
+
+    Uses a polling loop (retry every 0.1s, max 5s) to handle WAL flush
+    timing across processes.
+    """
     with tempfile.TemporaryDirectory() as tmpdir:
         db_path = os.path.join(tmpdir, "events_test.db")
 
@@ -150,12 +155,18 @@ def test_cross_process_sequential_delivery():
         for inc in incidents:
             _push_via_app_subprocess(db_path, inc)
 
-        conn = sqlite3.connect(db_path)
-        conn.execute("PRAGMA journal_mode=WAL")
-        rows = conn.execute(
-            "SELECT id, incident_json FROM incidents WHERE id > 0 ORDER BY id"
-        ).fetchall()
-        conn.close()
+        deadline = time.monotonic() + 5
+        rows = []
+        while time.monotonic() < deadline:
+            conn = sqlite3.connect(db_path)
+            conn.execute("PRAGMA journal_mode=WAL")
+            rows = conn.execute(
+                "SELECT id, incident_json FROM incidents WHERE id > 0 ORDER BY id"
+            ).fetchall()
+            conn.close()
+            if len(rows) >= 5:
+                break
+            time.sleep(0.1)
 
         assert len(rows) == 5
         for i, (_, raw) in enumerate(rows):

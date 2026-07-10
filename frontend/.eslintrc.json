@@ -19,11 +19,14 @@
         "initFirebase": "writable",
         "showToast": "writable",
         "getAuth": "writable",
-        "getDb": "writable"
+        "getDb": "writable",
+        "google": "readonly",
+        "StadiumMap": "readonly",
+        "__GOOGLE_MAPS_API_KEY__": "readonly"
     },
     "rules": {
         "no-redeclare": "off",
-        "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_|^Admin$|^Auth$|^initFirebase$|^getDb$|^getAuth$" }],
+        "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_|^Admin$|^Auth$|^initFirebase$|^getDb$|^getAuth$|^StadiumMap$" }],
         "no-console": "off",
         "eqeqeq": ["error", "always"],
         "no-eval": "error",

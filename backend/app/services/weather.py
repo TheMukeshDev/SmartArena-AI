@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
 
-STADIUM_LAT = 25.9542
-STADIUM_LON = -80.2391
+STADIUM_LAT = 22.5680
+STADIUM_LON = 88.4055
 
 WEATHER_CACHE_TTL = 300  # 5 minutes
 

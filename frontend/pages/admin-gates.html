@@ -59,6 +59,20 @@
 
         <div id="gates-content" class="hidden space-y-4" role="list" aria-label="Stadium gates"></div>
 
+        <!-- Dataset Import Section -->
+        <section class="mt-10 glass-card p-6 border-white/5" aria-label="Import stadium data">
+            <h2 class="text-lg font-bold mb-2">Import Dataset</h2>
+            <p class="text-sm text-surface-200/50 mb-4">Upload CSV or JSON with zone occupancy, gate status, or incident logs to populate the system.</p>
+            <div id="upload-zone" class="border-2 border-dashed border-white/10 rounded-xl p-8 text-center hover:border-arena-400/50 transition-colors cursor-pointer" tabindex="0" role="button" aria-label="Drop files here or click to browse">
+                <p class="text-surface-200/40 text-sm mb-3">Drag &amp; drop a CSV or JSON file here, or click to browse</p>
+                <input type="file" id="dataset-file" accept=".csv,.json" class="hidden" aria-label="Choose dataset file">
+                <button id="upload-btn" class="bg-arena-500 hover:bg-arena-600 text-white text-sm font-medium py-2 px-6 rounded-lg transition-colors hidden">Upload</button>
+            </div>
+            <div id="upload-result" class="mt-4 hidden">
+                <p id="upload-result-text" class="text-sm"></p>
+            </div>
+        </section>
+
         <div id="gate-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Edit gate">
             <div class="glass-card p-6 w-full max-w-md mx-4 border-arena-500/30">
                 <h2 class="text-lg font-bold mb-4">Edit Gate: <span id="modal-gate-name"></span></h2>
@@ -105,6 +119,7 @@
                             return;
                         }
                         Admin.initGatesPage();
+                        Admin.initUploadZone();
                     } catch (e) {
                         window.location.href = 'login.html';
                     }

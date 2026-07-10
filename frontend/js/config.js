@@ -25,6 +25,13 @@ const CONFIG = {
     measurementId: "G-J63FCNYD3E",
   },
 
+  // Google Maps API Key — injected by Vite define() from .env at build time.
+  // This key IS expected in the browser bundle; security is via
+  // HTTP-referer restrictions in Google Cloud Console, not secrecy.
+  GOOGLE_MAPS_API_KEY: typeof __GOOGLE_MAPS_API_KEY__ !== 'undefined'
+    ? __GOOGLE_MAPS_API_KEY__
+    : "YOUR_GOOGLE_MAPS_API_KEY",
+
   // API Version
   API_VERSION: "v1",
 
@@ -92,7 +99,9 @@ window.fetch = async function (resource, options) {
       }
     }
 
-    // 2. Attach CSRF Token for mutating requests
+      // 2. Attach CSRF Token for mutating requests (best-effort)
+    // CSRF is exempt on all auth-protected blueprints, but we still
+    // try to attach the token for any remaining unprotected endpoints.
     if (['POST', 'PUT', 'DELETE'].includes(options.method?.toUpperCase())) {
       if (!_csrfToken) {
         if (!_csrfFetchPromise) {
@@ -104,7 +113,8 @@ window.fetch = async function (resource, options) {
                 _csrfToken = data.csrf_token;
               }
             } catch (e) {
-              console.warn('[Fetch Interceptor] Failed to fetch CSRF token');
+              // Silently ignore — CSRF is exempt on auth-protected endpoints
+              _csrfToken = 'skip';
             } finally {
               _csrfFetchPromise = null;
             }
@@ -113,7 +123,7 @@ window.fetch = async function (resource, options) {
         await _csrfFetchPromise;
       }
       
-      if (_csrfToken) {
+      if (_csrfToken && _csrfToken !== 'skip') {
         options.headers = {
           ...options.headers,
           'X-CSRFToken': _csrfToken

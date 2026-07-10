@@ -37,8 +37,14 @@ ONLY with a raw JSON object containing:
 - "predicted_status_15min": (An object keyed by zone name, each value one of: Optimal,
   Moderate, Congested, Critical — your prediction of each zone's status in 15 minutes
   based on the trend)
-- "recommended_action": (A single concrete action the operations team should take now,
-  e.g. "Open Gate D early", "Redirect incoming fans from Zone 3 to Gate A")
+- "recommended_action": (An object keyed by language code with the SAME action translated
+  into each language. Keys: "en", "es", "fr", "ar", "hi". Each value is a single concrete
+  action the operations team or volunteer should take now, e.g.
+  "en": "Open Gate D early and redirect incoming fans from Zone 3 to Gate A",
+  "es": "Abre la Puerta D temprano y redirige a los aficionados de la Zona 3 a la Puerta A",
+  "fr": "Ouvrez la Porte D plus tôt et redirigez les supporters de la Zone 3 vers la Porte A",
+  "ar": "افتح البوابة D مبكراً ووجّه المشجعين من المنطقة 3 إلى البوابة A",
+  "hi": "गेट D जल्दी खोलें और ज़ोन 3 से आने वाले प्रशंसकों को गेट A पर पुनर्निर्देशित करें")
 
 Current Weather: {weather}
 Current Data: {data}

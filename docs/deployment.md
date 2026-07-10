@@ -6,7 +6,6 @@
 - Node.js 20+
 - Docker
 - Firebase CLI (`npm i -g firebase-tools`)
-- Google Cloud CLI (`gcloud`)
 
 ---
 
@@ -64,32 +63,23 @@ docker run -p 8080:8080 --env-file .env smartarena-ai-backend
 
 ---
 
-## Google Cloud Run Deployment
+## Production Deployment
+
+The application is deployed as:
+
+- **Frontend**: Firebase Hosting (`smartarena-ai-eaa94.web.app`)
+- **Backend**: Render.com (`https://smartarena-ai.onrender.com`)
+
+### Firebase Hosting
 
 ```bash
-# Authenticate
-gcloud auth login
-gcloud config set project YOUR_PROJECT_ID
-
-# Build and deploy
-gcloud run deploy smartarena-api \
-  --source ./backend \
-  --region asia-south1 \
-  --allow-unauthenticated \
-  --set-env-vars "FLASK_ENV=production"
-```
-
----
-
-## Firebase Hosting Deployment
-
-```bash
-# Login to Firebase
 firebase login
-
-# Deploy frontend
 firebase deploy --only hosting
 ```
+
+### Render.com
+
+The backend is deployed as a Web Service on Render.com using the `Dockerfile` in the `backend/` directory. Render auto-deploys from the `main` branch on push.
 
 ---
 

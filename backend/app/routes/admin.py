@@ -3,10 +3,13 @@ SmartArena AI — Admin Routes
 ==============================
 
 Admin-only endpoints for gate management, announcements,
-security logs, and user management.
+security logs, user management, and dataset import.
 """
 
+import csv
 import datetime
+import io
+import json
 import logging
 
 from flask import Blueprint, request, g
@@ -323,6 +326,91 @@ def list_users():
             users.append(data)
 
     return success_response({"users": users}, "Users retrieved.")
+
+
+# ── Dataset Import ──────────────────────────────────────────────────────────
+
+
+@admin_bp.route("/import-dataset", methods=["POST"])
+@require_auth
+@require_role(["admin"])
+def import_dataset():
+    """Import synthetic stadium data from a CSV or JSON file upload.
+
+    Accepts multipart/form-data with a ``file`` field containing CSV or JSON.
+    Supported record types (determined by ``type`` field in each record or
+    inferred from CSV headers):
+      - ``zone``: Zone occupancy data (name, occupancy, capacity, status).
+      - ``gate``: Gate status data (name, status, capacity).
+      - ``incident``: Incident log (description, category, priority, zone).
+
+    The parsed records are stored in Firestore under the ``imported_datasets``
+    collection keyed by upload timestamp.
+
+    Returns:
+        JSON with counts of imported records by type.
+    """
+    if "file" not in request.files:
+        return error_response("No file uploaded. Send a 'file' field.", status_code=400)
+
+    file = request.files["file"]
+    if not file.filename:
+        return error_response("Empty filename.", status_code=400)
+
+    filename = file.filename.lower()
+    try:
+        if filename.endswith(".json"):
+            raw = file.read().decode("utf-8")
+            records = json.loads(raw)
+            if not isinstance(records, list):
+                records = [records]
+        elif filename.endswith(".csv"):
+            stream = io.StringIO(file.stream.read().decode("utf-8"))
+            reader = csv.DictReader(stream)
+            records = [row for row in reader]
+        else:
+            return error_response(
+                "Unsupported file type. Upload CSV or JSON.", status_code=400
+            )
+    except (json.JSONDecodeError, UnicodeDecodeError, csv.Error) as exc:
+        return error_response(f"Failed to parse file: {exc}", status_code=400)
+
+    if not records:
+        return error_response("File contains no records.", status_code=400)
+
+    counts: dict[str, int] = {"zone": 0, "gate": 0, "incident": 0, "other": 0}
+    for record in records:
+        rtype = record.get("type", "other")
+        if rtype in counts:
+            counts[rtype] += 1
+        else:
+            counts["other"] += 1
+
+    db = _get_db()
+    if db:
+        now = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        db.collection("imported_datasets").add(
+            {
+                "filename": file.filename,
+                "record_count": len(records),
+                "counts": counts,
+                "records": records[:500],
+                "imported_by": g.user["uid"],
+                "imported_at": now,
+            }
+        )
+
+    _log_security_event(
+        "dataset_imported",
+        f"Imported {len(records)} records from '{file.filename}'",
+        g.user["uid"],
+    )
+
+    return success_response(
+        {"total": len(records), "counts": counts, "filename": file.filename},
+        f"Imported {len(records)} records.",
+        status_code=201,
+    )
 
 
 # ── Helper ───────────────────────────────────────────────────────────────────

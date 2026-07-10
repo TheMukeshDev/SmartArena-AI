@@ -43,6 +43,9 @@ class BaseConfig:
     # ── Gemini AI ───────────────────────────────────────────────────────
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
 
+    # ── Google Maps ─────────────────────────────────────────────────────
+    GOOGLE_MAPS_API_KEY: str = os.getenv("GOOGLE_MAPS_API_KEY", "")
+
     # ── CORS ────────────────────────────────────────────────────────────
     CORS_ORIGINS: list[str] = [
         origin.strip()

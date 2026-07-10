@@ -20,6 +20,7 @@ CSP_POLICY = {
         "https://cdn.jsdelivr.net",
         "https://fonts.googleapis.com",
         "https://apis.google.com",
+        "https://maps.googleapis.com",
     ],
     "style-src": [
         "'self'",
@@ -30,6 +31,7 @@ CSP_POLICY = {
         "'unsafe-inline'",
         "https://fonts.googleapis.com",
         "https://cdn.jsdelivr.net",
+        "https://maps.googleapis.com",
     ],
     "font-src": [
         "'self'",
@@ -41,6 +43,8 @@ CSP_POLICY = {
         "data:",
         "https://www.gstatic.com",
         "https://apis.google.com",
+        "https://maps.googleapis.com",
+        "https://maps.gstatic.com",
     ],
     "connect-src": [
         "'self'",
@@ -51,10 +55,12 @@ CSP_POLICY = {
         "https://firebaseremoteconfig.googleapis.com",
         "https://generativelanguage.googleapis.com",
         "https://googleapis.com",
+        "https://maps.googleapis.com",
     ],
     "frame-src": [
         "'self'",
         "https://apis.google.com",
+        "https://maps.google.com",
     ],
     "object-src": ["'none'"],
     "base-uri": ["'self'"],

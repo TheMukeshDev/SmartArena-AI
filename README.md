@@ -2,7 +2,7 @@
 
 # 🏟️ SmartArena AI
 
-### AI-Powered Smart Stadium Operations Platform — FIFA World Cup 2026
+### AI-Powered Volunteer Co-Pilot — FIFA World Cup 2026
 
 [![CI](https://github.com/themukeshdev/smartarena-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/themukeshdev/smartarena-ai/actions)
 [![Python](https://img.shields.io/badge/Python-3.12-3776ab?logo=python&logoColor=white)](https://python.org)
@@ -11,9 +11,9 @@
 [![Gemini](https://img.shields.io/badge/Gemini-AI-4285f4?logo=google&logoColor=white)](https://ai.google.dev)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**Real-time crowd intelligence · AI incident management · Sustainability tracking · Multilingual (EN/ES/FR/AR/HI)**
+**Built for under-trained stadium volunteers managing multilingual crowds in real time — crowd intelligence, incident response, and sustainability tracking in 5 languages.**
 
-[Live Demo](#) · [Documentation](docs/) · [Architecture](docs/architecture.md) · [API Docs](docs/api.md) · [PS4 Alignment](docs/ps-alignment.md)
+[Live Demo](#) · [Documentation](docs/) · [Architecture](docs/architecture.md) · [API Docs](docs/api.md) · [PS Alignment](docs/ps-alignment.md)
 
 </div>
 
@@ -21,7 +21,9 @@
 
 ## Problem Statement
 
-FIFA World Cup 2026 Challenge 4 — Develop an AI-powered platform for smart stadium operations at scale, handling crowd management, incident response, volunteer coordination, sustainability tracking, and multilingual support for diverse audiences across USA, Mexico, and Canada.
+FIFA World Cup 2026 Challenge 4 — An AI-powered platform built for **under-trained stadium volunteers** who must coordinate multilingual crowds in real time. The system provides a **Volunteer Co-Pilot** mode with live zone status, AI-generated recommended actions, and multilingual guidance across English, Spanish, French, Arabic, and Hindi — enabling volunteers to make confident decisions under pressure.
+
+**Why depth over breadth:** Every feature exists to support one persona (the volunteer) in one vertical (crowd management + multilingual coordination). Navigation, transport, sustainability, and admin capabilities are secondary features that feed data back into the volunteer's real-time awareness.
 
 ---
 
@@ -186,8 +188,8 @@ docker run -p 8080:8080 --env-file .env smartarena-ai
 ## Deployment
 
 See [Deployment Guide](docs/deployment.md) for full instructions on deploying to:
-- **Firebase Hosting** (Frontend)
-- **Google Cloud Run** (Backend)
+- **Firebase Hosting** (Frontend) — `smartarena-ai-eaa94.web.app`
+- **Render.com** (Backend) — `https://smartarena-ai.onrender.com`
 
 ---
 
@@ -233,6 +235,7 @@ For manual testing of Role-Based Access Control (RBAC) and dashboard panels, the
 | DELETE | `/api/v1/admin/announcements/<id>` | Delete announcement (admin) |
 | GET | `/api/v1/admin/security/logs` | List security audit logs (admin) |
 | GET | `/api/v1/admin/users` | List all users (admin) |
+| POST | `/api/v1/admin/import-dataset` | Import CSV/JSON stadium dataset (admin) |
 | GET | `/api/v1/events/incidents` | SSE stream for real-time incidents |
 
 ---

@@ -415,6 +415,44 @@ List security audit logs (admin actions, auth events).
 
 List all registered users (limited to 500).
 
+### POST `/api/v1/admin/import-dataset`
+
+Import synthetic stadium data from a CSV or JSON file (admin-only).
+
+**Request:** `multipart/form-data` with a `file` field containing CSV or JSON.
+
+**CSV Format:**
+```csv
+type,name,occupancy,capacity,status
+zone,Gate A,3200,5000,Moderate
+gate,Gate B,,5000,open
+incident,Spill in Section 12,Maintenance,Low,North Stand
+```
+
+**JSON Format:**
+```json
+[
+  {"type": "zone", "name": "Gate A", "occupancy": 3200, "capacity": 5000, "status": "Moderate"},
+  {"type": "gate", "name": "Gate B", "status": "open", "capacity": 5000},
+  {"type": "incident", "description": "Spill in Section 12", "category": "Maintenance", "priority": "Low", "zone": "North Stand"}
+]
+```
+
+**Response (201):**
+```json
+{
+  "success": true,
+  "data": {
+    "total": 3,
+    "counts": { "zone": 1, "gate": 1, "incident": 1, "other": 0 },
+    "filename": "stadium_data.csv"
+  },
+  "message": "Imported 3 records."
+}
+```
+
+**Supported record types:** `zone`, `gate`, `incident`, `other` (unclassified).
+
 ---
 
 ## Events (Server-Sent Events)

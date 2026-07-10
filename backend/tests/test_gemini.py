@@ -224,7 +224,13 @@ async def test_analyze_crowd_data_with_history():
                 "insights": ["North Stand filling rapidly"],
                 "routing_advice": "Route to Gate D",
                 "predicted_status_15min": {"North Stand": "Critical"},
-                "recommended_action": "Open overflow seating",
+                "recommended_action": {
+                    "en": "Open overflow seating",
+                    "es": "Abrir asientos adicionales",
+                    "fr": "Ouvrir des places supplémentaires",
+                    "ar": "افتح مقاعد إضافية",
+                    "hi": "अतिरिक्त सीटें खोलें",
+                },
             }
         )
         mock_client.models.generate_content.return_value = mock_response
@@ -234,7 +240,7 @@ async def test_analyze_crowd_data_with_history():
 
         assert res["global_status"] == "Congested"
         assert res["predicted_status_15min"]["North Stand"] == "Critical"
-        assert res["recommended_action"] == "Open overflow seating"
+        assert res["recommended_action"]["en"] == "Open overflow seating"
         assert len(res["insights"]) == 1
 
 
@@ -245,4 +251,4 @@ async def test_analyze_crowd_data_with_history_fallback_without_init(app):
         res = await analyze_crowd_data([], history=[{"zones": [], "timestamp": ""}])
         assert res["global_status"] == "Normal"
         assert res["predicted_status_15min"] == {}
-        assert res["recommended_action"] == "Continue normal operations."
+        assert res["recommended_action"]["en"] == "Continue normal operations."

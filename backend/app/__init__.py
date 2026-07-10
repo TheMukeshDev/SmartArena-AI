@@ -18,6 +18,9 @@ from app.middleware.ratelimit import init_ratelimit
 from app.middleware.security import init_security_headers
 from app.routes import register_blueprints
 from app.routes.auth import auth_bp
+from app.routes.ai_ops import ai_ops_bp
+from app.routes.events import events_bp
+from app.routes.admin import admin_bp
 from app.routes.errors import register_error_handlers
 
 
@@ -65,8 +68,14 @@ def create_app(config_name: str | None = None) -> Flask:
     register_blueprints(app)
 
     # ── Initialize CSRF Protection ──────────────────────────────────────
+    # All blueprints using @require_auth are exempt from CSRF because
+    # Firebase Bearer tokens provide CSRF protection (not sent automatically
+    # by browsers). CSRF is only needed for session/cookie-based auth.
     csrf = CSRFProtect(app)
     csrf.exempt(auth_bp)
+    csrf.exempt(ai_ops_bp)
+    csrf.exempt(events_bp)
+    csrf.exempt(admin_bp)
 
     # ── Initialize Compression ──────────────────────────────────────────
     Compress(app)

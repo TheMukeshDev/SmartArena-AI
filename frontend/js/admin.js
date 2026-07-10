@@ -239,11 +239,83 @@ const Admin = (() => {
         await loadLogs();
     }
 
+    // ── Dataset Import ─────────────────────────────────────────────────────
+    function initUploadZone() {
+        const zone = document.getElementById('upload-zone');
+        const fileInput = document.getElementById('dataset-file');
+        const uploadBtn = document.getElementById('upload-btn');
+        const resultEl = document.getElementById('upload-result');
+        const resultText = document.getElementById('upload-result-text');
+        if (!zone || !fileInput) return;
+
+        zone.addEventListener('click', () => fileInput.click());
+        zone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
+
+        zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('border-arena-400/50'); });
+        zone.addEventListener('dragleave', () => { zone.classList.remove('border-arena-400/50'); });
+        zone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            zone.classList.remove('border-arena-400/50');
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                showUploadBtn();
+            }
+        });
+
+        fileInput.addEventListener('change', showUploadBtn);
+
+        function showUploadBtn() {
+            if (fileInput.files.length) {
+                uploadBtn.classList.remove('hidden');
+                uploadBtn.textContent = 'Upload ' + fileInput.files[0].name;
+            }
+        }
+
+        uploadBtn.addEventListener('click', async () => {
+            if (!fileInput.files.length) return;
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Uploading...';
+            resultEl.classList.add('hidden');
+            try {
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                const token = window.firebase?.auth()?.currentUser;
+                const idToken = token ? await token.getIdToken() : null;
+                const headers = idToken ? { 'Authorization': 'Bearer ' + idToken } : {};
+                const res = await fetch(CONFIG.apiUrl('/admin/import-dataset'), {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers,
+                    body: formData,
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    resultEl.classList.remove('hidden');
+                    resultText.className = 'text-sm text-neon-green';
+                    resultText.textContent = 'Imported ' + data.data.total + ' records. Zones: ' + data.data.counts.zone + ', Gates: ' + data.data.counts.gate + ', Incidents: ' + data.data.counts.incident;
+                    showToast('Dataset imported successfully.', 'success');
+                } else {
+                    resultEl.classList.remove('hidden');
+                    resultText.className = 'text-sm text-red-400';
+                    resultText.textContent = data.error?.message || 'Upload failed.';
+                }
+            } catch (err) {
+                resultEl.classList.remove('hidden');
+                resultText.className = 'text-sm text-red-400';
+                resultText.textContent = 'Network error. Please try again.';
+            } finally {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = 'Upload';
+                fileInput.value = '';
+            }
+        });
+    }
+
     function escapeHtml(str) {
         const div = document.createElement('div');
         div.textContent = str;
         return div.innerHTML;
     }
 
-    return { initGatesPage, initAnnouncementsPage, initSecurityLogsPage };
+    return { initGatesPage, initAnnouncementsPage, initSecurityLogsPage, initUploadZone };
 })();
