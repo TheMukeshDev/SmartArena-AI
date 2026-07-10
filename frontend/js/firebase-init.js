@@ -26,7 +26,7 @@ async function initFirebase() {
     const response = await fetch(CONFIG.apiUrl("/config/firebase"), {
       method: "GET",
       headers: { Accept: "application/json" },
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(60000), // Increased to 60s for Render cold start
     });
 
     if (!response.ok) {
