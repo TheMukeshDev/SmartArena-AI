@@ -165,6 +165,45 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
+        // Fan Transport Suggestion Logic
+        const fanPlanBtn = document.getElementById('fan-plan-btn');
+        if (fanPlanBtn) {
+            fanPlanBtn.addEventListener('click', async () => {
+                const gate = document.getElementById('fan-gate').value || 'Gate C';
+                const time = document.getElementById('fan-time').value || '18:00';
+                
+                fanPlanBtn.disabled = true;
+                fanPlanBtn.textContent = 'Planning...';
+                const resultDiv = document.getElementById('fan-route-result');
+                const titleEl = document.getElementById('fan-route-title');
+
+                try {
+                    const res = await fetch(CONFIG.apiUrl("/ai/transport/suggest"), {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ gate: gate, arrival_time: time }),
+                        credentials: "include"
+                    });
+                    const result = await res.json();
+                    
+                    if (res.ok && result.data) {
+                        const data = result.data;
+                        titleEl.textContent = `${data.recommended_mode} (~${data.estimated_travel_time_minutes}m)`;
+                        resultDiv.innerHTML = `
+                            <p class="font-medium text-white mb-2">${data.directions}</p>
+                            <p class="text-xs"><strong>Backup:</strong> ${data.alternative}</p>
+                        `;
+                    }
+                } catch (err) {
+                    console.error(err);
+                    resultDiv.innerHTML = `<p class="text-red-400">Failed to plan route.</p>`;
+                } finally {
+                    fanPlanBtn.disabled = false;
+                    fanPlanBtn.textContent = 'Get AI Route';
+                }
+            });
+        }
+
         // Phase 9: AI Assistant Logic
         const chatToggle = document.getElementById('ai-chat-toggle');
         const chatWindow = document.getElementById('ai-chat-window');

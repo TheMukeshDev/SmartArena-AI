@@ -117,14 +117,23 @@
                         <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-neon-green">
                             🎟️ Fan Experience
                         </h2>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="bg-surface-800 p-4 rounded-xl border border-white/5">
-                                <h3 class="font-medium mb-1">Fastest Route to Seat</h3>
-                                <p class="text-sm text-surface-200/60">Enter via Gate C (2 min wait)</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="bg-surface-800 p-4 rounded-xl border border-white/5 flex flex-col justify-between">
+                                <div>
+                                    <h3 class="font-medium mb-3">Plan Arrival</h3>
+                                    <div class="space-y-3 mb-4">
+                                        <input type="text" id="fan-gate" placeholder="Target Gate (e.g., Gate C)" class="w-full bg-surface-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-neon-green outline-none">
+                                        <input type="time" id="fan-time" class="w-full bg-surface-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-neon-green outline-none">
+                                    </div>
+                                </div>
+                                <button id="fan-plan-btn" class="w-full bg-neon-green hover:bg-green-600 text-surface-950 font-bold py-2 rounded-lg transition-colors text-sm">Get AI Route</button>
                             </div>
-                            <div class="bg-surface-800 p-4 rounded-xl border border-white/5">
-                                <h3 class="font-medium mb-1">Food Pre-order</h3>
-                                <p class="text-sm text-surface-200/60">Ready for pickup at Kiosk 4</p>
+                            
+                            <div class="bg-surface-800 p-4 rounded-xl border border-white/5 flex flex-col justify-center items-center text-center">
+                                <h3 class="font-medium mb-2" id="fan-route-title">AI Suggested Route</h3>
+                                <div id="fan-route-result" class="text-sm text-surface-200/60 w-full h-full flex flex-col justify-center">
+                                    <p>Enter your target gate and time to get a smart route.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
