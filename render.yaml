@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: smartarena-ai
+    runtime: python
+    region: oregon
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && gunicorn -c gunicorn.conf.py app:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: "3.12"
+      - key: WEB_CONCURRENCY
+        value: "2"
+      - key: MAX_THREADS
+        value: "8"

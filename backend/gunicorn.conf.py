@@ -1,13 +1,20 @@
 """
 SmartArena AI — Gunicorn Configuration
-========================================
+=======================================
 
-Production WSGI server configuration for Cloud Run deployment.
-Cloud Run provides PORT via environment variable.
+Production WSGI server configuration for Render / Cloud Run deployment.
+Render provides PORT via environment variable (default 10000).
+Cloud Run provides PORT via environment variable (default 8080).
 """
 
 import os
 import multiprocessing
+
+# ── WSGI Application ─────────────────────────────────────────────────────
+# Ensures gunicorn always finds the Flask app even when Render invokes
+# gunicorn without an explicit app module argument (e.g. its default
+# "gunicorn your_application.wsgi" start command).
+wsgi_app = "app:app"
 
 # ── Server Socket ───────────────────────────────────────────────────────
 bind = f"0.0.0.0:{os.getenv('PORT', '8080')}"
@@ -30,6 +37,7 @@ access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
 
 # ── Process Naming ──────────────────────────────────────────────────────
 proc_name = "smartarena-ai"
+
 
 # ── Server Hooks ────────────────────────────────────────────────────────
 def on_starting(server):
