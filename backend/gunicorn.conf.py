@@ -14,7 +14,9 @@ import multiprocessing
 # Ensures gunicorn always finds the Flask app even when Render invokes
 # gunicorn without an explicit app module argument (e.g. its default
 # "gunicorn your_application.wsgi" start command).
-wsgi_app = "app:app"
+# Note: app/__init__.py uses a factory (create_app), so "app:app" won't
+# work — gunicorn needs the wsgi.py shim which exposes the created instance.
+wsgi_app = "wsgi:app"
 
 # ── Server Socket ───────────────────────────────────────────────────────
 bind = f"0.0.0.0:{os.getenv('PORT', '8080')}"
