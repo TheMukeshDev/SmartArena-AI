@@ -8,8 +8,12 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
-  registerSW();
-  initOfflineDetection();
+  // Defer non-critical background services to free up the main thread
+  setTimeout(() => {
+    registerSW();
+    initOfflineDetection();
+    checkBackendHealth();
+  }, 1500);
 });
 
 /**
@@ -19,7 +23,6 @@ async function initApp() {
   animateHero();
   animateStats();
   animateFeatureCards();
-  checkBackendHealth();
   initNavScroll();
   initMobileMenu();
 }

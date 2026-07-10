@@ -1,5 +1,12 @@
 venv/
+.venv/
 .pytest_cache/
 __pycache__/
 *.pyc
 .coverage
+*.db
+.env
+.vscode/
+.idea/
+tests/
+firebase-credentials.json

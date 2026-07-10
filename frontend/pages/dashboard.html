@@ -9,7 +9,6 @@
     <title>Dashboard — SmartArena AI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
     <noscript>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -35,7 +34,7 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-lg overflow-hidden shadow-glow">
-                        <img src="/assets/images/logo.png" alt="SmartArena Logo" class="w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync">
+                        <img src="/assets/images/logo.webp" alt="SmartArena Logo" class="w-full h-full object-cover" fetchpriority="high" loading="eager" decoding="sync">
                     </div>
                     <span class="text-xl font-display font-bold">Smart<span class="gradient-text">Arena</span></span>
                 </div>
@@ -67,7 +66,7 @@
         <div id="dashboard-content" class="hidden">
             <header class="mb-8 relative rounded-2xl overflow-hidden glass-card">
                 <div class="absolute inset-0 z-0">
-                    <img src="/assets/images/hero.png" alt="" class="w-full h-full object-cover opacity-40" fetchpriority="high" loading="eager" decoding="sync">
+                    <img src="/assets/images/hero.webp" alt="" class="w-full h-full object-cover opacity-40" fetchpriority="high" loading="eager" decoding="sync">
                     <div class="absolute inset-0 bg-gradient-to-t from-surface-900 to-transparent"></div>
                 </div>
                 <div class="relative z-10 p-8 sm:p-12 text-center sm:text-left">
@@ -82,7 +81,7 @@
                 <div id="admin-panel" class="hidden col-span-full mb-6">
                     <div class="glass-card p-6 border-arena-500/30">
                         <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-arena-400">
-                            👑 <span data-i18n="dash.admin.title">Admin Controls</span>
+                            <span aria-hidden="true">👑</span> <span data-i18n="dash.admin.title">Admin Controls</span>
                         </h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             <a href="admin-gates.html" id="admin-gates-btn" class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-arena-500/50 transition-colors block">
@@ -113,7 +112,7 @@
                     <div class="glass-card p-6 border-neon-blue/30">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
                             <h2 class="text-lg font-bold flex items-center gap-2 text-neon-blue">
-                                🤝 <span data-i18n="dash.volunteer.title">Volunteer Tasks</span>
+                                <span aria-hidden="true">🤝</span> <span data-i18n="dash.volunteer.title">Volunteer Tasks</span>
                             </h2>
                             <div class="flex items-center gap-3">
                                 <select id="vol-location" aria-label="Select volunteer location" class="bg-surface-900 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-neon-blue">
@@ -145,8 +144,8 @@
 
                 <div id="fan-panel" class="hidden col-span-full mb-6">
                     <div class="glass-card p-6 border-neon-green/30">
-                        <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-neon-green">
-                            🎟️ <span data-i18n="dash.fan.title">Fan Experience</span>
+                            <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-neon-green">
+                             <span aria-hidden="true">🎟️</span> <span data-i18n="dash.fan.title">Fan Experience</span>
                         </h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div class="bg-surface-800 p-4 rounded-xl border border-white/5 flex flex-col justify-between">
@@ -191,7 +190,7 @@
                 <!-- Phase 6: AI Incident Reporting -->
                 <div class="col-span-full glass-card p-6 border-neon-pink/30 mt-4">
                     <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-neon-pink">
-                        🚨 AI Incident Reporter
+                         <span aria-hidden="true">🚨</span> AI Incident Reporter
                     </h2>
                     <form id="incident-form" class="space-y-4 max-w-2xl">
                         <div>
@@ -259,7 +258,7 @@
     </div>
 
     <!-- SSE Incident Toast Container -->
-    <div id="incident-toast-container"></div>
+    <div id="incident-toast-container" role="log" aria-live="polite" aria-label="Incident notifications"></div>
 
     <script src="../js/i18n.js"></script>
     <script src="../js/dashboard.js"></script>

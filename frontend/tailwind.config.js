@@ -51,7 +51,6 @@ module.exports = {
         "slide-up": "slideUp 0.6s ease-out",
         "slide-down": "slideDown 0.4s ease-out",
         "scale-in": "scaleIn 0.3s ease-out",
-        "pulse-glow": "pulseGlow 2s ease-in-out infinite",
         float: "float 3s ease-in-out infinite",
         shimmer: "shimmer 2s linear infinite",
       },
@@ -71,10 +70,6 @@ module.exports = {
         scaleIn: {
           "0%": { opacity: "0", transform: "scale(0.95)" },
           "100%": { opacity: "1", transform: "scale(1)" },
-        },
-        pulseGlow: {
-          "0%, 100%": { boxShadow: "0 0 20px rgba(51, 141, 255, 0.3)" },
-          "50%": { boxShadow: "0 0 40px rgba(51, 141, 255, 0.6)" },
         },
         float: {
           "0%, 100%": { transform: "translateY(0px)" },

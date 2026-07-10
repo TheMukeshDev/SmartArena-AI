@@ -1,5 +1,15 @@
-import asyncio
-from flask import Blueprint, request
+"""
+SmartArena AI — AI Operations & Navigation Routes
+===================================================
+
+Exposes endpoints for incident reporting, crowd analysis, volunteer assignment,
+sustainability optimization, chat, transport suggestions, navigation (zones,
+paths, accessible paths), and weather lookups.
+"""
+
+from flask import Blueprint, g, request
+from flask.wrappers import Response
+
 from app.services.ai_service import AIService
 from app.services.navigation import (
     ZONE_ADJACENCY,
@@ -26,9 +36,8 @@ ai_ops_bp = Blueprint("ai_ops", __name__)
 
 @ai_ops_bp.route("/incident", methods=["POST"])
 @require_auth
-async def report_incident():
-    from flask import g
-
+async def report_incident() -> tuple[Response, int]:
+    """Process and classify an incident report from the current user."""
     try:
         data = IncidentRequest(**request.get_json())
     except ValidationError as e:
@@ -44,9 +53,8 @@ async def report_incident():
 
 @ai_ops_bp.route("/crowd/analyze", methods=["POST"])
 @require_auth
-async def analyze_crowd():
-    from flask import g
-
+async def analyze_crowd() -> tuple[Response, int]:
+    """Analyze crowd density for the specified zones."""
     try:
         data = CrowdAnalyzeRequest(**request.get_json())
     except ValidationError as e:
@@ -59,24 +67,24 @@ async def analyze_crowd():
 
 @ai_ops_bp.route("/volunteer/assign", methods=["POST"])
 @require_auth
-async def assign_task():
-    from flask import g
-
+async def assign_task() -> tuple[Response, int]:
+    """Assign a volunteer task at the given location."""
     try:
         data = VolunteerAssignRequest(**request.get_json())
     except ValidationError as e:
         return error_response(message=str(e.errors()), status_code=400)
 
-    assignment = await AIService.process_volunteer_assignment(data.location, g.user["uid"])
+    assignment = await AIService.process_volunteer_assignment(
+        data.location, g.user["uid"]
+    )
 
     return success_response(assignment, "Task assigned.")
 
 
 @ai_ops_bp.route("/sustainability/optimize", methods=["POST"])
 @require_auth
-async def optimize_sus():
-    from flask import g
-
+async def optimize_sus() -> tuple[Response, int]:
+    """Optimise sustainability based on the provided metrics."""
     try:
         data = SustainabilityOptimizeRequest(**request.get_json())
     except ValidationError as e:
@@ -89,7 +97,8 @@ async def optimize_sus():
 
 @ai_ops_bp.route("/assistant/chat", methods=["POST"])
 @require_auth
-async def chat():
+async def chat() -> tuple[Response, int]:
+    """Handle a user chat query with enhanced navigation context."""
     try:
         data = ChatRequest(**request.get_json())
     except ValidationError as e:
@@ -112,19 +121,23 @@ async def chat():
 
 @ai_ops_bp.route("/transport/suggest", methods=["POST"])
 @require_auth
-async def transport_suggest():
+async def transport_suggest() -> tuple[Response, int]:
+    """Suggest transport options from a gate at a given arrival time."""
     try:
         data = TransportSuggestRequest(**request.get_json())
     except ValidationError as e:
         return error_response(message=str(e.errors()), status_code=400)
 
-    suggestion = await AIService.process_transport_suggestion(data.gate, data.arrival_time)
+    suggestion = await AIService.process_transport_suggestion(
+        data.gate, data.arrival_time
+    )
     return success_response(suggestion, "Transport suggestion ready.")
 
 
 @ai_ops_bp.route("/navigation/zones", methods=["GET"])
 @require_auth
-def get_zones():
+def get_zones() -> tuple[Response, int]:
+    """Return the full zone map including adjacency and sensory-friendly zones."""
     return success_response(
         {
             "zones": list(ZONE_ADJACENCY.keys()),
@@ -137,7 +150,8 @@ def get_zones():
 
 @ai_ops_bp.route("/navigation/path", methods=["GET"])
 @require_auth
-def get_path():
+def get_path() -> tuple[Response, int]:
+    """Find the shortest path between two zones."""
     start = request.args.get("start", "")
     end = request.args.get("end", "")
     if not start or not end:
@@ -154,7 +168,8 @@ def get_path():
 
 @ai_ops_bp.route("/weather", methods=["GET"])
 @require_auth
-async def get_weather():
+async def get_weather() -> tuple[Response, int]:
+    """Fetch current weather data for the venue."""
     w = await fetch_weather()
     if not w:
         return error_response(message="Weather data unavailable.", status_code=503)
@@ -173,7 +188,8 @@ async def get_weather():
 
 @ai_ops_bp.route("/navigation/path/accessible", methods=["GET"])
 @require_auth
-def get_accessible_path():
+def get_accessible_path() -> tuple[Response, int]:
+    """Find an accessible path between two zones (avoids stairs, etc.)."""
     start = request.args.get("start", "")
     end = request.args.get("end", "")
     if not start or not end:

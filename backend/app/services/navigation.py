@@ -1,4 +1,13 @@
-ZONE_ADJACENCY = {
+"""Navigation services for the SmartArena AI system.
+
+Provides BFS-based shortest-path computation between stadium zones,
+with optional support for accessibility-aware routing.
+"""
+
+from collections import deque
+from collections.abc import Callable
+
+ZONE_ADJACENCY: dict[str, list[str]] = {
     "North Stand": ["West Stand", "East Stand", "Gate A", "Gate B", "Concourse North"],
     "South Stand": ["West Stand", "East Stand", "Gate C", "Gate D", "Concourse South"],
     "West Stand": ["North Stand", "South Stand", "Gate A", "Gate D", "VIP Lounge"],
@@ -19,78 +28,117 @@ ZONE_ADJACENCY = {
     "Rideshare Drop-off": ["Gate D"],
 }
 
-ACCESSIBLE_EDGES: dict[tuple[str, str], bool] = {
-    ("North Stand", "West Stand"): True,
-    ("North Stand", "East Stand"): True,
-    ("North Stand", "Gate A"): True,
-    ("North Stand", "Gate B"): True,
-    ("North Stand", "Concourse North"): True,
-    ("South Stand", "West Stand"): True,
-    ("South Stand", "East Stand"): True,
-    ("South Stand", "Gate C"): True,
-    ("South Stand", "Gate D"): True,
-    ("South Stand", "Concourse South"): True,
-    ("West Stand", "North Stand"): True,
-    ("West Stand", "South Stand"): True,
-    ("West Stand", "Gate A"): True,
-    ("West Stand", "Gate D"): True,
-    ("West Stand", "VIP Lounge"): True,
-    ("East Stand", "North Stand"): True,
-    ("East Stand", "South Stand"): True,
-    ("East Stand", "Gate B"): True,
-    ("East Stand", "Gate C"): True,
-    ("East Stand", "Food Court East"): True,
-    ("Gate A", "North Stand"): True,
-    ("Gate A", "West Stand"): True,
-    ("Gate A", "Parking Lot A"): True,
-    ("Gate B", "North Stand"): True,
-    ("Gate B", "East Stand"): True,
-    ("Gate B", "Parking Lot B"): True,
-    ("Gate C", "South Stand"): True,
-    ("Gate C", "East Stand"): True,
-    ("Gate C", "Transit Hub"): True,
-    ("Gate D", "South Stand"): True,
-    ("Gate D", "West Stand"): True,
-    ("Gate D", "Rideshare Drop-off"): True,
-    ("Concourse North", "North Stand"): True,
-    ("Concourse North", "Food Court North"): True,
-    ("Concourse South", "South Stand"): True,
-    ("Concourse South", "Food Court South"): True,
-    ("VIP Lounge", "West Stand"): True,
-    ("Food Court East", "East Stand"): True,
-    ("Food Court North", "Concourse North"): True,
-    ("Food Court South", "Concourse South"): True,
-    ("Parking Lot A", "Gate A"): True,
-    ("Parking Lot B", "Gate B"): True,
-    ("Transit Hub", "Gate C"): True,
-    ("Rideshare Drop-off", "Gate D"): True,
+ACCESSIBLE_EDGES: set[tuple[str, str]] = {
+    ("North Stand", "West Stand"),
+    ("North Stand", "East Stand"),
+    ("North Stand", "Gate A"),
+    ("North Stand", "Gate B"),
+    ("North Stand", "Concourse North"),
+    ("South Stand", "West Stand"),
+    ("South Stand", "East Stand"),
+    ("South Stand", "Gate C"),
+    ("South Stand", "Gate D"),
+    ("South Stand", "Concourse South"),
+    ("West Stand", "North Stand"),
+    ("West Stand", "South Stand"),
+    ("West Stand", "Gate A"),
+    ("West Stand", "Gate D"),
+    ("West Stand", "VIP Lounge"),
+    ("East Stand", "North Stand"),
+    ("East Stand", "South Stand"),
+    ("East Stand", "Gate B"),
+    ("East Stand", "Gate C"),
+    ("East Stand", "Food Court East"),
+    ("Gate A", "North Stand"),
+    ("Gate A", "West Stand"),
+    ("Gate A", "Parking Lot A"),
+    ("Gate B", "North Stand"),
+    ("Gate B", "East Stand"),
+    ("Gate B", "Parking Lot B"),
+    ("Gate C", "South Stand"),
+    ("Gate C", "East Stand"),
+    ("Gate C", "Transit Hub"),
+    ("Gate D", "South Stand"),
+    ("Gate D", "West Stand"),
+    ("Gate D", "Rideshare Drop-off"),
+    ("Concourse North", "North Stand"),
+    ("Concourse North", "Food Court North"),
+    ("Concourse South", "South Stand"),
+    ("Concourse South", "Food Court South"),
+    ("VIP Lounge", "West Stand"),
+    ("Food Court East", "East Stand"),
+    ("Food Court North", "Concourse North"),
+    ("Food Court South", "Concourse South"),
+    ("Parking Lot A", "Gate A"),
+    ("Parking Lot B", "Gate B"),
+    ("Transit Hub", "Gate C"),
+    ("Rideshare Drop-off", "Gate D"),
 }
 
 SENSORY_FRIENDLY_ZONES: set[str] = {"VIP Lounge", "Food Court East"}
 
 
-def find_path(start: str, end: str) -> list[str]:
+def _bfs(
+    start: str, end: str, edge_filter: Callable[[str, str], bool] | None = None
+) -> list[str]:
+    """Run a breadth-first search from *start* to *end* in the zone graph.
+
+    When *edge_filter* is supplied it is called as ``edge_filter(node, neighbor)``
+    for each candidate edge; the edge is skipped when the callable returns
+    ``False``.
+
+    Returns the shortest path as a list of zone names, or an empty list when
+    no path exists.
+    """
     if start not in ZONE_ADJACENCY or end not in ZONE_ADJACENCY:
         return []
     if start == end:
         return [start]
 
     visited = {start}
-    queue = [[start]]
+    queue: deque[list[str]] = deque([[start]])
+
     while queue:
-        path = queue.pop(0)
+        path = queue.popleft()
         node = path[-1]
+
         for neighbor in ZONE_ADJACENCY.get(node, []):
+            if edge_filter is not None and not edge_filter(node, neighbor):
+                continue
             if neighbor == end:
                 return path + [neighbor]
             if neighbor not in visited:
                 visited.add(neighbor)
                 queue.append(path + [neighbor])
+
     return []
 
 
+def find_path(start: str, end: str) -> list[str]:
+    """Find the shortest path between *start* and *end* using all available edges.
+
+    Returns the path as a list of zone names, or an empty list if either zone
+    is unknown or no route exists.
+    """
+    return _bfs(start, end)
+
+
+def find_accessible_path(start: str, end: str) -> list[str]:
+    """Find the shortest accessible path between two zones.
+
+    Only edges listed in ``ACCESSIBLE_EDGES`` are traversed.  Returns the path
+    as a list of zone names, or an empty list when no accessible route exists.
+    """
+    return _bfs(start, end, lambda n, nb: (n, nb) in ACCESSIBLE_EDGES)
+
+
 def get_navigation_context(current_zone: str | None = None) -> dict:
-    context = {
+    """Return a dictionary of navigation-related data for the frontend.
+
+    When *current_zone* is provided the result also includes that zone and its
+    immediate neighbours.
+    """
+    context: dict = {
         "zones": list(ZONE_ADJACENCY.keys()),
         "adjacency": ZONE_ADJACENCY,
         "sensory_friendly_zones": list(SENSORY_FRIENDLY_ZONES),
@@ -99,26 +147,3 @@ def get_navigation_context(current_zone: str | None = None) -> dict:
         context["current_zone"] = current_zone
         context["reachable_zones"] = ZONE_ADJACENCY.get(current_zone, [])
     return context
-
-
-def find_accessible_path(start: str, end: str) -> list[str]:
-    if start not in ZONE_ADJACENCY or end not in ZONE_ADJACENCY:
-        return []
-    if start == end:
-        return [start]
-
-    visited = {start}
-    queue = [[start]]
-    while queue:
-        path = queue.pop(0)
-        node = path[-1]
-        for neighbor in ZONE_ADJACENCY.get(node, []):
-            edge = (node, neighbor)
-            if not ACCESSIBLE_EDGES.get(edge, False):
-                continue
-            if neighbor == end:
-                return path + [neighbor]
-            if neighbor not in visited:
-                visited.add(neighbor)
-                queue.append(path + [neighbor])
-    return []

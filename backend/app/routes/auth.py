@@ -117,9 +117,17 @@ def register_user() -> tuple[Response, int]:
     if g.user["uid"] != uid:
         return error_response("Cannot register a different user", status_code=403)
 
+    ALLOWED_ROLES = ["fan", "volunteer"]
     requested_role = data.get("role", "fan")
-    allowed_roles = ["fan", "volunteer", "admin"]
-    role = requested_role if requested_role in allowed_roles else "fan"
+    role = requested_role if requested_role in ALLOWED_ROLES else "fan"
+
+    # Only existing admins can assign admin role
+    if requested_role == "admin" and g.user.get("role") != "admin":
+        role = "fan"
+        logger.warning(
+            "Non-admin user %s attempted to self-assign admin role",
+            g.user["uid"],
+        )
 
     try:
         # 1. Set Custom Claims for RBAC
@@ -144,7 +152,9 @@ def register_user() -> tuple[Response, int]:
 
     except Exception as e:
         logger.error("Error registering user: %s", str(e))
-        return error_response("Registration failed. Please try again later.", status_code=500)
+        return error_response(
+            "Registration failed. Please try again later.", status_code=500
+        )
 
 
 @auth_bp.route("/me", methods=["GET"])

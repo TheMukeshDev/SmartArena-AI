@@ -10,7 +10,7 @@ import logging
 import traceback
 from typing import Any
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from flask.wrappers import Response
 from werkzeug.exceptions import HTTPException
 
@@ -59,7 +59,7 @@ def register_error_handlers(app: Flask) -> None:
         return _error_response(
             status_code=404,
             error_type="Not Found",
-            message=f"Resource not found: {request.path}",
+            message="The requested resource was not found",
         )
 
     @app.errorhandler(405)
@@ -68,7 +68,7 @@ def register_error_handlers(app: Flask) -> None:
         return _error_response(
             status_code=405,
             error_type="Method Not Allowed",
-            message=f"Method {request.method} is not allowed for {request.path}",
+            message="The requested method is not allowed for this resource",
         )
 
     @app.errorhandler(429)

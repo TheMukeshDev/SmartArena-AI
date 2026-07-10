@@ -133,7 +133,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (res.ok) {
                         const t = data.data;
                         
-                        // Create new task element
                         const li = document.createElement('li');
                         li.className = 'flex flex-col p-4 bg-surface-800 rounded-lg border border-neon-blue/30 animate-pulse';
                         
@@ -141,18 +140,28 @@ document.addEventListener('DOMContentLoaded', async () => {
                             ? 'bg-red-500/20 text-red-400' 
                             : 'bg-yellow-500/20 text-yellow-400';
 
-                        li.innerHTML = `
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="font-medium text-neon-blue">AI: ${t.task}</span>
-                                <span class="text-xs ${pClass} px-2 py-1 rounded">${t.priority} Priority</span>
-                            </div>
-                            <p class="text-sm text-surface-200/80">${t.description}</p>
-                        `;
+                        const header = document.createElement('div');
+                        header.className = 'flex items-center justify-between mb-1';
+
+                        const taskLabel = document.createElement('span');
+                        taskLabel.className = 'font-medium text-neon-blue';
+                        taskLabel.textContent = 'AI: ' + t.task;
+
+                        const priorityBadge = document.createElement('span');
+                        priorityBadge.className = 'text-xs ' + pClass + ' px-2 py-1 rounded';
+                        priorityBadge.textContent = t.priority + ' Priority';
+
+                        header.appendChild(taskLabel);
+                        header.appendChild(priorityBadge);
+
+                        const desc = document.createElement('p');
+                        desc.className = 'text-sm text-surface-200/80';
+                        desc.textContent = t.description;
+
+                        li.appendChild(header);
+                        li.appendChild(desc);
                         
-                        // Add to top of list
                         volTaskList.prepend(li);
-                        
-                        // Remove pulse after 2s
                         setTimeout(() => li.classList.remove('animate-pulse'), 2000);
                     }
                 } catch (err) {
@@ -188,15 +197,27 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     if (res.ok && result.data) {
                         const data = result.data;
-                        titleEl.textContent = `${data.recommended_mode} (~${data.estimated_travel_time_minutes}m)`;
-                        resultDiv.innerHTML = `
-                            <p class="font-medium text-white mb-2">${data.directions}</p>
-                            <p class="text-xs"><strong>Backup:</strong> ${data.alternative}</p>
-                        `;
+                        titleEl.textContent = data.recommended_mode + ' (~' + data.estimated_travel_time_minutes + 'm)';
+                        
+                        const dirP = document.createElement('p');
+                        dirP.className = 'font-medium text-white mb-2';
+                        dirP.textContent = data.directions;
+
+                        const altP = document.createElement('p');
+                        altP.className = 'text-xs';
+                        const altStrong = document.createElement('strong');
+                        altStrong.textContent = 'Backup: ';
+                        altP.appendChild(altStrong);
+                        altP.appendChild(document.createTextNode(data.alternative));
+
+                        resultDiv.replaceChildren(dirP, altP);
                     }
                 } catch (err) {
                     console.error(err);
-                    resultDiv.innerHTML = `<p class="text-red-400">Failed to plan route.</p>`;
+                    const errP = document.createElement('p');
+                    errP.className = 'text-red-400';
+                    errP.textContent = 'Failed to plan route.';
+                    resultDiv.replaceChildren(errP);
                 } finally {
                     fanPlanBtn.disabled = false;
                     fanPlanBtn.textContent = 'Get AI Route';
@@ -382,20 +403,53 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const inc = data.incident;
                 const toast = document.createElement('div');
                 toast.className = 'fixed top-4 right-4 z-[200] bg-surface-800 border border-neon-orange/50 rounded-xl p-4 shadow-2xl animate-slide-up max-w-sm';
-                toast.innerHTML = `
-                    <div class="flex items-start gap-3">
-                        <span class="text-2xl">🚨</span>
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="text-xs font-mono text-neon-orange">${inc.classification?.priority || 'UNKNOWN'}</span>
-                                <span class="text-xs text-surface-200/40">${inc.classification?.category || 'General'}</span>
-                            </div>
-                            <p class="text-sm text-white">${inc.description}</p>
-                            <p class="text-xs text-surface-200/40 mt-1">${inc.classification?.action || ''}</p>
-                        </div>
-                        <button onclick="this.parentElement.parentElement.remove()" class="text-surface-200/40 hover:text-white" aria-label="Dismiss">&times;</button>
-                    </div>
-                `;
+                toast.setAttribute('role', 'alert');
+                toast.setAttribute('aria-live', 'assertive');
+
+                const toastInner = document.createElement('div');
+                toastInner.className = 'flex items-start gap-3';
+
+                const alertIcon = document.createElement('span');
+                alertIcon.className = 'text-2xl';
+                alertIcon.setAttribute('aria-hidden', 'true');
+                alertIcon.textContent = '\u{1F6A8}';
+
+                const content = document.createElement('div');
+                content.className = 'flex-1';
+
+                const meta = document.createElement('div');
+                meta.className = 'flex items-center gap-2 mb-1';
+                const prioritySpan = document.createElement('span');
+                prioritySpan.className = 'text-xs font-mono text-neon-orange';
+                prioritySpan.textContent = inc.classification?.priority || 'UNKNOWN';
+                const categorySpan = document.createElement('span');
+                categorySpan.className = 'text-xs text-surface-200/40';
+                categorySpan.textContent = inc.classification?.category || 'General';
+                meta.appendChild(prioritySpan);
+                meta.appendChild(categorySpan);
+
+                const descP = document.createElement('p');
+                descP.className = 'text-sm text-white';
+                descP.textContent = inc.description;
+
+                const actionP = document.createElement('p');
+                actionP.className = 'text-xs text-surface-200/40 mt-1';
+                actionP.textContent = inc.classification?.action || '';
+
+                content.appendChild(meta);
+                content.appendChild(descP);
+                content.appendChild(actionP);
+
+                const dismissBtn = document.createElement('button');
+                dismissBtn.className = 'text-surface-200/40 hover:text-white';
+                dismissBtn.setAttribute('aria-label', 'Dismiss');
+                dismissBtn.textContent = '\u00D7';
+                dismissBtn.addEventListener('click', () => toast.remove());
+
+                toastInner.appendChild(alertIcon);
+                toastInner.appendChild(content);
+                toastInner.appendChild(dismissBtn);
+                toast.appendChild(toastInner);
                 toastContainer.appendChild(toast);
                 setTimeout(() => toast.remove(), 15000);
             } catch (err) {

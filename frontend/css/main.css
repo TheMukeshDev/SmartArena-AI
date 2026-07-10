@@ -190,4 +190,44 @@
   .text-glow {
     text-shadow: 0 0 20px rgba(51, 141, 255, 0.5);
   }
+
+  /* Composited Pulse Glow Animation */
+  .animate-pulse-glow {
+    position: relative;
+    z-index: 1;
+  }
+  .animate-pulse-glow::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 30px rgba(51, 141, 255, 0.4);
+    opacity: 0.5;
+    z-index: -1;
+    pointer-events: none;
+    animation: pulseGlowOpacity 2s ease-in-out infinite;
+    will-change: opacity, transform;
+  }
+  @keyframes pulseGlowOpacity {
+    0%, 100% {
+      opacity: 0.3;
+      transform: scale(0.98);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.02);
+    }
+  }
+}
+
+/* ── Accessibility: Reduced Motion ──────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

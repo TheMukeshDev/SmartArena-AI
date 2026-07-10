@@ -103,7 +103,7 @@ def _push_via_app_subprocess(db_path, incident):
     subprocess.run(
         [sys.executable, "-c", code],
         check=True,
-        timeout=15,
+        timeout=30,
         cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     )
 

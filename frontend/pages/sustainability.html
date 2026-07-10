@@ -10,7 +10,6 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
     <noscript>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -39,7 +38,7 @@
                 <div class="flex items-center gap-6">
                     <a href="dashboard.html" class="flex items-center gap-3">
                         <div class="w-8 h-8 rounded-lg overflow-hidden shadow-glow">
-                            <img src="/assets/images/logo.png" alt="SmartArena Logo" class="w-full h-full object-cover">
+                            <img src="/assets/images/logo.webp" alt="SmartArena Logo" class="w-full h-full object-cover">
                         </div>
                         <span class="text-xl font-display font-bold hidden sm:block">Smart<span class="gradient-text">Arena</span></span>
                     </a>
@@ -62,7 +61,7 @@
                 <p class="text-surface-200 text-sm">Real-time environmental impact and resource optimization.</p>
             </div>
             <button id="ai-optimize-btn" class="bg-neon-green hover:bg-green-600 text-surface-950 font-bold py-2 px-6 rounded-xl transition-colors shadow-glow flex items-center gap-2">
-                🌱 Run AI Eco-Optimizer
+                <span aria-hidden="true">🌱</span> Run AI Eco-Optimizer
             </button>
         </header>
 
@@ -78,21 +77,21 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <div class="glass-card p-6 border-t-2 border-arena-500">
                 <h3 class="text-sm font-medium text-surface-200 mb-4 flex justify-between">Power Consumption <span class="text-arena-400">-4%</span></h3>
-                <div class="relative h-48 w-full">
+                <div class="relative h-48 w-full" role="img" aria-label="Power consumption chart showing 4% reduction">
                     <canvas id="energyChart"></canvas>
                 </div>
             </div>
             
             <div class="glass-card p-6 border-t-2 border-neon-blue">
                 <h3 class="text-sm font-medium text-surface-200 mb-4 flex justify-between">Water Usage <span class="text-neon-blue">-1.2%</span></h3>
-                <div class="relative h-48 w-full">
+                <div class="relative h-48 w-full" role="img" aria-label="Water usage chart showing 1.2% reduction">
                     <canvas id="waterChart"></canvas>
                 </div>
             </div>
 
             <div class="glass-card p-6 border-t-2 border-neon-green">
                 <h3 class="text-sm font-medium text-surface-200 mb-4 flex justify-between">Waste Diverted <span class="text-neon-green">+14%</span></h3>
-                <div class="relative h-48 w-full">
+                <div class="relative h-48 w-full" role="img" aria-label="Waste diversion chart showing 14% improvement">
                     <canvas id="wasteChart"></canvas>
                 </div>
             </div>

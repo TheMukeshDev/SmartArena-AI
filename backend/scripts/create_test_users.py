@@ -4,7 +4,7 @@ import datetime
 import logging
 
 # Setup path so we can import from app
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from firebase_admin import auth, credentials, initialize_app
 from app.config.firebase import get_firestore_client
@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask app to load env and firebase setup
 app = create_app()
+
 
 def create_or_update_user(email, password, name, role):
     try:
@@ -29,26 +30,37 @@ def create_or_update_user(email, password, name, role):
             uid = user.uid
 
         # Set custom claims
-        auth.set_custom_user_claims(uid, {'role': role})
+        auth.set_custom_user_claims(uid, {"role": role})
         logger.info(f"Set role '{role}' in custom claims for {email}")
 
         # Update Firestore
         db = get_firestore_client()
         if db:
-            db.collection("users").document(uid).set({
-                "email": email,
-                "name": name,
-                "role": role,
-                "createdAt": datetime.datetime.now(datetime.timezone.utc).isoformat()
-            }, merge=True)
+            db.collection("users").document(uid).set(
+                {
+                    "email": email,
+                    "name": name,
+                    "role": role,
+                    "createdAt": datetime.datetime.now(
+                        datetime.timezone.utc
+                    ).isoformat(),
+                },
+                merge=True,
+            )
             logger.info(f"Set role '{role}' in Firestore for {email}")
-        
+
     except Exception as e:
         logger.error(f"Error processing user {email}: {str(e)}")
 
+
 with app.app_context():
-    create_or_update_user("admin@smartarena.ai", "Admin123!", "Test Admin", "admin")
-    create_or_update_user("volunteer@smartarena.ai", "Volunteer123!", "Test Volunteer", "volunteer")
-    create_or_update_user("fan@smartarena.ai", "Fan123!", "Test Fan", "fan")
+    admin_pw = os.environ.get("TEST_ADMIN_PASSWORD", "ChangeMeInProd!")
+    volunteer_pw = os.environ.get("TEST_VOLUNTEER_PASSWORD", "ChangeMeInProd!")
+    fan_pw = os.environ.get("TEST_FAN_PASSWORD", "ChangeMeInProd!")
+    create_or_update_user("admin@smartarena.ai", admin_pw, "Test Admin", "admin")
+    create_or_update_user(
+        "volunteer@smartarena.ai", volunteer_pw, "Test Volunteer", "volunteer"
+    )
+    create_or_update_user("fan@smartarena.ai", fan_pw, "Test Fan", "fan")
 
 logger.info("Done creating test users.")

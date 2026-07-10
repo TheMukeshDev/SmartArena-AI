@@ -10,7 +10,6 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
     <noscript>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -42,7 +41,7 @@
         <div class="text-center mb-8">
             <a href="../index.html" class="inline-flex items-center gap-3">
                 <div class="w-12 h-12 rounded-xl overflow-hidden shadow-glow">
-                    <img src="/assets/images/logo.png" alt="SmartArena Logo" class="w-full h-full object-cover">
+                    <img src="/assets/images/logo.webp" alt="SmartArena Logo" class="w-full h-full object-cover">
                 </div>
                 <span class="text-2xl font-display font-bold text-white">Smart<span class="gradient-text">Arena</span></span>
             </a>
@@ -71,12 +70,11 @@
                 </div>
                 <div>
                     <label for="role" class="block text-sm font-medium text-surface-200/60 mb-2">Role</label>
-                    <select id="role" class="w-full bg-surface-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-arena-500 focus:ring-1 focus:ring-arena-500">
+                    <select id="role" class="w-full bg-surface-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-arena-500 focus:ring-1 focus:ring-arena-500" aria-describedby="role-hint">
                         <option value="fan">Fan</option>
                         <option value="volunteer">Volunteer</option>
-                        <!-- Admin role should typically not be self-selectable, but included for demo -->
-                        <option value="admin">Admin</option>
                     </select>
+                    <p id="role-hint" class="text-xs text-surface-200/40 mt-1">Admin role must be assigned by an existing administrator.</p>
                 </div>
                 <button type="submit" id="signup-btn" class="w-full bg-arena-500 hover:bg-arena-600 text-white font-medium py-3 rounded-xl transition-colors mt-2">
                     Create Account

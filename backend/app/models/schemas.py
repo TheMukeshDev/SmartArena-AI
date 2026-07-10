@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 
 class IncidentRequest(BaseModel):
@@ -34,7 +34,7 @@ class ChatRequest(BaseModel):
     preferred_language: str = Field(
         default="en", description="Preferred response language (en/hi/es)."
     )
-    previous_interaction_id: str = Field(
+    previous_interaction_id: Optional[str] = Field(
         default=None, description="ID of the previous interaction for multi-turn chat."
     )
 

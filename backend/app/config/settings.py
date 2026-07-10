@@ -16,11 +16,11 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 
-def _parse_limit(val: str) -> int:
-    val = os.getenv("RATE_LIMIT_DEFAULT", val)
-    if "/" in val:
-        val = val.split("/")[0]
-    return int(val)
+def _parse_limit(default: str) -> int:
+    raw = os.getenv("RATE_LIMIT_DEFAULT", default)
+    if "/" in raw:
+        raw = raw.split("/")[0]
+    return int(raw)
 
 
 class BaseConfig:
@@ -73,7 +73,7 @@ class BaseConfig:
         False  # Disable strict referer check for cross-origin frontend
     )
     WTF_CSRF_CHECK_DEFAULT: bool = (
-        False  # Disable CSRF checks by default (redundant with Bearer tokens & breaks without 3rd-party cookies)
+        False  # Per-endpoint: state-changing routes use @csrf.exempt
     )
 
     # ── Logging ─────────────────────────────────────────────────────────

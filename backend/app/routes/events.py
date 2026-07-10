@@ -65,7 +65,7 @@ def _get_db(db_path: str) -> sqlite3.Connection:
 @events_bp.route("/incidents", methods=["GET"])
 @require_auth
 @require_role(["admin", "volunteer"])
-def stream_incidents():
+def stream_incidents() -> Response:
     from flask import current_app
 
     testing = current_app.config.get("TESTING", False)
