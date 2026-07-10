@@ -117,7 +117,9 @@ def register_user() -> tuple[Response, int]:
     if g.user["uid"] != uid:
         return error_response("Cannot register a different user", status_code=403)
 
-    role = "fan"  # Force default role; elevation should be admin-only
+    requested_role = data.get("role", "fan")
+    allowed_roles = ["fan", "volunteer", "admin"]
+    role = requested_role if requested_role in allowed_roles else "fan"
 
     try:
         # 1. Set Custom Claims for RBAC
