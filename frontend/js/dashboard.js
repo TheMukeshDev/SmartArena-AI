@@ -248,6 +248,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
 
+            let isTtsEnabled = true;
+            
+            const speakText = (text) => {
+                if (!isTtsEnabled || !('speechSynthesis' in window)) return;
+                const utterance = new SpeechSynthesisUtterance(text);
+                // Attempt to select a better voice
+                const voices = window.speechSynthesis.getVoices();
+                utterance.voice = voices.find(v => v.lang.includes('en')) || null;
+                window.speechSynthesis.speak(utterance);
+            };
+
             const appendMessage = (text, isUser = false) => {
                 const div = document.createElement('div');
                 div.className = isUser 
@@ -256,9 +267,52 @@ document.addEventListener('DOMContentLoaded', async () => {
                 div.textContent = text;
                 chatMessages.appendChild(div);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                if (!isUser) {
+                    speakText(text);
+                }
             };
 
             let previousInteractionId = null;
+
+            // --- Voice Integration ---
+            const micBtn = document.getElementById('ai-chat-mic');
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (micBtn && SpeechRecognition) {
+                const recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US'; // Future: Detect browser language or settings
+
+                recognition.onstart = () => {
+                    micBtn.classList.add('text-neon-pink', 'animate-pulse');
+                    chatInput.placeholder = "Listening...";
+                };
+
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    chatInput.value = transcript;
+                    // Automatically submit after listening
+                    chatForm.dispatchEvent(new Event('submit'));
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error', event.error);
+                };
+
+                recognition.onend = () => {
+                    micBtn.classList.remove('text-neon-pink', 'animate-pulse');
+                    chatInput.placeholder = "Ask something...";
+                };
+
+                micBtn.addEventListener('click', () => {
+                    recognition.start();
+                });
+            } else if (micBtn) {
+                micBtn.style.display = 'none'; // Hide if not supported
+            }
+            // ------------------------
 
             chatForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -267,6 +321,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 appendMessage(query, true);
                 chatInput.value = '';
+                
+                // Stop any current speaking when user sends a new message
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                }
                 
                 // Show typing indicator
                 const typingId = 'typing-' + Date.now();
