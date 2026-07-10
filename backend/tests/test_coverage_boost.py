@@ -54,12 +54,11 @@ async def test_assign_volunteer_task_exception():
     from app.ai.gemini import assign_volunteer_task
 
     with (
-        patch("app.ai.gemini._init_gemini", return_value=True),
-        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
+        patch("app.ai.gemini._get_client") as mock_get_client,
     ):
-        mock_model.return_value.generate_content_async = AsyncMock(
-            side_effect=Exception("Gemini API error")
-        )
+        mock_client = MagicMock()
+        mock_client.models.generate_content.side_effect = Exception("Gemini API error")
+        mock_get_client.return_value = mock_client
         result = await assign_volunteer_task("Gate A")
         assert result["task"] == "Monitor designated area"
 
@@ -69,12 +68,11 @@ async def test_optimize_sustainability_exception():
     from app.ai.gemini import optimize_sustainability
 
     with (
-        patch("app.ai.gemini._init_gemini", return_value=True),
-        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
+        patch("app.ai.gemini._get_client") as mock_get_client,
     ):
-        mock_model.return_value.generate_content_async = AsyncMock(
-            side_effect=Exception("Gemini API error")
-        )
+        mock_client = MagicMock()
+        mock_client.models.generate_content.side_effect = Exception("Gemini API error")
+        mock_get_client.return_value = mock_client
         result = await optimize_sustainability({"energy": 100})
         assert result["status"] == "Optimization Failed"
 
@@ -132,8 +130,9 @@ async def test_process_chat_cache_hit():
     ):
         mock_cache.get.return_value = "Cached response"
 
-        result = await AIService.process_chat("hello", {}, language="en")
-        assert result == "Cached response"
+        reply, interaction_id = await AIService.process_chat("hello", {}, language="en")
+        assert reply == "Cached response"
+        assert interaction_id is None
 
 
 @pytest.mark.asyncio
@@ -146,7 +145,7 @@ async def test_process_chat_unknown_language():
         ) as mock_ask,
         patch("app.services.ai_service._cache") as mock_cache,
     ):
-        mock_ask.return_value = "Response"
+        mock_ask.return_value = ("Response", "mock_id")
         mock_cache.get.return_value = None
 
         await AIService.process_chat("hi", {}, language="xx")

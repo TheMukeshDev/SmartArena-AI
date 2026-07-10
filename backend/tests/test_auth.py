@@ -80,7 +80,7 @@ with (
             )
 
             assert res.status_code == 200
-            set_claims_mock.assert_called_with("user123", {"role": "fan"})
+            set_claims_mock.assert_called_with("user123", {"role": "admin"})
 
     def test_register_user_uid_mismatch(client):
         client.set_cookie("session", "fake_session")

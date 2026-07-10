@@ -50,11 +50,6 @@ def require_auth(func: Callable[..., Any]) -> Callable[..., Any]:
                     error_type="Unauthorized",
                     status_code=401,
                 )
-
-            # Store user claims in Flask global context
-            g.user = decoded_claims
-            return func(*args, **kwargs)
-
         except auth.RevokedIdTokenError:
             logger.warning("Revoked token used")
             return error_response(
@@ -76,6 +71,10 @@ def require_auth(func: Callable[..., Any]) -> Callable[..., Any]:
                 error_type="Unauthorized",
                 status_code=401,
             )
+            
+        # Store user claims in Flask global context
+        g.user = decoded_claims
+        return func(*args, **kwargs)
 
     return wrapper
 

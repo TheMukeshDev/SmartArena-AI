@@ -105,7 +105,7 @@ def test_sustainability_optimize(client):
 
 def test_assistant_chat(client):
     with patch("app.services.ai_service.AIService.process_chat") as mock_process:
-        mock_process.return_value = "This is a test response."
+        mock_process.return_value = ("This is a test response.", "mock_id")
 
         client.set_cookie("session", "fake")
         with patch(
@@ -129,7 +129,7 @@ def test_assistant_chat_missing_query(client):
 
 def test_assistant_chat_with_nested_context(client):
     with patch("app.services.ai_service.AIService.process_chat") as mock_process:
-        mock_process.return_value = "Response with nested context"
+        mock_process.return_value = ("Response with nested context", "mock_id")
 
         client.set_cookie("session", "fake")
         with patch(
