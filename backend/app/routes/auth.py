@@ -8,7 +8,6 @@ Handles session cookie creation, destruction, and user registration
 
 import datetime
 import logging
-from typing import Any
 
 from firebase_admin import auth
 from flask import Blueprint, request, jsonify
@@ -41,7 +40,7 @@ def session_login() -> tuple[Response, int]:
     try:
         # Verify the ID token first
         decoded_claims = auth.verify_id_token(id_token)
-        
+
         # Only process if the user recently signed in (within last 5 mins)
         if datetime.datetime.now().timestamp() - decoded_claims["auth_time"] < 5 * 60:
             # Create session cookie
@@ -50,10 +49,9 @@ def session_login() -> tuple[Response, int]:
             )
 
             # Build response
-            response = jsonify({
-                "success": True,
-                "message": "Session created successfully"
-            })
+            response = jsonify(
+                {"success": True, "message": "Session created successfully"}
+            )
 
             # Set HttpOnly cookie
             response.set_cookie(
@@ -62,13 +60,11 @@ def session_login() -> tuple[Response, int]:
                 max_age=int(SESSION_EXPIRES_IN.total_seconds()),
                 httponly=True,
                 samesite="Strict",
-                secure=True, # Should be True in prod (HTTPS)
+                secure=True,  # Should be True in prod (HTTPS)
             )
             return response, 200
         else:
-            return error_response(
-                "Recent sign in required", status_code=401
-            )
+            return error_response("Recent sign in required", status_code=401)
 
     except auth.InvalidIdTokenError:
         return error_response("Invalid ID token", status_code=401)
@@ -81,7 +77,7 @@ def session_login() -> tuple[Response, int]:
 def session_logout() -> tuple[Response, int]:
     """Revoke session and clear cookie."""
     session_cookie = request.cookies.get("session")
-    
+
     response = jsonify({"success": True, "message": "Logged out successfully"})
     response.set_cookie("session", expires=0)
 
@@ -90,7 +86,7 @@ def session_logout() -> tuple[Response, int]:
             decoded_claims = auth.verify_session_cookie(session_cookie)
             auth.revoke_refresh_tokens(decoded_claims["uid"])
         except auth.InvalidSessionCookieError:
-            pass # Cookie already invalid
+            pass  # Cookie already invalid
         except Exception as e:
             logger.error("Error revoking tokens: %s", str(e))
 
@@ -102,19 +98,20 @@ def session_logout() -> tuple[Response, int]:
 def register_user() -> tuple[Response, int]:
     """Register a new user, set their role in Firestore and Custom Claims."""
     from flask import g
+
     data = request.get_json()
-    
+
     uid = data.get("uid")
     email = data.get("email")
     name = data.get("name", "")
-    
+
     if not uid or not email:
         return error_response("uid and email are required", status_code=400)
-        
+
     if g.user["uid"] != uid:
         return error_response("Cannot register a different user", status_code=403)
-        
-    role = "fan" # Force default role; elevation should be admin-only
+
+    role = "fan"  # Force default role; elevation should be admin-only
 
     try:
         # 1. Set Custom Claims for RBAC
@@ -123,12 +120,17 @@ def register_user() -> tuple[Response, int]:
         # 2. Save user profile to Firestore
         db = get_firestore_client()
         if db:
-            db.collection("users").document(uid).set({
-                "email": email,
-                "name": name,
-                "role": role,
-                "createdAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-            }, merge=True)
+            db.collection("users").document(uid).set(
+                {
+                    "email": email,
+                    "name": name,
+                    "role": role,
+                    "createdAt": datetime.datetime.now(
+                        datetime.timezone.utc
+                    ).isoformat(),
+                },
+                merge=True,
+            )
 
         return success_response(message=f"User registered successfully as {role}")
 
@@ -142,4 +144,5 @@ def register_user() -> tuple[Response, int]:
 def get_current_user() -> tuple[Response, int]:
     """Get the current authenticated user's profile."""
     from flask import g
+
     return success_response(data=g.user)

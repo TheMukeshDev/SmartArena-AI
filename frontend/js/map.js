@@ -55,6 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add a slight transparency to the hex color for the SVG fill
             zone.setAttribute('fill', data.color + '80'); 
             zone.dataset.currentData = JSON.stringify(data);
+
+            // Update dynamic aria-label for screen readers
+            const label = `${zone.dataset.zone} zone, ${data.occupancyPct}% full, ${data.status}. Press Enter for details.`;
+            zone.setAttribute('aria-label', label);
         });
     }, 5000); // Update every 5 seconds
 
@@ -97,8 +101,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Click and keyboard handler for zones
     zones.forEach(zone => {
         // Initialize with data
-        zone.dataset.currentData = JSON.stringify(generateSimData(zone.dataset.zone));
+        const initData = generateSimData(zone.dataset.zone);
+        zone.dataset.currentData = JSON.stringify(initData);
         zone.setAttribute('aria-selected', 'false');
+        zone.setAttribute('aria-label',
+            `${zone.dataset.zone} zone, ${initData.occupancyPct}% full, ${initData.status}. Press Enter for details.`);
 
         zone.addEventListener('click', () => selectZone(zone));
         zone.addEventListener('keydown', (e) => {

@@ -3,7 +3,6 @@ import hashlib
 import json
 import datetime
 import logging
-from typing import Any, Optional
 
 from app.config.firebase import get_firestore_client
 from app.services.cache import SQLiteCache

@@ -63,7 +63,7 @@ def create_app(config_name: str | None = None) -> Flask:
     register_blueprints(app)
 
     # ── Initialize CSRF Protection ──────────────────────────────────────
-    csrf = CSRFProtect(app)
+    CSRFProtect(app)
 
     @app.route("/api/v1/csrf-token", methods=["GET"])
     def get_csrf():

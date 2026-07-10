@@ -35,7 +35,8 @@ VOLUNTEER_PROMPT = (
     + """
 You are an AI Volunteer Coordinator for a smart stadium.
 A volunteer is currently located at: "{location}".
-Assign them a highly specific, realistic task based on potential needs in that area (e.g. crowd control, ticketing, directing, spills, VIP escort).
+Assign them a highly specific, realistic task based on potential needs in that area
+(e.g. crowd control, ticketing, directing, spills, VIP escort).
 Respond ONLY with a raw JSON object containing:
 - "task": (A short title of the task)
 - "priority": (Low, Medium, High, Critical)
@@ -58,7 +59,9 @@ ASSISTANT_PROMPT = (
     DEFENSIVE_PREAMBLE
     + """
 You are 'ArenaBot', the highly intelligent AI assistant for SmartArena AI.
-Answer the user's question concisely based on the following real-time stadium context (if relevant). If the context doesn't have the answer, use your best judgement or ask for clarification. Keep answers under 3 sentences.
+Answer the user's question concisely based on the following real-time stadium context (if relevant).
+If the context doesn't have the answer, use your best judgement or ask for clarification.
+Keep answers under 3 sentences.
 Respond in the {language} language.
 
 Context: {context}

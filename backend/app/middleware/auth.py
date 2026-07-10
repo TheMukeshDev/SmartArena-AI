@@ -23,11 +23,12 @@ def require_auth(func: Callable[..., Any]) -> Callable[..., Any]:
 
     Sets g.user with the decoded token payload.
     """
+
     @functools.wraps(func)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
         # 1. Try to get Session Cookie
         session_cookie = request.cookies.get("session")
-        
+
         # 2. Try to get Bearer Token
         auth_header = request.headers.get("Authorization")
         bearer_token = None
@@ -42,9 +43,7 @@ def require_auth(func: Callable[..., Any]) -> Callable[..., Any]:
                     session_cookie, check_revoked=True
                 )
             elif bearer_token:
-                decoded_claims = auth.verify_id_token(
-                    bearer_token, check_revoked=True
-                )
+                decoded_claims = auth.verify_id_token(bearer_token, check_revoked=True)
             else:
                 return error_response(
                     message="Authentication required. No token or session cookie provided.",
@@ -89,6 +88,7 @@ def require_role(allowed_roles: list[str]) -> Callable[..., Any]:
     Args:
         allowed_roles: List of role strings (e.g., ['admin', 'volunteer'])
     """
+
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -104,7 +104,9 @@ def require_role(allowed_roles: list[str]) -> Callable[..., Any]:
             if not user_role or user_role not in allowed_roles:
                 logger.warning(
                     "Access denied for user %s. Role '%s' not in %s",
-                    user.get("uid"), user_role, allowed_roles
+                    user.get("uid"),
+                    user_role,
+                    allowed_roles,
                 )
                 return error_response(
                     message="You do not have permission to access this resource.",
@@ -113,5 +115,7 @@ def require_role(allowed_roles: list[str]) -> Callable[..., Any]:
                 )
 
             return func(*args, **kwargs)
+
         return wrapper
+
     return decorator

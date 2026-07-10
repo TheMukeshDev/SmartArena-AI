@@ -10,7 +10,7 @@ by design — it's used by the Firebase JS SDK in the browser.
 import logging
 import os
 
-from flask import Blueprint, current_app
+from flask import Blueprint
 from flask.wrappers import Response
 
 from app.utils.response import success_response, error_response

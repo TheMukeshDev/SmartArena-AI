@@ -13,15 +13,16 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-RUN useradd -m appuser && chown -R appuser /app
-USER appuser
+RUN useradd -m appuser
 
-# ── Install Dependencies ────────────────────────────────────────────────
+# ── Install Dependencies (as root into system site-packages) ────────────
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# ── Copy Application Code ──────────────────────────────────────────────
-COPY . .
+# ── Copy Application Code (as appuser) ─────────────────────────────────
+RUN chown -R appuser /app
+USER appuser
+COPY --chown=appuser:appuser . .
 
 # ── Expose Port ─────────────────────────────────────────────────────────
 # Cloud Run injects PORT env var (default 8080)

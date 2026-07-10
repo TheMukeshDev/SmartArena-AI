@@ -7,7 +7,6 @@ Uses Application Default Credentials in production (Cloud Run)
 and service account JSON in development.
 """
 
-import os
 import logging
 from typing import Optional
 

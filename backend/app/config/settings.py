@@ -53,10 +53,10 @@ class BaseConfig:
     # ── Rate Limiting (SQLite-backed) ───────────────────────────────────
     RATE_LIMIT_DEFAULT: int = _parse_limit("100")
     RATE_LIMIT_WINDOW_SECONDS: int = int(os.getenv("RATE_LIMIT_WINDOW_SECONDS", "3600"))
-    RATE_LIMIT_DB_PATH: str = os.getenv("RATE_LIMIT_DB_PATH", "ratelimit.db")
+    RATE_LIMIT_DB_PATH: str = os.getenv("RATE_LIMIT_DB_PATH", "/tmp/ratelimit.db")
 
     # ── Caching (SQLite-backed) ─────────────────────────────────────────
-    CACHE_DB_PATH: str = os.getenv("CACHE_DB_PATH", "cache.db")
+    CACHE_DB_PATH: str = os.getenv("CACHE_DB_PATH", "/tmp/cache.db")
     CACHE_TTL_SECONDS: int = int(os.getenv("CACHE_TTL_SECONDS", "3600"))
 
     # ── Security ────────────────────────────────────────────────────────
@@ -74,7 +74,7 @@ class DevelopmentConfig(BaseConfig):
     DEBUG: bool = True
     TESTING: bool = False
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "DEBUG")
-    FORCE_HTTPS: bool = os.getenv("FORCE_HTTPS", "0") == "1"
+    FORCE_HTTPS: bool = False
 
 
 class ProductionConfig(BaseConfig):
@@ -102,6 +102,7 @@ class TestingConfig(BaseConfig):
     LOG_LEVEL: str = "DEBUG"
     FIREBASE_PROJECT_ID: str = "test-project"
     WTF_CSRF_ENABLED: bool = False
+    FORCE_HTTPS: bool = False
 
 
 # ── Configuration Map ───────────────────────────────────────────────────

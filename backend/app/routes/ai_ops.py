@@ -1,5 +1,5 @@
 import asyncio
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from app.services.ai_service import AIService
 from app.services.navigation import ZONE_ADJACENCY, find_path, get_navigation_context
 from app.utils.response import success_response, error_response
