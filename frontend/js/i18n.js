@@ -70,6 +70,24 @@ const translations = {
     "dash.fan.title": "تجربة المشجعين",
     "dash.logout": "تسجيل خروج",
     "dash.chat.placeholder": "اسأل عن شيء..."
+  },
+  hi: {
+    "nav.features": "विशेषताएं",
+    "nav.stats": "आंकड़े",
+    "nav.tech": "तकनीक",
+    "nav.login": "लॉगिन",
+    "nav.dashboard": "डैशबोर्ड",
+    "hero.badge": "फीफा विश्व कप 2026™ एआई इंटेलिजेंस",
+    "hero.title1": "स्मार्टर स्टेडियम।",
+    "hero.title2": "एआई द्वारा संचालित।",
+    "hero.subtitle": "रीयल-टाइम क्राउड इंटेलिजेंस, प्रेडिक्टिव इंसिडेंट मैनेजमेंट, और फीफा विश्व कप 2026™ के लिए सस्टेनेबिलिटी ट्रैकिंग — सब एक ही स्मार्ट कमांड सेंटर से।",
+    "dash.welcome": "आपके",
+    "dash.subtitle": "यहाँ स्टेडियम का रीयल-टाइम अवलोकन है।",
+    "dash.admin.title": "व्यवस्थापक संचालन",
+    "dash.volunteer.title": "स्वयंसेवक कार्य",
+    "dash.fan.title": "प्रशंसक अनुभव",
+    "dash.logout": "लॉग आउट",
+    "dash.chat.placeholder": "कुछ पूछें..."
   }
 };
 

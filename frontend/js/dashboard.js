@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const recognition = new SpeechRecognition();
                 recognition.continuous = false;
                 recognition.interimResults = false;
-                const langMap = { 'en': 'en-US', 'es': 'es-ES', 'fr': 'fr-FR', 'ar': 'ar-SA' };
+                const langMap = { 'en': 'en-US', 'es': 'es-ES', 'fr': 'fr-FR', 'ar': 'ar-SA', 'hi': 'hi-IN' };
                 recognition.lang = langMap[window.localStorage.getItem('preferred_language') || 'en'];
 
                 recognition.onstart = () => {
