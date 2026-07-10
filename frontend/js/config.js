@@ -45,35 +45,55 @@ const CONFIG = {
 // Freeze config to prevent mutations
 Object.freeze(CONFIG);
 
-// ── Global CSRF Injection ──────────────────────────────────────────────
+// ── Global Fetch Interceptor ──────────────────────────────────────────────
 let _csrfToken = null;
 const _originalFetch = window.fetch;
 
 window.fetch = async function (resource, options) {
+  options = options || {};
+  
   if (
-    options && 
-    ['POST', 'PUT', 'DELETE'].includes(options.method?.toUpperCase()) && 
     typeof resource === 'string' && 
     (resource.includes(CONFIG.API_BASE_URL) || resource.startsWith('/'))
   ) {
-    if (!_csrfToken) {
-      try {
-        const tokenRes = await _originalFetch(CONFIG.baseUrl('/api/v1/csrf-token'), { credentials: 'include' });
-        if (tokenRes.ok) {
-          const data = await tokenRes.json();
-          _csrfToken = data.csrf_token;
+    // 1. Attach Firebase Auth Bearer Token
+    if (window.firebase && window.firebase.auth) {
+      const currentUser = window.firebase.auth().currentUser;
+      if (currentUser) {
+        try {
+          const idToken = await currentUser.getIdToken();
+          options.headers = {
+            ...options.headers,
+            'Authorization': `Bearer ${idToken}`
+          };
+        } catch (e) {
+          console.warn('[Fetch Interceptor] Failed to get Firebase ID token:', e);
         }
-      } catch (e) {
-        console.warn('Failed to fetch CSRF token');
       }
     }
-    
-    if (_csrfToken) {
-      options.headers = {
-        ...options.headers,
-        'X-CSRFToken': _csrfToken
-      };
+
+    // 2. Attach CSRF Token for mutating requests
+    if (['POST', 'PUT', 'DELETE'].includes(options.method?.toUpperCase())) {
+      if (!_csrfToken) {
+        try {
+          const tokenRes = await _originalFetch(CONFIG.baseUrl('/api/v1/csrf-token'), { credentials: 'include' });
+          if (tokenRes.ok) {
+            const data = await tokenRes.json();
+            _csrfToken = data.csrf_token;
+          }
+        } catch (e) {
+          console.warn('[Fetch Interceptor] Failed to fetch CSRF token');
+        }
+      }
+      
+      if (_csrfToken) {
+        options.headers = {
+          ...options.headers,
+          'X-CSRFToken': _csrfToken
+        };
+      }
     }
   }
+  
   return _originalFetch(resource, options);
 };
