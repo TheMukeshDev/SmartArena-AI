@@ -11,7 +11,7 @@ import logging
 
 from flask import Blueprint, request, g
 from pydantic import BaseModel, Field, ValidationError
-from typing import Optional
+from typing import Optional, Literal
 
 from app.middleware.auth import require_auth, require_role
 from app.utils.response import success_response, error_response
@@ -27,9 +27,9 @@ class GateUpdateRequest(BaseModel):
     """Schema for gate update requests."""
 
     name: str = Field(..., min_length=1, description="Gate name.")
-    status: str = Field(
+    status: Literal["open", "closed", "maintenance"] = Field(
         default="open",
-        description="Gate status: open, closed, maintenance.",
+        description="Gate status: open, closed, or maintenance.",
     )
     capacity: Optional[int] = Field(
         default=None, ge=0, description="Gate capacity limit."
@@ -41,7 +41,9 @@ class AnnouncementRequest(BaseModel):
 
     title: str = Field(..., min_length=1, max_length=200)
     message: str = Field(..., min_length=1, max_length=2000)
-    priority: str = Field(default="normal", description="normal or urgent")
+    priority: Literal["normal", "urgent"] = Field(
+        default="normal", description="Announcement priority: normal or urgent."
+    )
     target_zones: list[str] = Field(
         default_factory=list, description="Zones to target, empty = all."
     )

@@ -81,7 +81,7 @@ smartarena-ai/
 │   │   ├── middleware/       # CORS, Auth (RBAC), Rate limiting (SQLite), Security headers
 │   │   ├── models/          # Pydantic schemas (validated input models)
 │   │   └── utils/           # Response helpers
-│   ├── tests/               # Pytest test suite (154 tests)
+│   ├── tests/               # Pytest test suite (187 tests)
 │   ├── app.py               # Entry point
 │   ├── gunicorn.conf.py     # Production WSGI config
 │   ├── Dockerfile           # Container image
@@ -146,7 +146,7 @@ Visit `http://localhost:5000/health` to verify the backend is running.
 
 ## Testing
 
-### Backend Tests (154 tests)
+### Backend Tests (187 tests)
 ```bash
 cd backend
 pytest tests/ -v --cov=app --cov-report=term-missing
@@ -211,6 +211,7 @@ For manual testing of Role-Based Access Control (RBAC) and dashboard panels, the
 | GET | `/health/ready` | Readiness probe with dependency checks |
 | GET | `/api/v1/` | API root with endpoint listing |
 | GET | `/api/v1/csrf-token` | Get CSRF token |
+| GET | `/api/v1/config/firebase` | Firebase client configuration (public) |
 | POST | `/api/v1/auth/sessionLogin` | Create session from Firebase ID token |
 | POST | `/api/v1/auth/sessionLogout` | Destroy session |
 | POST | `/api/v1/auth/register` | Register new user |

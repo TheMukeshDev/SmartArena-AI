@@ -32,13 +32,13 @@ class TestCORS:
     def test_cors_preflight_headers(self, client):
         """OPTIONS requests should include CORS headers."""
         resp = client.options(
-            "/health",
+            "/api/v1/csrf-token",
             headers={
                 "Origin": "http://localhost:5500",
-                "Access-Control-Request-Method": "POST",
+                "Access-Control-Request-Method": "GET",
             },
         )
-        assert resp.status_code in (200, 204, 404)
+        assert resp.status_code in (200, 204)
 
     def test_cors_credentials_header(self, client):
         """CORS responses should support credentials when origin matches."""

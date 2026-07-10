@@ -9,6 +9,7 @@ location and generates operational notes for stadium management.
 import asyncio
 import json
 import logging
+import time
 import urllib.request
 from dataclasses import dataclass
 from typing import Optional
@@ -19,6 +20,10 @@ OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
 
 STADIUM_LAT = 25.9542
 STADIUM_LON = -80.2391
+
+WEATHER_CACHE_TTL = 300  # 5 minutes
+
+_cache: dict = {}
 
 
 @dataclass
@@ -72,6 +77,8 @@ async def fetch_weather(
 ) -> Optional[WeatherData]:
     """Fetch current weather from the Open-Meteo API.
 
+    Results are cached for 5 minutes to avoid redundant external calls.
+
     Args:
         lat: Latitude of the location to query.
         lon: Longitude of the location to query.
@@ -79,6 +86,12 @@ async def fetch_weather(
     Returns:
         WeatherData with current conditions, or None on failure.
     """
+    cache_key = f"{lat}:{lon}"
+    now = time.time()
+    cached = _cache.get(cache_key)
+    if cached and (now - cached["ts"]) < WEATHER_CACHE_TTL:
+        return cached["data"]
+
     try:
         url = (
             f"{OPEN_METEO_URL}?latitude={lat}&longitude={lon}"
@@ -91,6 +104,7 @@ async def fetch_weather(
         req = urllib.request.Request(url, headers={"User-Agent": "SmartArenaAI/1.0"})
 
         def _do_request():
+            """Execute the HTTP request in a background thread."""
             with urllib.request.urlopen(req, timeout=10) as resp:  # nosec B310
                 return json.loads(resp.read().decode())
 
@@ -111,6 +125,7 @@ async def fetch_weather(
             summary=f"{temp}°C, {condition}, {precip}mm precipitation",
         )
         w.operational_note = _generate_operational_note(temp, precip, wind, condition)
+        _cache[cache_key] = {"data": w, "ts": now}
         return w
     except Exception as e:
         logger.warning("Weather fetch failed: %s", str(e))

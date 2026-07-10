@@ -126,4 +126,4 @@ AI responses are cached in `cache.db` using SHA-256 keyed hashes. Cache entries 
 Flask-Talisman applies CSP, HSTS, X-Content-Type-Options, frame-options, and referrer-policy. Force HTTPS can be disabled via `FORCE_HTTPS=0` for local development.
 
 ### i18n
-The frontend supports English, Spanish, French, and Arabic for FIFA World Cup 2026. Language preference is stored in `localStorage` and sent to the AI backend for multilingual responses.
+The frontend supports English, Spanish, French, Arabic, and Hindi for FIFA World Cup 2026. Language preference is stored in `localStorage` and sent to the AI backend for multilingual responses.

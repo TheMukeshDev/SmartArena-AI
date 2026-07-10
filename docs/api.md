@@ -174,6 +174,28 @@ Get a CSRF token for form submissions.
 
 ---
 
+### GET `/api/v1/config/firebase`
+
+Returns Firebase client-side configuration (API key, auth domain, project ID, etc.).
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "data": {
+    "apiKey": "AIza...",
+    "authDomain": "smartarena-ai.firebaseapp.com",
+    "projectId": "smartarena-ai",
+    "storageBucket": "smartarena-ai.appspot.com",
+    "messagingSenderId": "123456789",
+    "appId": "1:123456789:web:abc123"
+  },
+  "message": "Firebase client configuration"
+}
+```
+
+---
+
 ## AI Operations
 
 All AI endpoints require authentication.

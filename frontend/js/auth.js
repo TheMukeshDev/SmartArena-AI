@@ -23,11 +23,8 @@ const Auth = {
       this.user = user;
       
       if (user) {
-        console.debug("[Auth] User is signed in:", user.email);
         // Ensure session cookie exists
         await this.createBackendSession(user);
-      } else {
-        console.debug("[Auth] User is signed out.");
       }
 
       if (typeof onStateChangeCallback === "function") {
@@ -157,10 +154,8 @@ const Auth = {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
-        console.error("[Auth] Session creation failed:", response.status, errorData);
         throw new Error(errorData?.error?.message || "Failed to create backend session");
       }
-      console.debug("[Auth] Backend session created successfully.");
     } catch (error) {
       console.error("[Auth] Session creation error:", error);
     }

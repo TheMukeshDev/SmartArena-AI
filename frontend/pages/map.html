@@ -47,7 +47,7 @@
                         <a href="dashboard.html"
                             class="text-sm text-surface-200 hover:text-white transition-colors">Dashboard</a>
                         <a href="map.html"
-                            class="text-sm text-arena-400 font-medium border-b-2 border-arena-400 pb-5 translate-y-[10px]">Live
+                            class="text-sm text-arena-400 font-medium border-b-2 border-arena-400 pb-5 translate-y-[10px]" aria-current="page">Live
                             Map</a>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                 class="hidden mb-4 bg-arena-900/50 border border-arena-500/30 p-4 rounded-xl backdrop-blur-md"
                 role="region" aria-live="polite" aria-label="AI crowd analysis results">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-bold text-arena-400"><span aria-hidden="true">🧠</span> AI Global Strategy</h3>
+                    <h2 class="font-bold text-arena-400"><span aria-hidden="true">🧠</span> AI Global Strategy</h2>
                     <span id="ai-global-status" class="badge">...</span>
                 </div>
                 <ul id="ai-insights-list" class="list-disc list-inside text-sm text-surface-200/80 mb-2 space-y-1"></ul>
@@ -212,14 +212,14 @@
         </div>
     </main>
 
-    <script src="../js/i18n.js"></script>
+    <script src="../js/i18n.js" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             I18N.renderLanguageSwitcher('language-switcher');
         });
     </script>
-    <script src="../js/toast.js"></script>
-    <script src="../js/map.js"></script>
+    <script src="../js/toast.js" defer></script>
+    <script src="../js/map.js" defer></script>
     <script>
         document.getElementById('logout-btn').addEventListener('click', () => Auth.logout());
     </script>

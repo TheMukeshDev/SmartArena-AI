@@ -461,5 +461,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
         evtSource.onerror = () => console.warn("SSE connection lost, will retry...");
+
+        const closeSSE = () => { evtSource.close(); };
+        window.addEventListener("pagehide", closeSSE);
+        window.addEventListener("beforeunload", closeSSE);
     }
 });

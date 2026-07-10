@@ -59,6 +59,12 @@ CSP_POLICY = {
 
 
 def init_security_headers(app: Flask) -> None:
+    """Configure Flask-Talisman security headers on the given app.
+
+    Sets Content-Security-Policy, HSTS, X-Content-Type-Options,
+    frame-options, referrer-policy, Permissions-Policy, and
+    session cookie attributes.
+    """
     force_https = app.config.get("FORCE_HTTPS", True)
     Talisman(
         app,

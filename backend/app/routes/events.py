@@ -123,6 +123,12 @@ def stream_incidents() -> Response:
     heartbeat_interval = 15
 
     def generate():
+        """Yield SSE-formatted incident events from the SQLite database.
+
+        Polls the incidents table at a configurable interval, sending
+        new incidents as ``event:incident`` messages. Emits a comment
+        heartbeat every 15 seconds to keep the connection alive.
+        """
         last_seen_id = 0
         last_heartbeat = time.time()
         while True:

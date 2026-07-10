@@ -3,11 +3,15 @@ SmartArena AI — Pydantic Request Schemas
 ==========================================
 
 Validates incoming request payloads for all AI operation endpoints.
-Enforces min_length constraints to prevent empty or trivially short inputs.
+Enforces min_length, max_length, and allowlist constraints to prevent
+empty inputs, oversized payloads, and injection vectors.
 """
 
-from pydantic import BaseModel, Field
-from typing import List, Dict, Any, Optional
+from pydantic import BaseModel, Field, field_validator
+from typing import List, Dict, Any, Optional, Literal
+
+
+ALLOWED_LANGUAGES = Literal["en", "es", "fr", "ar", "hi"]
 
 
 class IncidentRequest(BaseModel):
@@ -45,7 +49,12 @@ class SustainabilityOptimizeRequest(BaseModel):
 class ChatRequest(BaseModel):
     """Schema for AI assistant chat requests."""
 
-    query: str = Field(..., min_length=2, description="User query for ArenaBot.")
+    query: str = Field(
+        ...,
+        min_length=2,
+        max_length=1000,
+        description="User query for ArenaBot.",
+    )
     context: Dict[str, Any] = Field(
         default_factory=dict, description="Real-time stadium context."
     )
@@ -56,6 +65,15 @@ class ChatRequest(BaseModel):
     previous_interaction_id: Optional[str] = Field(
         default=None, description="ID of the previous interaction for multi-turn chat."
     )
+
+    @field_validator("preferred_language")
+    @classmethod
+    def validate_language(cls, v: str) -> str:
+        """Ensure preferred_language is one of the supported languages."""
+        allowed = {"en", "es", "fr", "ar", "hi"}
+        if v not in allowed:
+            raise ValueError(f"Unsupported language '{v}'. Allowed: {sorted(allowed)}")
+        return v
 
 
 class TransportSuggestRequest(BaseModel):

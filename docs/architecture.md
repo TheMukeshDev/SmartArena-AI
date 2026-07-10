@@ -69,7 +69,7 @@ SmartArena AI is an AI-powered smart stadium operations platform designed to man
 - CORS whitelisting
 - Rate limiting on API endpoints
 - CSRF protection
-- Input validation via Marshmallow schemas
+- Input validation via Pydantic schemas
 - Firestore security rules enforce server-side authorization
 
 ## Deployment

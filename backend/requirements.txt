@@ -16,6 +16,9 @@ python-dotenv==1.1.0
 flask-cors==5.0.1
 Flask-WTF==1.2.1
 
+# Compression
+flask-compress==1.17
+
 # Security Headers
 flask-talisman==1.1.0
 
@@ -23,7 +26,6 @@ flask-talisman==1.1.0
 google-genai>=0.2.0
 
 # Utilities
-marshmallow==3.26.1
 pydantic==2.13.4
 python-dateutil==2.9.0
 asgiref>=3.5.0

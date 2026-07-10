@@ -40,6 +40,9 @@ def test_sse_streams_incident(app, client):
 
 def test_weather_endpoint_returns_data(app, client):
     from unittest.mock import patch, MagicMock
+    from app.services.weather import _cache
+
+    _cache.clear()
 
     mock_data = {
         "current": {

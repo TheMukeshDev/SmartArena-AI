@@ -29,7 +29,7 @@
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-arena-500 text-white px-4 py-2 rounded z-[100]">Skip to main content</a>
 
     <!-- Navbar -->
-    <nav class="border-b border-white/10 bg-surface-900/50 backdrop-blur-md sticky top-0 z-50">
+    <nav class="border-b border-white/10 bg-surface-900/50 backdrop-blur-md sticky top-0 z-50" aria-label="Main navigation">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
@@ -223,7 +223,7 @@
     <!-- Phase 9: AI Assistant Floating UI -->
     <div class="fixed bottom-6 right-6 z-[100]">
         <!-- Chat Window -->
-        <div id="ai-chat-window" class="hidden mb-4 w-80 sm:w-96 glass-card border-arena-500/50 shadow-2xl overflow-hidden flex flex-col transition-all duration-300">
+        <div id="ai-chat-window" class="hidden mb-4 w-80 sm:w-96 glass-card border-arena-500/50 shadow-2xl overflow-hidden flex flex-col transition-all duration-300" role="dialog" aria-modal="true" aria-label="AI Assistant Chat">
             <div class="bg-surface-800 p-4 border-b border-white/10 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="text-xl" aria-hidden="true">🤖</span>
@@ -261,8 +261,8 @@
     <!-- SSE Incident Toast Container -->
     <div id="incident-toast-container" role="log" aria-live="polite" aria-label="Incident notifications"></div>
 
-    <script src="../js/i18n.js"></script>
-    <script src="../js/toast.js"></script>
-    <script src="../js/dashboard.js"></script>
+    <script src="../js/i18n.js" defer></script>
+    <script src="../js/toast.js" defer></script>
+    <script src="../js/dashboard.js" defer></script>
 </body>
 </html>

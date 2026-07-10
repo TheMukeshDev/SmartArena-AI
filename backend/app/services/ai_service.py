@@ -218,6 +218,7 @@ class AIService:
             "es": "Spanish",
             "fr": "French",
             "ar": "Arabic",
+            "hi": "Hindi",
         }.get(language, "English")
         key = _cache_key(query, context, language)
         cached = _cache.get(key)

@@ -153,7 +153,10 @@ async def ask_assistant(
         return "I am currently offline. Please try again later.", None
 
     safe_query = sanitize_user_input(query)
-    safe_context = json.dumps(context, default=str)[:5000]
+    sanitized_context = {
+        k: sanitize_user_input(str(v), max_length=200) for k, v in context.items()
+    }
+    safe_context = json.dumps(sanitized_context, default=str)[:5000]
     prompt = ASSISTANT_PROMPT.format(
         context=safe_context, query=safe_query, language=language
     )

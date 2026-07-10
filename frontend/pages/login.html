@@ -25,14 +25,14 @@
     <link rel="icon" href="/favicon.ico">
 </head>
 <body class="bg-surface-950 bg-mesh min-h-screen flex items-center justify-center p-4">
-    <a href="#login-form" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-arena-500 text-white px-4 py-2 rounded z-[100]">Skip to login form</a>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-arena-500 text-white px-4 py-2 rounded z-[100]">Skip to main content</a>
     <!-- Back Button (Absolute Top Left) -->
     <a href="../index.html" class="absolute top-6 left-6 inline-flex items-center text-sm text-surface-200/60 hover:text-arena-400 transition-colors z-50">
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         Back to Home
     </a>
 
-    <div class="w-full max-w-md">
+    <main id="main-content" class="w-full max-w-md" tabindex="-1">
         
         <!-- Logo -->
         <div class="text-center mb-8">
@@ -47,7 +47,7 @@
         <!-- Login Card -->
         <div class="glass-card p-8">
             <h1 class="text-xl font-display font-bold text-white mb-2 text-center">Welcome Back</h1>
-            <p class="text-sm text-surface-200/50 text-center mb-8">Sign in to access your stadium dashboard</p>
+            <p class="text-sm text-surface-200/60 text-center mb-8">Sign in to access your stadium dashboard</p>
 
             <div id="error-message" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3 rounded-xl mb-4 text-center" role="alert"></div>
 
@@ -89,7 +89,7 @@
                 </p>
             </div>
         </div>
-    </div>
+    </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {

@@ -174,3 +174,139 @@ def test_transport_suggest(client):
             assert res.status_code == 200
             data = json.loads(res.data)
             assert data["data"]["recommended_mode"] == "Transit"
+
+
+# ── Boundary Validation Tests ───────────────────────────────────────────
+
+
+class TestBoundaryValidation:
+    """Verify Pydantic field constraints are enforced."""
+
+    def test_incident_rejects_short_description(self, client):
+        """Incident description must be at least 10 characters."""
+        client.set_cookie("session", "fake")
+        with patch(
+            "app.middleware.auth.auth.verify_session_cookie",
+            return_value={"uid": "123"},
+        ):
+            res = client.post(
+                "/api/v1/ai/incident",
+                json={"description": "Short"},
+            )
+            assert res.status_code in (400, 422)
+
+    def test_volunteer_rejects_short_location(self, client):
+        """Volunteer location must be at least 2 characters."""
+        client.set_cookie("session", "fake")
+        with patch(
+            "app.middleware.auth.auth.verify_session_cookie",
+            return_value={"uid": "123"},
+        ):
+            res = client.post(
+                "/api/v1/ai/volunteer/assign",
+                json={"location": "X"},
+            )
+            assert res.status_code in (400, 422)
+
+    def test_chat_rejects_empty_query(self, client):
+        """Chat query must be at least 2 characters."""
+        client.set_cookie("session", "fake")
+        with patch(
+            "app.middleware.auth.auth.verify_session_cookie",
+            return_value={"uid": "123"},
+        ):
+            res = client.post(
+                "/api/v1/ai/assistant/chat",
+                json={"query": "a"},
+            )
+            assert res.status_code in (400, 422)
+
+    def test_chat_rejects_long_query(self, client):
+        """Chat query must not exceed 1000 characters."""
+        client.set_cookie("session", "fake")
+        with patch(
+            "app.middleware.auth.auth.verify_session_cookie",
+            return_value={"uid": "123"},
+        ):
+            res = client.post(
+                "/api/v1/ai/assistant/chat",
+                json={"query": "x" * 1001},
+            )
+            assert res.status_code in (400, 422)
+
+    def test_chat_rejects_invalid_language(self, client):
+        """Chat preferred_language must be in the allowlist."""
+        client.set_cookie("session", "fake")
+        with patch(
+            "app.middleware.auth.auth.verify_session_cookie",
+            return_value={"uid": "123"},
+        ):
+            res = client.post(
+                "/api/v1/ai/assistant/chat",
+                json={"query": "hello", "preferred_language": "zz"},
+            )
+            assert res.status_code in (400, 422)
+
+    def test_chat_accepts_hindi(self, client):
+        """Chat should accept Hindi as a valid language."""
+        client.set_cookie("session", "fake")
+        with (
+            patch(
+                "app.middleware.auth.auth.verify_session_cookie",
+                return_value={"uid": "123"},
+            ),
+            patch("app.services.ai_service.AIService.process_chat") as mock_chat,
+        ):
+            mock_chat.return_value = ("Namaste", None)
+            res = client.post(
+                "/api/v1/ai/assistant/chat",
+                json={"query": "Hello", "preferred_language": "hi"},
+            )
+            assert res.status_code == 200
+
+    def test_transport_rejects_empty_gate(self, client):
+        """Transport gate must be at least 1 character."""
+        client.set_cookie("session", "fake")
+        with patch(
+            "app.middleware.auth.auth.verify_session_cookie",
+            return_value={"uid": "123"},
+        ):
+            res = client.post(
+                "/api/v1/ai/transport/suggest",
+                json={"gate": "", "arrival_time": "3:00 PM"},
+            )
+            assert res.status_code in (400, 422)
+
+    def test_admin_gate_rejects_invalid_status(self, client):
+        """Gate status must be open, closed, or maintenance."""
+        client.set_cookie("session", "fake")
+        with patch(
+            "app.middleware.auth.auth.verify_session_cookie",
+            return_value={"uid": "123", "role": "admin"},
+        ):
+            res = client.post(
+                "/api/v1/admin/gates",
+                json={"name": "Gate A", "status": "invalid_status"},
+            )
+            assert res.status_code in (400, 422)
+
+    def test_admin_announcement_rejects_invalid_priority(self, client):
+        """Announcement priority must be normal or urgent."""
+        client.set_cookie("session", "fake")
+        with (
+            patch(
+                "app.middleware.auth.auth.verify_session_cookie",
+                return_value={"uid": "123", "role": "admin"},
+            ),
+            patch("app.routes.admin.get_firestore_client") as mock_db,
+        ):
+            mock_db.return_value = None
+            res = client.post(
+                "/api/v1/admin/announcements",
+                json={
+                    "title": "Test",
+                    "message": "Test announcement",
+                    "priority": "critical",
+                },
+            )
+            assert res.status_code in (400, 422)

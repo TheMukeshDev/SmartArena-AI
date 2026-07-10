@@ -25,10 +25,12 @@ CREATE TABLE IF NOT EXISTS rate_limit_windows (
 
 
 def _get_db_path(app: Flask) -> str:
+    """Return the filesystem path for the SQLite rate limit database."""
     return app.config.get("RATE_LIMIT_DB_PATH", "ratelimit.db")
 
 
 def _get_client_ip() -> str:
+    """Extract the real client IP, preferring X-Forwarded-For in production."""
     forwarded = request.headers.get("X-Forwarded-For", "")
     if forwarded:
         return forwarded.split(",")[0].strip()
@@ -36,6 +38,7 @@ def _get_client_ip() -> str:
 
 
 def _ensure_db(app: Flask) -> sqlite3.Connection:
+    """Return the per-request SQLite connection, creating it if necessary."""
     if "ratelimit_db" not in g:
         db_path = _get_db_path(app)
         db = sqlite3.connect(db_path)
@@ -61,6 +64,12 @@ def _cleanup_expired_windows(app: Flask) -> None:
 
 
 def init_ratelimit(app: Flask) -> None:
+    """Initialize the SQLite-backed rate limiter and register request hooks.
+
+    Creates the rate limit table if it does not exist, runs initial
+    cleanup of expired windows, and registers ``before_request`` /
+        ``after_request`` hooks to enforce and report rate limits.
+    """
     db_path = _get_db_path(app)
     conn = sqlite3.connect(db_path)
     conn.execute("PRAGMA journal_mode=WAL")

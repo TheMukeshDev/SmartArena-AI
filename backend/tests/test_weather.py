@@ -3,6 +3,16 @@ import json
 from unittest.mock import patch, MagicMock
 
 
+@pytest.fixture(autouse=True)
+def _clear_weather_cache():
+    """Clear the weather module cache before each test."""
+    from app.services.weather import _cache
+
+    _cache.clear()
+    yield
+    _cache.clear()
+
+
 @pytest.mark.asyncio
 async def test_fetch_weather_returns_data():
     from app.services.weather import fetch_weather, WeatherData
@@ -62,6 +72,7 @@ async def test_fetch_weather_injects_into_crowd_prompt():
 
         weather = await fetch_weather()
         assert weather is not None
+        assert weather.temperature_c == 32.0
 
         mock_client = mock_get_client.return_value
         mock_response = MagicMock()
@@ -84,7 +95,7 @@ async def test_fetch_weather_injects_into_crowd_prompt():
 
         call_kwargs = mock_client.models.generate_content.call_args[1]
         sent_prompt = call_kwargs["contents"]
-        assert "32.0" in sent_prompt or "25.0" in sent_prompt
+        assert "32.0" in sent_prompt
         assert res["global_status"] == "Optimal"
 
 

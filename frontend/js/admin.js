@@ -58,7 +58,7 @@ const Admin = (() => {
                             <div class="bg-arena-500 h-1.5 rounded-full transition-all duration-500" style="width: ${Math.min(100, (g.current_count / g.capacity) * 100)}%"></div>
                         </div>
                     </div>
-                    <button data-gate-idx="${i}" class="gate-edit-btn bg-surface-700 hover:bg-surface-600 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors whitespace-nowrap">Edit Gate</button>
+                    <button data-gate-idx="${i}" class="gate-edit-btn bg-surface-700 hover:bg-surface-600 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors whitespace-nowrap" aria-label="Edit Gate ${escapeHtml(String(g.name))}">Edit Gate</button>
                 </div>
             `).join('');
             content.classList.remove('hidden');

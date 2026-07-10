@@ -7,6 +7,7 @@ This enables multiple configurations (dev, prod, test) and simplifies testing.
 """
 
 from flask import Flask, jsonify
+from flask_compress import Compress
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 
 from app.config.settings import get_config
@@ -66,6 +67,9 @@ def create_app(config_name: str | None = None) -> Flask:
     # ── Initialize CSRF Protection ──────────────────────────────────────
     csrf = CSRFProtect(app)
     csrf.exempt(auth_bp)
+
+    # ── Initialize Compression ──────────────────────────────────────────
+    Compress(app)
 
     @app.route("/api/v1/csrf-token", methods=["GET"])
     def get_csrf():

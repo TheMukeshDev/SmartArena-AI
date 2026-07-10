@@ -106,11 +106,11 @@ function initMapPage() {
         // Highlight selected zone and update ARIA
         zones.forEach(z => {
             z.setAttribute('stroke-width', '2');
-            z.setAttribute('aria-selected', 'false');
+            z.setAttribute('aria-pressed', 'false');
         });
         zone.setAttribute('stroke-width', '4');
         zone.setAttribute('stroke', '#ffffff');
-        zone.setAttribute('aria-selected', 'true');
+        zone.setAttribute('aria-pressed', 'true');
     };
 
     // Click and keyboard handler for zones
@@ -118,7 +118,7 @@ function initMapPage() {
         // Initialize with data
         const initData = generateSimData(zone.dataset.zone);
         zone.dataset.currentData = JSON.stringify(initData);
-        zone.setAttribute('aria-selected', 'false');
+        zone.setAttribute('aria-pressed', 'false');
         zone.setAttribute('aria-label',
             `${zone.dataset.zone} zone, ${initData.occupancyPct}% full, ${initData.status}. Press Enter for details.`);
 

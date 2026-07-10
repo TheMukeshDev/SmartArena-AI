@@ -30,7 +30,7 @@
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-arena-500 text-white px-4 py-2 rounded z-[100]">Skip to sustainability dashboard</a>
     
     <!-- Navbar -->
-    <nav class="border-b border-white/10 bg-surface-900/50 backdrop-blur-md sticky top-0 z-50">
+    <nav class="border-b border-white/10 bg-surface-900/50 backdrop-blur-md sticky top-0 z-50" aria-label="Main navigation">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-6">
@@ -43,7 +43,7 @@
                     <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
                     <div class="flex items-center gap-4">
                         <a href="dashboard.html" class="text-sm text-surface-200 hover:text-white transition-colors">Dashboard</a>
-                        <a href="sustainability.html" class="text-sm text-neon-green font-medium border-b-2 border-neon-green pb-5 translate-y-[10px]">Eco Dashboard</a>
+                        <a href="sustainability.html" class="text-sm text-neon-green font-medium border-b-2 border-neon-green pb-5 translate-y-[10px]" aria-current="page">Eco Dashboard</a>
                     </div>
                 </div>
             </div>
@@ -51,7 +51,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" tabindex="-1">
         
         <header class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
             <div>

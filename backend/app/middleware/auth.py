@@ -20,6 +20,11 @@ logger = logging.getLogger(__name__)
 
 
 def _authenticate_request() -> tuple[dict | None, Any]:
+    """Verify the request using a Firebase session cookie or ID token.
+
+    Returns a ``(decoded_claims, None)`` tuple on success, or
+    ``(None, error_response)`` on failure.
+    """
     session_cookie = request.cookies.get("session")
     auth_header = request.headers.get("Authorization")
     bearer_token = None
@@ -100,6 +105,7 @@ def require_role(allowed_roles: list[str]) -> Callable[..., Any]:
 
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         def _check_role() -> Any:
+            """Verify the authenticated user's role is in the allowed list."""
             user = getattr(g, "user", None)
             if not user:
                 return error_response(
