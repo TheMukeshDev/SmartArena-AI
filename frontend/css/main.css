@@ -220,6 +220,21 @@
   }
 }
 
+/* ── Toast Notification Animation ───────────────────────────────────── */
+.toast-enter {
+  animation: toastSlideUp 0.3s ease-out;
+}
+@keyframes toastSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ── Accessibility: Reduced Motion ──────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,

@@ -47,12 +47,12 @@ const Admin = (() => {
                 <div class="glass-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4" role="listitem">
                     <div class="flex-1">
                         <div class="flex items-center gap-3 mb-2">
-                            <h3 class="font-bold text-lg">${g.name}</h3>
-                            <span class="text-xs px-2 py-0.5 rounded-full font-medium ${GATE_STATUSES[g.status] || GATE_STATUSES.open}">${g.status}</span>
+                            <h3 class="font-bold text-lg">${escapeHtml(String(g.name))}</h3>
+                            <span class="text-xs px-2 py-0.5 rounded-full font-medium ${GATE_STATUSES[g.status] || GATE_STATUSES.open}">${escapeHtml(String(g.status))}</span>
                         </div>
                         <div class="flex items-center gap-6 text-sm text-surface-200/60">
-                            <span>Capacity: <strong class="text-white">${g.capacity}</strong></span>
-                            <span>Current: <strong class="text-white">${g.current_count}</strong></span>
+                            <span>Capacity: <strong class="text-white">${escapeHtml(String(g.capacity))}</strong></span>
+                            <span>Current: <strong class="text-white">${escapeHtml(String(g.current_count))}</strong></span>
                         </div>
                         <div class="w-full bg-surface-800 h-1.5 rounded-full mt-2 max-w-xs">
                             <div class="bg-arena-500 h-1.5 rounded-full transition-all duration-500" style="width: ${Math.min(100, (g.current_count / g.capacity) * 100)}%"></div>
@@ -96,7 +96,7 @@ const Admin = (() => {
                 modal.classList.add('hidden');
                 await loadGates();
             } catch (err) {
-                alert('Failed to update gate.');
+                showToast('Failed to update gate.', 'error');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Save Changes';
@@ -131,7 +131,7 @@ const Admin = (() => {
                         </div>
                         <p class="text-sm text-surface-200/70 mb-2">${escapeHtml(a.message)}</p>
                         <div class="flex items-center gap-3 text-xs text-surface-200/40">
-                            <span>${a.target_zones?.length ? a.target_zones.join(', ') : 'All Zones'}</span>
+                            <span>${a.target_zones?.length ? escapeHtml(a.target_zones.join(', ')) : 'All Zones'}</span>
                             <span>${a.created_at ? new Date(a.created_at).toLocaleString() : ''}</span>
                         </div>
                     </div>
@@ -168,7 +168,7 @@ const Admin = (() => {
                 form.reset();
                 await loadAnnouncements();
             } catch (err) {
-                alert('Failed to broadcast announcement.');
+                showToast('Failed to broadcast announcement.', 'error');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Broadcast Announcement';

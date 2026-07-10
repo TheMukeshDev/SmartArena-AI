@@ -200,11 +200,11 @@ function initMapPage() {
                     }
                     insightsBanner.classList.remove('hidden');
                 } else {
-                    alert("AI failed to analyze crowd data.");
+                    showToast("AI failed to analyze crowd data.", "error");
                 }
             } catch (err) {
                 console.error(err);
-                alert("Error contacting AI service.");
+                showToast("Error contacting AI service.", "error");
             } finally {
                 analyzeBtn.disabled = false;
                 analyzeBtn.innerHTML = '<span aria-hidden="true">🧠</span> Run AI Crowd Analysis';

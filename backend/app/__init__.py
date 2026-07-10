@@ -16,6 +16,7 @@ from app.middleware.cors import init_cors
 from app.middleware.ratelimit import init_ratelimit
 from app.middleware.security import init_security_headers
 from app.routes import register_blueprints
+from app.routes.auth import auth_bp
 from app.routes.errors import register_error_handlers
 
 
@@ -63,7 +64,8 @@ def create_app(config_name: str | None = None) -> Flask:
     register_blueprints(app)
 
     # ── Initialize CSRF Protection ──────────────────────────────────────
-    CSRFProtect(app)
+    csrf = CSRFProtect(app)
+    csrf.exempt(auth_bp)
 
     @app.route("/api/v1/csrf-token", methods=["GET"])
     def get_csrf():

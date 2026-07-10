@@ -73,7 +73,7 @@ class BaseConfig:
         False  # Disable strict referer check for cross-origin frontend
     )
     WTF_CSRF_CHECK_DEFAULT: bool = (
-        False  # Per-endpoint: state-changing routes use @csrf.exempt
+        True  # CSRF enforced on all POST/PUT/DELETE by default
     )
 
     # ── Logging ─────────────────────────────────────────────────────────

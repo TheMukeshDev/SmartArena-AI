@@ -6,11 +6,13 @@
     "dev": "vite",
     "build": "vite build && npx -y shx cp -r js dist/ && npx -y shx cp -r assets dist/",
     "serve": "vite preview",
+    "lint": "eslint js/",
     "test:rules": "node tests/run-rules-test.js"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^3.0.1",
     "autoprefixer": "^10.5.2",
+    "eslint": "^8.57.0",
     "firebase": "^10.14.0",
     "mocha": "^10.7.0",
     "postcss": "^8.5.16",

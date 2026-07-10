@@ -1,0 +1,29 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "script"
+    },
+    "globals": {
+        "CONFIG": "readonly",
+        "I18N": "readonly",
+        "Auth": "readonly",
+        "Admin": "readonly",
+        "Chart": "readonly",
+        "gsap": "readonly",
+        "initFirebase": "readonly",
+        "showToast": "readonly"
+    },
+    "rules": {
+        "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+        "no-console": "off",
+        "eqeqeq": ["error", "always"],
+        "no-eval": "error",
+        "no-implied-eval": "error",
+        "no-new-func": "error"
+    }
+}

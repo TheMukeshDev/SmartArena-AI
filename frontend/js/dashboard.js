@@ -102,11 +102,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         aiResult.classList.remove('hidden');
                         document.getElementById('incident-desc').value = '';
                     } else {
-                        alert(t('dash.incident.error'));
+                        showToast(t('dash.incident.error'), 'error');
                     }
                 } catch (err) {
                     console.error(err);
-                    alert(t('dash.incident.network_error'));
+                    showToast(t('dash.incident.network_error'), 'error');
                 } finally {
                     incidentSubmit.disabled = false;
                     incidentSubmit.textContent = t('dash.incident.submit');
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 } catch (err) {
                     console.error(err);
-                    alert(t('vol.error_task'));
+                    showToast(t('vol.error_task'), 'error');
                 } finally {
                     reqTaskBtn.disabled = false;
                     reqTaskBtn.textContent = t('vol.ask');

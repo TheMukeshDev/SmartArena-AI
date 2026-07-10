@@ -135,11 +135,11 @@ function initSustainabilityPage() {
                     
                     ecoPanel.classList.remove('hidden');
                 } else {
-                    alert("Optimization failed.");
+                    showToast("Optimization failed.", "error");
                 }
             } catch (err) {
                 console.error(err);
-                alert("Error contacting AI service.");
+                showToast("Error contacting AI service.", "error");
             } finally {
                 optBtn.disabled = false;
                 optBtn.textContent = '🌱 Run AI Eco-Optimizer';
