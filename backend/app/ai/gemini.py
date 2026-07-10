@@ -59,7 +59,7 @@ async def classify_incident(description: str) -> dict:
     prompt = INCIDENT_PROMPT.format(description=safe_desc)
 
     try:
-        response = await model.generate_content_async(
+        response = model.generate_content(
             prompt, generation_config={"response_mime_type": "application/json"}
         )
         return json.loads(response.text)
@@ -91,7 +91,7 @@ async def analyze_crowd_data(
     )
 
     try:
-        response = await model.generate_content_async(
+        response = model.generate_content(
             prompt, generation_config={"response_mime_type": "application/json"}
         )
         return json.loads(response.text)
@@ -115,7 +115,7 @@ async def assign_volunteer_task(location: str) -> dict:
     prompt = VOLUNTEER_PROMPT.format(location=safe_loc)
 
     try:
-        response = await model.generate_content_async(
+        response = model.generate_content(
             prompt, generation_config={"response_mime_type": "application/json"}
         )
         return json.loads(response.text)
@@ -139,7 +139,7 @@ async def optimize_sustainability(metrics: dict, weather: str = "Unknown") -> di
     prompt = SUSTAINABILITY_PROMPT.format(metrics=safe_metrics, weather=safe_weather)
 
     try:
-        response = await model.generate_content_async(
+        response = model.generate_content(
             prompt, generation_config={"response_mime_type": "application/json"}
         )
         return json.loads(response.text)
@@ -160,7 +160,8 @@ async def ask_assistant(query: str, context: dict, language: str = "English") ->
     )
 
     try:
-        response = await model.generate_content_async(prompt)
+        # Use synchronous generate_content to avoid grpc asyncio loop issues in Flask threads
+        response = model.generate_content(prompt)
         return response.text.strip()
     except Exception as e:
         logger.error("Gemini assistant failed: %s", str(e))
@@ -189,7 +190,7 @@ async def suggest_transport(
     )
 
     try:
-        response = await model.generate_content_async(
+        response = model.generate_content(
             prompt, generation_config={"response_mime_type": "application/json"}
         )
         return json.loads(response.text)
