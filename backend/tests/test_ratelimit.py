@@ -1,7 +1,6 @@
 import json
-import os
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, AsyncMock
 
 
 @pytest.fixture
@@ -48,7 +47,8 @@ class TestRateLimit:
             ),
             patch(
                 "app.services.ai_service.AIService.process_chat",
-                return_value="fake response",
+                new_callable=AsyncMock,
+                return_value=("fake response", None),
             ),
         ):
             url = "/api/v1/ai/assistant/chat"
@@ -72,7 +72,8 @@ class TestRateLimit:
             ),
             patch(
                 "app.services.ai_service.AIService.process_chat",
-                return_value="fake response",
+                new_callable=AsyncMock,
+                return_value=("fake response", None),
             ),
         ):
             url = "/api/v1/ai/assistant/chat"
@@ -95,11 +96,11 @@ class TestRateLimit:
             ),
             patch(
                 "app.services.ai_service.AIService.process_chat",
-                return_value="fake response",
+                new_callable=AsyncMock,
+                return_value=("fake response", None),
             ),
         ):
-            res = rl_client.post(
-                "/api/v1/ai/assistant/chat", json={"query": "Hello", "context": {}}
-            )
+            url = "/api/v1/ai/assistant/chat"
+            res = rl_client.post(url, json={"query": "Hello", "context": {}})
             assert "X-RateLimit-Limit" in res.headers
             assert "X-RateLimit-Remaining" in res.headers

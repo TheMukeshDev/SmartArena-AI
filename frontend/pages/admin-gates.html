@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartArena AI — Gate Management">
+    <title>Manage Gates — SmartArena AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="../js/config.js?v=2"></script>
+    <script src="../js/firebase-init.js?v=2"></script>
+    <script src="../js/auth.js?v=2"></script>
+    <link rel="icon" href="/favicon.ico">
+</head>
+<body class="bg-surface-950 min-h-screen text-white">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-arena-500 text-white px-4 py-2 rounded z-[100]">Skip to main content</a>
+
+    <nav class="border-b border-white/10 bg-surface-900/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-6">
+                    <a href="dashboard.html" class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg overflow-hidden shadow-glow">
+                            <img src="/assets/images/logo.png" alt="SmartArena Logo" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-xl font-display font-bold hidden sm:block">Smart<span class="gradient-text">Arena</span></span>
+                    </a>
+                    <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
+                    <div class="flex items-center gap-4">
+                        <a href="dashboard.html" class="text-sm text-surface-200 hover:text-white transition-colors">Dashboard</a>
+                        <a href="admin-gates.html" class="text-sm text-arena-400 font-medium border-b-2 border-arena-400 pb-5 translate-y-[10px]">Manage Gates</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="logout-btn" class="text-sm text-surface-200 hover:text-white transition-colors">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" tabindex="-1">
+        <header class="mb-8">
+            <h1 class="text-3xl font-display font-bold mb-2">Gate <span class="gradient-text">Management</span></h1>
+            <p class="text-surface-200 text-sm">Open, close, or adjust capacity for stadium gates.</p>
+        </header>
+
+        <div id="loading-state" class="flex justify-center items-center h-32">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-arena-500"></div>
+        </div>
+
+        <div id="gates-content" class="hidden space-y-4" role="list" aria-label="Stadium gates"></div>
+
+        <div id="gate-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Edit gate">
+            <div class="glass-card p-6 w-full max-w-md mx-4 border-arena-500/30">
+                <h2 class="text-lg font-bold mb-4">Edit Gate: <span id="modal-gate-name"></span></h2>
+                <form id="gate-form" class="space-y-4">
+                    <div>
+                        <label for="gate-status" class="block text-sm font-medium text-surface-200/60 mb-1">Status</label>
+                        <select id="gate-status" class="w-full bg-surface-900 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-arena-400">
+                            <option value="open">Open</option>
+                            <option value="closed">Closed</option>
+                            <option value="maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="gate-capacity" class="block text-sm font-medium text-surface-200/60 mb-1">Capacity</label>
+                        <input type="number" id="gate-capacity" min="0" class="w-full bg-surface-900 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-arena-400">
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                        <button type="submit" class="flex-1 bg-arena-500 hover:bg-arena-600 text-white font-medium py-2 rounded-lg transition-colors">Save Changes</button>
+                        <button type="button" id="modal-close-btn" class="flex-1 bg-surface-700 hover:bg-surface-600 text-white font-medium py-2 rounded-lg transition-colors">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('logout-btn').addEventListener('click', () => Auth.logout());
+            Admin.initGatesPage();
+        });
+    </script>
+</body>
+</html>

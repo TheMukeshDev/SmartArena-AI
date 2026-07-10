@@ -105,7 +105,9 @@ def update_gate():
             "name": data.name,
             "status": data.status,
             "capacity": data.capacity,
-            "updated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "updated_at": datetime.datetime.now(
+                datetime.timezone.utc
+            ).isoformat(),
         },
         merge=True,
     )
@@ -271,7 +273,9 @@ def _log_security_event(event_type: str, description: str, admin_uid: str):
                 "event_type": event_type,
                 "description": description,
                 "admin_uid": admin_uid,
-                "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                "timestamp": datetime.datetime.now(
+                    datetime.timezone.utc
+                ).isoformat(),
             }
         )
     except Exception as e:

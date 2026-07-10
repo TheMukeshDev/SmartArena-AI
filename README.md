@@ -208,14 +208,6 @@ For manual testing of Role-Based Access Control (RBAC) and dashboard panels, the
 
 ---
 
-## Troubleshooting
-
-### Login / Session Errors
-If you experience a `400 Bad Request` or get logged out immediately after successfully logging in, your browser might have a corrupted session cookie from an older deployment. 
-**Fix:** Manually clear your cookies for the site (or use an Incognito window) and try logging in again.
-
----
-
 ## License
 
 This project is licensed under the MIT License.

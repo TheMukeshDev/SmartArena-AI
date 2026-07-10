@@ -42,98 +42,89 @@ def test_sanitize_user_input_preserves_benign():
 
 @pytest.mark.asyncio
 async def test_classify_incident_fallback():
-    with patch("app.ai.gemini._init_gemini", return_value=False):
+    with patch("app.ai.gemini._get_client", return_value=None):
         res = await classify_incident("test")
         assert res["category"] == "General"
 
 
 @pytest.mark.asyncio
 async def test_analyze_crowd_data_fallback():
-    with patch("app.ai.gemini._init_gemini", return_value=False):
+    with patch("app.ai.gemini._get_client", return_value=None):
         res = await analyze_crowd_data([])
         assert res["global_status"] == "Normal"
 
 
 @pytest.mark.asyncio
 async def test_assign_volunteer_task_fallback():
-    with patch("app.ai.gemini._init_gemini", return_value=False):
+    with patch("app.ai.gemini._get_client", return_value=None):
         res = await assign_volunteer_task("Gate A")
         assert res["priority"] == "Medium"
 
 
 @pytest.mark.asyncio
 async def test_optimize_sustainability_fallback():
-    with patch("app.ai.gemini._init_gemini", return_value=False):
+    with patch("app.ai.gemini._get_client", return_value=None):
         res = await optimize_sustainability({})
         assert res["status"] == "Optimization Failed"
 
 
 @pytest.mark.asyncio
 async def test_ask_assistant_fallback():
-    with patch("app.ai.gemini._init_gemini", return_value=False):
-        res = await ask_assistant("Hello", {})
-        assert "offline" in res.lower()
+    with patch("app.ai.gemini._get_client", return_value=None):
+        text, interaction_id = await ask_assistant("Hello", {})
+        assert "offline" in text.lower()
+        assert interaction_id is None
 
 
 @pytest.mark.asyncio
 async def test_classify_incident_exception():
-    with (
-        patch("app.ai.gemini._init_gemini", return_value=True),
-        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
-    ):
-        mock_instance = mock_model.return_value
-        mock_instance.generate_content_async = AsyncMock(
-            side_effect=Exception("API Error")
-        )
+    with patch("app.ai.gemini._get_client") as mock_get_client:
+        mock_client = MagicMock()
+        mock_client.models.generate_content.side_effect = Exception("API Error")
+        mock_get_client.return_value = mock_client
         res = await classify_incident("test")
         assert res["category"] == "General"
 
 
 @pytest.mark.asyncio
 async def test_classify_incident_invalid_json_returns_fallback():
-    with (
-        patch("app.ai.gemini._init_gemini", return_value=True),
-        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
-    ):
-        mock_instance = mock_model.return_value
-        mock_response = AsyncMock()
+    with patch("app.ai.gemini._get_client") as mock_get_client:
+        mock_client = MagicMock()
+        mock_response = MagicMock()
         mock_response.text = "not valid json at all"
-        mock_instance.generate_content_async = AsyncMock(return_value=mock_response)
+        mock_client.models.generate_content.return_value = mock_response
+        mock_get_client.return_value = mock_client
         res = await classify_incident("test")
         assert res["category"] == "General"
 
 
 @pytest.mark.asyncio
 async def test_analyze_crowd_data_invalid_json_returns_fallback():
-    with (
-        patch("app.ai.gemini._init_gemini", return_value=True),
-        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
-    ):
-        mock_instance = mock_model.return_value
-        mock_response = AsyncMock()
+    with patch("app.ai.gemini._get_client") as mock_get_client:
+        mock_client = MagicMock()
+        mock_response = MagicMock()
         mock_response.text = "{{{bad json}}}"
-        mock_instance.generate_content_async = AsyncMock(return_value=mock_response)
+        mock_client.models.generate_content.return_value = mock_response
+        mock_get_client.return_value = mock_client
         res = await analyze_crowd_data([])
         assert res["global_status"] == "Normal"
 
 
 @pytest.mark.asyncio
 async def test_suggest_transport_fallback():
-    with patch("app.ai.gemini._init_gemini", return_value=False):
+    with patch("app.ai.gemini._get_client", return_value=None):
         res = await suggest_transport("Gate A", "3:00 PM")
         assert res["recommended_mode"] == "Parking"
 
 
 @pytest.mark.asyncio
 async def test_suggest_transport_invalid_json_returns_fallback():
-    with (
-        patch("app.ai.gemini._init_gemini", return_value=True),
-        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
-    ):
-        mock_instance = mock_model.return_value
-        mock_response = AsyncMock()
+    with patch("app.ai.gemini._get_client") as mock_get_client:
+        mock_client = MagicMock()
+        mock_response = MagicMock()
         mock_response.text = "not json"
-        mock_instance.generate_content_async = AsyncMock(return_value=mock_response)
+        mock_client.models.generate_content.return_value = mock_response
+        mock_get_client.return_value = mock_client
         res = await suggest_transport("Gate A", "3:00 PM")
         assert res["recommended_mode"] == "Parking"
 
@@ -143,75 +134,67 @@ def test_sanitize_user_input_non_string():
     assert result == "12345"
 
 
-def test_init_gemini_missing_key(app):
+def test_get_client_missing_key(app):
     with app.app_context():
         app.config["GEMINI_API_KEY"] = ""
-        from app.ai.gemini import _init_gemini
+        from app.ai.gemini import _get_client
 
-        assert _init_gemini() is False
+        assert _get_client() is None
 
 
 @pytest.mark.asyncio
 async def test_assign_volunteer_task_success():
-    with (
-        patch("app.ai.gemini._init_gemini", return_value=True),
-        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
-    ):
-        mock_instance = mock_model.return_value
-        mock_response = AsyncMock()
+    with patch("app.ai.gemini._get_client") as mock_get_client:
+        mock_client = MagicMock()
+        mock_response = MagicMock()
         mock_response.text = (
             '{"task": "Clean", "priority": "High", "description": "Spill"}'
         )
-        mock_instance.generate_content_async = AsyncMock(return_value=mock_response)
+        mock_client.models.generate_content.return_value = mock_response
+        mock_get_client.return_value = mock_client
         res = await assign_volunteer_task("Gate A")
         assert res["task"] == "Clean"
 
 
 @pytest.mark.asyncio
 async def test_optimize_sustainability_success():
-    with (
-        patch("app.ai.gemini._init_gemini", return_value=True),
-        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
-    ):
-        mock_instance = mock_model.return_value
-        mock_response = AsyncMock()
+    with patch("app.ai.gemini._get_client") as mock_get_client:
+        mock_client = MagicMock()
+        mock_response = MagicMock()
         mock_response.text = '{"status": "Good", "recommendations": []}'
-        mock_instance.generate_content_async = AsyncMock(return_value=mock_response)
+        mock_client.models.generate_content.return_value = mock_response
+        mock_get_client.return_value = mock_client
         res = await optimize_sustainability({"energy": 100})
         assert res["status"] == "Good"
 
 
 @pytest.mark.asyncio
 async def test_ask_assistant_success():
-    with (
-        patch("app.ai.gemini._init_gemini", return_value=True),
-        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
-    ):
-        mock_instance = mock_model.return_value
-        mock_response = AsyncMock()
-        mock_response.text = "Hello there"
-        mock_instance.generate_content_async = AsyncMock(return_value=mock_response)
-        res = await ask_assistant("Hi", {})
-        assert res == "Hello there"
+    with patch("app.ai.gemini._get_client") as mock_get_client:
+        mock_client = MagicMock()
+        mock_interaction = MagicMock()
+        mock_interaction.output_text = "Hello there"
+        mock_interaction.id = "interaction-123"
+        mock_client.interactions.create.return_value = mock_interaction
+        mock_get_client.return_value = mock_client
+        text, interaction_id = await ask_assistant("Hi", {})
+        assert text == "Hello there"
+        assert interaction_id == "interaction-123"
 
 
 @pytest.mark.asyncio
 async def test_ask_assistant_exception():
-    with (
-        patch("app.ai.gemini._init_gemini", return_value=True),
-        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
-    ):
-        mock_instance = mock_model.return_value
-        mock_instance.generate_content_async = AsyncMock(
-            side_effect=Exception("API Error")
-        )
-        res = await ask_assistant("Hi", {})
-        assert "trouble processing" in res
+    with patch("app.ai.gemini._get_client") as mock_get_client:
+        mock_client = MagicMock()
+        mock_client.interactions.create.side_effect = Exception("API Error")
+        mock_get_client.return_value = mock_client
+        text, interaction_id = await ask_assistant("Hi", {})
+        assert "trouble processing" in text
+        assert interaction_id is None
 
 
 @pytest.mark.asyncio
 async def test_analyze_crowd_data_with_history():
-    """Verify history is included in the prompt for predictive analysis."""
     from app.config.prompts import CROWD_PROMPT
 
     history = [
@@ -232,12 +215,9 @@ async def test_analyze_crowd_data_with_history():
 
     assert "{history}" in CROWD_PROMPT
 
-    with (
-        patch("app.ai.gemini._init_gemini", return_value=True),
-        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
-    ):
-        mock_instance = mock_model.return_value
-        mock_response = AsyncMock()
+    with patch("app.ai.gemini._get_client") as mock_get_client:
+        mock_client = MagicMock()
+        mock_response = MagicMock()
         mock_response.text = json.dumps(
             {
                 "global_status": "Congested",
@@ -247,7 +227,8 @@ async def test_analyze_crowd_data_with_history():
                 "recommended_action": "Open overflow seating",
             }
         )
-        mock_instance.generate_content_async = AsyncMock(return_value=mock_response)
+        mock_client.models.generate_content.return_value = mock_response
+        mock_get_client.return_value = mock_client
 
         res = await analyze_crowd_data(zones_data, history=history)
 
@@ -259,7 +240,6 @@ async def test_analyze_crowd_data_with_history():
 
 @pytest.mark.asyncio
 async def test_analyze_crowd_data_with_history_fallback_without_init(app):
-    """Fallback works when _init_gemini fails, even with history."""
     with app.app_context():
         app.config["GEMINI_API_KEY"] = ""
         res = await analyze_crowd_data([], history=[{"zones": [], "timestamp": ""}])

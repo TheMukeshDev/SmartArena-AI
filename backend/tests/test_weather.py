@@ -1,6 +1,6 @@
 import pytest
 import json
-from unittest.mock import patch, AsyncMock, MagicMock
+from unittest.mock import patch, MagicMock
 
 
 @pytest.mark.asyncio
@@ -41,7 +41,7 @@ async def test_fetch_weather_returns_none_on_error():
 
 @pytest.mark.asyncio
 async def test_fetch_weather_injects_into_crowd_prompt():
-    from app.services.weather import fetch_weather, WeatherData
+    from app.services.weather import fetch_weather
     from app.ai.gemini import analyze_crowd_data
 
     mock_data = {
@@ -54,8 +54,7 @@ async def test_fetch_weather_injects_into_crowd_prompt():
     }
     with (
         patch("urllib.request.urlopen") as mock_urlopen,
-        patch("app.ai.gemini._init_gemini", return_value=True),
-        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
+        patch("app.ai.gemini._get_client") as mock_get_client,
     ):
         mock_resp = MagicMock()
         mock_resp.read.return_value = json.dumps(mock_data).encode()
@@ -64,8 +63,8 @@ async def test_fetch_weather_injects_into_crowd_prompt():
         weather = await fetch_weather()
         assert weather is not None
 
-        mock_instance = mock_model.return_value
-        mock_response = AsyncMock()
+        mock_client = mock_get_client.return_value
+        mock_response = MagicMock()
         mock_response.text = json.dumps(
             {
                 "global_status": "Optimal",
@@ -75,7 +74,7 @@ async def test_fetch_weather_injects_into_crowd_prompt():
                 "recommended_action": "Staff covered areas",
             }
         )
-        mock_instance.generate_content_async = AsyncMock(return_value=mock_response)
+        mock_client.models.generate_content.return_value = mock_response
 
         res = await analyze_crowd_data(
             [{"zone": "North Stand", "occupancy": 50}],
@@ -83,7 +82,8 @@ async def test_fetch_weather_injects_into_crowd_prompt():
             weather=weather.summary,
         )
 
-        sent_prompt = mock_instance.generate_content_async.call_args[0][0]
+        call_kwargs = mock_client.models.generate_content.call_args[1]
+        sent_prompt = call_kwargs["contents"]
         assert "32.0" in sent_prompt or "25.0" in sent_prompt
         assert res["global_status"] == "Optimal"
 
