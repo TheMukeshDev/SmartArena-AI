@@ -64,7 +64,7 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-surface-900 to-transparent"></div>
                 </div>
                 <div class="relative z-10 p-8 sm:p-12 text-center sm:text-left">
-                    <span class="badge mb-3">Intelligent Operations Center</span>
+                    <span class="badge mb-3">FIFA World Cup 2026™ Operations Center</span>
                     <h1 class="text-3xl sm:text-4xl font-display font-bold mb-2">Welcome to your <span class="gradient-text">Dashboard</span></h1>
                     <p class="text-surface-200" id="welcome-message">Here's a real-time overview of the stadium.</p>
                 </div>
@@ -78,11 +78,26 @@
                             👑 Admin Controls
                         </h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <button class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-white/5 transition-colors">Manage Gates</button>
-                            <a href="map.html" class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-arena-500/50 transition-colors block">🗺️ Open Live Map</a>
-                            <button class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-white/5 transition-colors">Broadcast Announcement</button>
-                            <button class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-white/5 transition-colors">View Security Logs</button>
-                            <a href="sustainability.html" class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-white/5 transition-colors block">Sustainability Report</a>
+                            <a href="admin-gates.html" id="admin-gates-btn" class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-arena-500/50 transition-colors block">
+                                <span class="font-medium">Manage Gates</span>
+                                <span class="text-xs text-surface-200/40 block mt-1">Open, close, adjust capacity</span>
+                            </a>
+                            <a href="map.html" class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-arena-500/50 transition-colors block">
+                                <span class="font-medium">🗺️ Open Live Map</span>
+                                <span class="text-xs text-surface-200/40 block mt-1">Real-time crowd heatmap</span>
+                            </a>
+                            <a href="admin-announcements.html" id="admin-announcements-btn" class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-arena-500/50 transition-colors block">
+                                <span class="font-medium">Broadcast Announcement</span>
+                                <span class="text-xs text-surface-200/40 block mt-1">Send stadium-wide alerts</span>
+                            </a>
+                            <a href="admin-security.html" id="admin-security-btn" class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-arena-500/50 transition-colors block">
+                                <span class="font-medium">View Security Logs</span>
+                                <span class="text-xs text-surface-200/40 block mt-1">Audit trail & admin events</span>
+                            </a>
+                            <a href="sustainability.html" class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-white/5 transition-colors block">
+                                <span class="font-medium">Sustainability Report</span>
+                                <span class="text-xs text-surface-200/40 block mt-1">Energy & environmental data</span>
+                            </a>
                         </div>
                     </div>
                 </div>

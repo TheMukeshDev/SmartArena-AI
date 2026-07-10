@@ -146,8 +146,9 @@ function initMobileMenu() {
   if (!toggle || !menu) return;
 
   toggle.addEventListener("click", () => {
-    menu.classList.toggle("hidden");
+    const isHidden = menu.classList.toggle("hidden");
     menu.classList.toggle("flex");
+    toggle.setAttribute("aria-expanded", !isHidden);
   });
 }
 

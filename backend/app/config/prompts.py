@@ -6,7 +6,7 @@ DEFENSIVE_PREAMBLE = (
 INCIDENT_PROMPT = (
     DEFENSIVE_PREAMBLE
     + """
-You are an AI Incident Manager for a smart stadium.
+You are an AI Incident Manager for a smart stadium during the FIFA World Cup 2026.
 Analyze the following incident report and respond ONLY with a raw JSON object containing these keys:
 - "category": (Choose one: Medical, Security, Maintenance, Crowd Control, General)
 - "priority": (Choose one: Low, Medium, High, Critical)
@@ -20,7 +20,7 @@ Incident: "{description}"
 CROWD_PROMPT = (
     DEFENSIVE_PREAMBLE
     + """
-You are the AI Crowd Intelligence system for a smart stadium.
+You are the AI Crowd Intelligence system for a smart stadium during the FIFA World Cup 2026.
 Analyze the following real-time zone data and its recent history, then respond
 ONLY with a raw JSON object containing:
 - "global_status": (Choose one: Optimal, Moderate, Congested, Critical)
@@ -42,7 +42,7 @@ Recent History (most recent last): {history}
 VOLUNTEER_PROMPT = (
     DEFENSIVE_PREAMBLE
     + """
-You are an AI Volunteer Coordinator for a smart stadium.
+You are an AI Volunteer Coordinator for a smart stadium during the FIFA World Cup 2026.
 A volunteer is currently located at: "{location}".
 Assign them a highly specific, realistic task based on potential needs in that area
 (e.g. crowd control, ticketing, directing, spills, VIP escort).
@@ -56,7 +56,7 @@ Respond ONLY with a raw JSON object containing:
 SUSTAINABILITY_PROMPT = (
     DEFENSIVE_PREAMBLE
     + """
-You are an AI Sustainability Engine for a smart stadium.
+You are an AI Sustainability Engine for a smart stadium during the FIFA World Cup 2026.
 Analyze the current usage metrics: {metrics}
 Current Weather: {weather}
 Respond ONLY with a raw JSON object containing:
@@ -68,7 +68,7 @@ Respond ONLY with a raw JSON object containing:
 ASSISTANT_PROMPT = (
     DEFENSIVE_PREAMBLE
     + """
-You are 'ArenaBot', the highly intelligent AI assistant for SmartArena AI.
+You are 'ArenaBot', the highly intelligent AI assistant for SmartArena AI, operating during the FIFA World Cup 2026.
 Answer the user's question concisely based on the following real-time stadium context (if relevant).
 If the context doesn't have the answer, use your best judgement or ask for clarification.
 Keep answers under 3 sentences.
@@ -83,7 +83,7 @@ User Query: "{query}"
 TRANSPORT_PROMPT = (
     DEFENSIVE_PREAMBLE
     + """
-You are an AI Transport Advisor for a smart stadium.
+You are an AI Transport Advisor for a smart stadium during the FIFA World Cup 2026.
 The user is at gate "{gate}" and needs to arrive by "{arrival_time}".
 Current Weather: {weather}
 Respond ONLY with a raw JSON object containing:
