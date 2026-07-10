@@ -81,6 +81,10 @@
            active:scale-[0.98] cursor-pointer;
   }
 
+  .btn-neon:focus-visible {
+    @apply outline-none ring-2 ring-white ring-offset-2 ring-offset-surface-950;
+  }
+
   .btn-neon::before {
     content: "";
     @apply absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300;
@@ -102,6 +106,22 @@
            transition-all duration-300
            hover:bg-arena-500/10 hover:border-arena-500/50
            active:scale-[0.98] cursor-pointer;
+  }
+
+  .btn-ghost:focus-visible {
+    @apply outline-none ring-2 ring-white ring-offset-2 ring-offset-surface-950;
+  }
+
+  /* Neon Green Button */
+  .btn-neon-green {
+    @apply relative px-6 py-3 rounded-xl font-semibold text-surface-950
+           bg-gradient-to-r from-neon-green to-green-400
+           transition-all duration-300
+           hover:scale-[1.02] active:scale-[0.98] cursor-pointer;
+  }
+
+  .btn-neon-green:focus-visible {
+    @apply outline-none ring-2 ring-white ring-offset-2 ring-offset-surface-950;
   }
 
   /* Badge */
@@ -145,7 +165,7 @@
   .input-field {
     @apply w-full px-4 py-3 rounded-xl
            bg-surface-800/80 border border-white/10
-           text-white placeholder-surface-200/40
+           text-white placeholder-surface-200/50
            focus:outline-none focus:border-arena-500/50 focus:ring-1 focus:ring-arena-500/30
            transition-all duration-200;
   }

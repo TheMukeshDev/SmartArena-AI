@@ -11,7 +11,7 @@
 [![Gemini](https://img.shields.io/badge/Gemini-AI-4285f4?logo=google&logoColor=white)](https://ai.google.dev)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**Real-time crowd intelligence • AI incident management • Sustainability tracking • Multilingual (EN/ES/FR/AR)**
+**Real-time crowd intelligence · AI incident management · Sustainability tracking · Multilingual (EN/ES/FR/AR/HI)**
 
 [Live Demo](#) · [Documentation](docs/) · [Architecture](docs/architecture.md) · [API Docs](docs/api.md) · [PS4 Alignment](docs/ps-alignment.md)
 
@@ -32,13 +32,17 @@ FIFA World Cup 2026 Challenge 4 — Develop an AI-powered platform for smart sta
 | 🧠 **AI Crowd Intelligence** | Gemini-powered crowd density analysis, congestion prediction, and gate routing |
 | 🚨 **Incident Management** | Auto-classification, prioritization, volunteer dispatch, and AI announcements |
 | 🗺️ **Interactive Stadium Map** | SVG-based live heatmap with clickable zones, keyboard navigation, and ARIA support |
-| 🤝 **Volunteer Management** | Real-time location tracking, AI-optimized task assignment |
-| 🌱 **Sustainability Dashboard** | Energy, water, waste, and carbon tracking with AI optimization |
-| 🤖 **AI Assistant** | Natural language queries with zone-aware navigation context |
+| 🤝 **Volunteer Management** | Real-time location tracking, AI-optimized task assignment, task history |
+| 🌱 **Sustainability Dashboard** | Energy, water, waste, and carbon tracking with AI optimization and Chart.js visualizations |
+| 🤖 **AI Assistant** | Natural language queries with zone-aware navigation context and text-to-speech |
 | 🚗 **Transportation Advisor** | AI-powered gate routing with parking, transit, rideshare, and walking suggestions |
-| 🌐 **Multilingual** | Full UI and AI responses in English, Spanish, French, and Arabic |
-| ♿ **Accessible** | Skip-to-content, keyboard navigation, ARIA labels, screen reader support |
-| 🛡️ **Secure** | SQLite rate limiting, CSP headers, prompt injection defense, CSRF protection |
+| 🌤️ **Weather Intelligence** | Real-time weather data with operational notes for stadium planning |
+| 🗣️ **Speech & Text** | Web Speech API voice input/output for the AI Assistant, supporting multiple languages |
+| 📡 **Live Event Stream** | Server-Sent Events (SSE) for real-time incident notifications |
+| 🌐 **Multilingual** | Full UI and AI responses in English, Spanish, French, Arabic, and Hindi |
+| ♿ **Accessible** | Skip-to-content, keyboard navigation, ARIA labels, focus management, screen reader support |
+| 🛡️ **Secure** | SQLite rate limiting, CSP headers, CSRF protection, RBAC, prompt injection defense |
+| 🔐 **Role-Based Access** | Admin, volunteer, and fan roles with Firebase Custom Claims |
 
 ---
 
@@ -46,17 +50,19 @@ FIFA World Cup 2026 Challenge 4 — Develop an AI-powered platform for smart sta
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | HTML + TailwindCSS + JavaScript |
+| Frontend | HTML + TailwindCSS + JavaScript (ES6+) |
 | Backend | Python Flask (Blueprints + Factory Pattern) |
 | Database | Firebase Firestore |
-| Cache | SQLite (SHA-256 keyed, TTL-based) |
-| Rate Limiting | SQLite (fixed-window, per-IP) |
-| Auth | Firebase Authentication |
+| Cache | SQLite (SHA-256 keyed, TTL-based, indexed expiry) |
+| Rate Limiting | SQLite (fixed-window, per-IP, atomic upsert) |
+| Auth | Firebase Authentication (ID tokens + session cookies) |
 | AI | Google Gemini 1.5 Flash API |
-| Security | Flask-Talisman (CSP, HSTS, frame-options) |
+| Security | Flask-Talisman (CSP, HSTS, frame-options, Permissions-Policy) |
 | Charts | Chart.js |
-| Maps | SVG Stadium Map (accessible) |
-| i18n | Custom JS i18n (EN, ES, FR, AR) |
+| Maps | SVG Stadium Map (accessible, keyboard-navigable) |
+| Speech | Web Speech API (recognition + synthesis) |
+| Events | Server-Sent Events (SSE) with keepalive heartbeat |
+| i18n | Custom JS i18n (EN, ES, FR, AR, HI) |
 | Hosting | Firebase Hosting + Cloud Run |
 | CI/CD | GitHub Actions |
 
@@ -69,36 +75,36 @@ smartarena-ai/
 ├── backend/
 │   ├── app/
 │   │   ├── config/          # Settings, Firebase, Logging, Prompts
-│   │   ├── routes/          # Flask Blueprints (auth, ai_ops, health, navigation)
-│   │   ├── services/        # AI service, cache, navigation graph
+│   │   ├── routes/          # Flask Blueprints (auth, ai_ops, health, admin, events)
+│   │   ├── services/        # AI service, cache, navigation graph, weather
 │   │   ├── ai/              # Gemini integration + prompt injection defense
-│   │   ├── middleware/       # CORS, Auth, Rate limiting (SQLite), Security headers
-│   │   ├── models/          # Pydantic schemas
-│   │   ├── utils/           # Response helpers
-│   │   └── templates/       # Jinja2 templates
-│   ├── tests/               # Pytest test suite
+│   │   ├── middleware/       # CORS, Auth (RBAC), Rate limiting (SQLite), Security headers
+│   │   ├── models/          # Pydantic schemas (validated input models)
+│   │   └── utils/           # Response helpers
+│   ├── tests/               # Pytest test suite (154 tests)
 │   ├── app.py               # Entry point
 │   ├── gunicorn.conf.py     # Production WSGI config
 │   ├── Dockerfile           # Container image
 │   └── requirements.txt     # Python dependencies
 ├── frontend/
 │   ├── css/                 # TailwindCSS source & output
-│   ├── js/                  # Config, auth, i18n, map, dashboard, sustainability
-│   ├── assets/              # Static assets
-│   ├── pages/               # HTML pages
+│   ├── js/                  # Config, auth, i18n, map, dashboard, sustainability, toast, admin
+│   ├── assets/              # Static assets (images, icons)
+│   ├── pages/               # HTML pages (dashboard, volunteer, admin, auth, map)
 │   ├── index.html           # Landing page
 │   ├── tailwind.config.js   # Tailwind configuration
-│   └── package.json         # Node dependencies
+│   └── package.json         # Node dependencies + ESLint
 ├── firebase/
 │   ├── firebase.json        # Hosting config
-│   ├── firestore.rules      # Security rules
+│   ├── firestore.rules      # Security rules (10 collections)
 │   └── firestore.indexes.json
 ├── docs/
 │   ├── architecture.md      # System architecture
-│   ├── api.md               # API documentation
+│   ├── api.md               # Full API documentation (20+ endpoints)
 │   └── deployment.md        # Deployment guide
 ├── .github/workflows/
-│   └── ci.yml               # CI pipeline
+│   └── ci.yml               # CI pipeline (backend tests + frontend lint)
+├── LICENSE                   # MIT License
 ├── .gitignore
 └── README.md
 ```
@@ -120,6 +126,7 @@ smartarena-ai/
 cd backend
 python -m venv venv
 venv\Scripts\activate          # Windows
+source venv/bin/activate       # macOS/Linux
 pip install -r requirements.txt
 cp .env.example .env           # Edit with your credentials
 python app.py
@@ -130,7 +137,7 @@ python app.py
 ```bash
 cd frontend
 npm install
-npm run dev                    # Watch mode
+npm run dev                    # Watch mode with TailwindCSS
 ```
 
 Visit `http://localhost:5000/health` to verify the backend is running.
@@ -139,10 +146,16 @@ Visit `http://localhost:5000/health` to verify the backend is running.
 
 ## Testing
 
-### Backend Tests
+### Backend Tests (154 tests)
 ```bash
 cd backend
 pytest tests/ -v --cov=app --cov-report=term-missing
+```
+
+### Frontend Linting
+```bash
+cd frontend
+npx eslint js/
 ```
 
 ### Firestore Rules Tests
@@ -190,11 +203,18 @@ For manual testing of Role-Based Access Control (RBAC) and dashboard panels, the
 
 ---
 
-
 ## API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
+| GET | `/health` | Health check |
+| GET | `/health/ready` | Readiness probe with dependency checks |
+| GET | `/api/v1/` | API root with endpoint listing |
+| GET | `/api/v1/csrf-token` | Get CSRF token |
+| POST | `/api/v1/auth/sessionLogin` | Create session from Firebase ID token |
+| POST | `/api/v1/auth/sessionLogout` | Destroy session |
+| POST | `/api/v1/auth/register` | Register new user |
+| GET | `/api/v1/auth/me` | Get current user profile |
 | POST | `/api/v1/ai/incident` | Classify and prioritize an incident |
 | POST | `/api/v1/ai/crowd/analyze` | Analyze crowd density data |
 | POST | `/api/v1/ai/volunteer/assign` | Assign task to volunteer |
@@ -202,15 +222,23 @@ For manual testing of Role-Based Access Control (RBAC) and dashboard panels, the
 | POST | `/api/v1/ai/assistant/chat` | Chat with ArenaBot (supports preferred_language) |
 | POST | `/api/v1/ai/transport/suggest` | Get transport directions to a gate |
 | GET | `/api/v1/ai/navigation/zones` | List all zones with adjacency graph |
-| GET | `/api/v1/ai/navigation/path?start=X&end=Y` | Find shortest path between zones |
-| GET | `/api/v1/health` | Health check |
-| GET | `/api/v1/csrf-token` | Get CSRF token |
+| GET | `/api/v1/ai/navigation/path` | Find shortest path between zones |
+| GET | `/api/v1/ai/navigation/path/accessible` | Find accessible path (no stairs) |
+| GET | `/api/v1/ai/weather` | Fetch current weather data |
+| GET | `/api/v1/admin/gates` | List all stadium gates (admin) |
+| POST | `/api/v1/admin/gates` | Update gate status/capacity (admin) |
+| GET | `/api/v1/admin/announcements` | List announcements (admin) |
+| POST | `/api/v1/admin/announcements` | Create announcement (admin) |
+| DELETE | `/api/v1/admin/announcements/<id>` | Delete announcement (admin) |
+| GET | `/api/v1/admin/security/logs` | List security audit logs (admin) |
+| GET | `/api/v1/admin/users` | List all users (admin) |
+| GET | `/api/v1/events/incidents` | SSE stream for real-time incidents |
 
 ---
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 

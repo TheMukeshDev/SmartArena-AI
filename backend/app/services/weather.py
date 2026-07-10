@@ -1,3 +1,11 @@
+"""
+SmartArena AI — Weather Service
+=================================
+
+Fetches real-time weather data from the Open-Meteo API for the stadium
+location and generates operational notes for stadium management.
+"""
+
 import asyncio
 import json
 import logging
@@ -15,6 +23,17 @@ STADIUM_LON = -80.2391
 
 @dataclass
 class WeatherData:
+    """Current weather observation for the stadium location.
+
+    Attributes:
+        temperature_c: Temperature in degrees Celsius.
+        precipitation_mm: Current precipitation in millimetres.
+        weather_code: WMO weather condition code.
+        wind_speed_kmh: Wind speed in km/h.
+        summary: Human-readable weather summary string.
+        operational_note: Generated note for stadium operations.
+    """
+
     temperature_c: float
     precipitation_mm: float
     weather_code: int
@@ -51,10 +70,20 @@ WEATHER_CODES = {
 async def fetch_weather(
     lat: float = STADIUM_LAT, lon: float = STADIUM_LON
 ) -> Optional[WeatherData]:
+    """Fetch current weather from the Open-Meteo API.
+
+    Args:
+        lat: Latitude of the location to query.
+        lon: Longitude of the location to query.
+
+    Returns:
+        WeatherData with current conditions, or None on failure.
+    """
     try:
         url = (
             f"{OPEN_METEO_URL}?latitude={lat}&longitude={lon}"
-            f"&current=temperature_2m,precipitation,weather_code,wind_speed_10m"
+            f"&current=temperature_2m,precipitation,"
+            f"weather_code,wind_speed_10m"
             f"&timezone=auto"
         )
         if not url.startswith("https://"):
@@ -91,6 +120,17 @@ async def fetch_weather(
 def _generate_operational_note(
     temp: float, precip: float, wind: float, condition: str
 ) -> str:
+    """Generate a human-readable operational note from weather data.
+
+    Args:
+        temp: Temperature in degrees Celsius.
+        precip: Precipitation in millimetres.
+        wind: Wind speed in km/h.
+        condition: Weather condition description.
+
+    Returns:
+        Operational note with staffing and safety recommendations.
+    """
     notes = []
     if precip > 5:
         notes.append(
@@ -103,7 +143,8 @@ def _generate_operational_note(
     if temp > 35:
         notes.append(
             "High heat — expect increased cooling energy load. "
-            "Ensure water stations are stocked and medical teams are aware."
+            "Ensure water stations are stocked and medical teams "
+            "are aware."
         )
     elif temp < 10:
         notes.append(

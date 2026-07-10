@@ -75,6 +75,12 @@ def init_security_headers(app: Flask) -> None:
         referrer_policy="strict-origin-when-cross-origin",
         session_cookie_secure=force_https,
         session_cookie_http_only=True,
-        session_cookie_samesite="None",
+        session_cookie_samesite="Lax",
+        permissions_policy={
+            "camera": "()",
+            "microphone": "()",
+            "geolocation": "()",
+            "payment": "()",
+        },
     )
     logger.info("Security headers initialized (force_https=%s)", force_https)

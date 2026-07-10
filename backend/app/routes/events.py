@@ -1,3 +1,12 @@
+"""
+SmartArena AI — Server-Sent Events (SSE)
+==========================================
+
+Provides a real-time incident streaming endpoint backed by an
+SQLite-backed incident queue. Each SSE client receives only incidents
+newer than the last event they saw.
+"""
+
 import json
 import time
 import datetime
@@ -21,12 +30,22 @@ CREATE TABLE IF NOT EXISTS incidents (
 
 
 def _get_db_path() -> str:
+    """Get the incidents database path from app config.
+
+    Returns:
+        Filesystem path for the incidents SQLite database.
+    """
     from flask import current_app
 
     return current_app.config.get("EVENTS_DB_PATH", "events.db")
 
 
 def _init_db(db_path: str) -> None:
+    """Create the incidents table if it doesn't exist.
+
+    Args:
+        db_path: Filesystem path for the SQLite database.
+    """
     conn = sqlite3.connect(db_path)
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute(CREATE_TABLE_SQL)
@@ -35,6 +54,14 @@ def _init_db(db_path: str) -> None:
 
 
 def _get_conn(db_path: str) -> sqlite3.Connection:
+    """Open a new SQLite connection with WAL mode.
+
+    Args:
+        db_path: Filesystem path for the SQLite database.
+
+    Returns:
+        Open SQLite connection.
+    """
     conn = sqlite3.connect(db_path)
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA synchronous=NORMAL")
@@ -42,11 +69,16 @@ def _get_conn(db_path: str) -> sqlite3.Connection:
 
 
 def push_incident(incident: dict) -> None:
+    """Push a new incident into the event queue.
+
+    Args:
+        incident: Incident data dictionary to persist.
+    """
     from flask import current_app
 
     db_path = current_app.config.get("EVENTS_DB_PATH", "events.db")
     _init_db(db_path)
-    conn = _get_db(db_path)
+    conn = _get_conn(db_path)
     try:
         conn.execute(
             "INSERT INTO incidents (incident_json, created_at) VALUES (?, ?)",
@@ -58,6 +90,14 @@ def push_incident(incident: dict) -> None:
 
 
 def _get_db(db_path: str) -> sqlite3.Connection:
+    """Get a database connection, initialising the schema first.
+
+    Args:
+        db_path: Filesystem path for the SQLite database.
+
+    Returns:
+        Open SQLite connection with schema initialised.
+    """
     _init_db(db_path)
     return _get_conn(db_path)
 
@@ -66,14 +106,25 @@ def _get_db(db_path: str) -> sqlite3.Connection:
 @require_auth
 @require_role(["admin", "volunteer"])
 def stream_incidents() -> Response:
+    """Stream new incidents via Server-Sent Events.
+
+    Clients receive only incidents newer than the last one they saw.
+    A keepalive comment is sent every 15 seconds to prevent proxy
+    timeouts.
+
+    Returns:
+        SSE response stream with mimetype text/event-stream.
+    """
     from flask import current_app
 
     testing = current_app.config.get("TESTING", False)
     db_path = _get_db_path()
     poll_interval = current_app.config.get("EVENTS_POLL_INTERVAL", 1.0)
+    heartbeat_interval = 15
 
     def generate():
         last_seen_id = 0
+        last_heartbeat = time.time()
         while True:
             conn = _get_db(db_path)
             try:
@@ -96,6 +147,12 @@ def stream_incidents() -> Response:
                 )
                 yield f"event: incident\ndata: {data}\n\n"
                 last_seen_id = row_id
+                last_heartbeat = time.time()
+
+            now = time.time()
+            if now - last_heartbeat >= heartbeat_interval:
+                yield ": keepalive\n\n"
+                last_heartbeat = now
 
             if testing:
                 break

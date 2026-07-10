@@ -33,8 +33,14 @@ async function initApp() {
  * Animate the hero section elements with staggered entrance.
  */
 function animateHero() {
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const heroElements = document.querySelectorAll("[data-animate='hero']");
   heroElements.forEach((el, index) => {
+    if (prefersReduced) {
+      el.style.opacity = "1";
+      el.style.transform = "none";
+      return;
+    }
     el.style.opacity = "0";
     el.style.transform = "translateY(30px)";
     setTimeout(() => {
@@ -49,6 +55,7 @@ function animateHero() {
  * Animate stat counters with counting effect.
  */
 function animateStats() {
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const statElements = document.querySelectorAll("[data-count]");
   const observer = new IntersectionObserver(
     (entries) => {
@@ -56,7 +63,11 @@ function animateStats() {
         if (entry.isIntersecting) {
           const el = entry.target;
           const target = parseInt(el.dataset.count, 10);
-          animateCount(el, 0, target, 2000);
+          if (prefersReduced) {
+            el.textContent = target.toLocaleString() + (el.dataset.suffix || "");
+          } else {
+            animateCount(el, 0, target, 2000);
+          }
           observer.unobserve(el);
         }
       });
@@ -100,12 +111,15 @@ function animateCount(el, start, end, duration) {
  * Animate feature cards on scroll.
  */
 function animateFeatureCards() {
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const cards = document.querySelectorAll("[data-animate='card']");
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add("animate-slide-up");
+          if (!prefersReduced) {
+            entry.target.classList.add("animate-slide-up");
+          }
           entry.target.style.opacity = "1";
           observer.unobserve(entry.target);
         }

@@ -8,8 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
     <noscript>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -54,8 +52,9 @@
             <p class="text-surface-200 text-sm">Open, close, or adjust capacity for stadium gates.</p>
         </header>
 
-        <div id="loading-state" class="flex justify-center items-center h-32">
-            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-arena-500"></div>
+        <div id="loading-state" class="flex justify-center items-center h-32" role="status">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-arena-500" aria-hidden="true"></div>
+            <span class="sr-only">Loading gates...</span>
         </div>
 
         <div id="gates-content" class="hidden space-y-4" role="list" aria-label="Stadium gates"></div>

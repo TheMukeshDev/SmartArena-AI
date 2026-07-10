@@ -13,6 +13,7 @@ from flask import Blueprint, jsonify
 from flask.wrappers import Response
 
 from app.config.firebase import get_firestore_client
+from app.config.settings import BaseConfig
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +34,7 @@ def health_check() -> tuple[Response, int]:
                 "data": {
                     "status": "healthy",
                     "service": "SmartArena AI",
-                    "version": "1.0.0",
+                    "version": BaseConfig.VERSION,
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                 },
             }

@@ -40,8 +40,8 @@ async def report_incident() -> tuple[Response, int]:
     """Process and classify an incident report from the current user."""
     try:
         data = IncidentRequest(**request.get_json())
-    except ValidationError as e:
-        return error_response(message=str(e.errors()), status_code=400)
+    except ValidationError:
+        return error_response(message="Invalid request data.", status_code=400)
 
     classification = await AIService.process_incident(data.description, g.user["uid"])
 
@@ -57,8 +57,8 @@ async def analyze_crowd() -> tuple[Response, int]:
     """Analyze crowd density for the specified zones."""
     try:
         data = CrowdAnalyzeRequest(**request.get_json())
-    except ValidationError as e:
-        return error_response(message=str(e.errors()), status_code=400)
+    except ValidationError:
+        return error_response(message="Invalid request data.", status_code=400)
 
     analysis = await AIService.process_crowd_analysis(data.zones, g.user["uid"])
 
@@ -71,8 +71,8 @@ async def assign_task() -> tuple[Response, int]:
     """Assign a volunteer task at the given location."""
     try:
         data = VolunteerAssignRequest(**request.get_json())
-    except ValidationError as e:
-        return error_response(message=str(e.errors()), status_code=400)
+    except ValidationError:
+        return error_response(message="Invalid request data.", status_code=400)
 
     assignment = await AIService.process_volunteer_assignment(
         data.location, g.user["uid"]
@@ -87,8 +87,8 @@ async def optimize_sus() -> tuple[Response, int]:
     """Optimise sustainability based on the provided metrics."""
     try:
         data = SustainabilityOptimizeRequest(**request.get_json())
-    except ValidationError as e:
-        return error_response(message=str(e.errors()), status_code=400)
+    except ValidationError:
+        return error_response(message="Invalid request data.", status_code=400)
 
     optimization = await AIService.process_sustainability(data.metrics, g.user["uid"])
 
@@ -101,8 +101,8 @@ async def chat() -> tuple[Response, int]:
     """Handle a user chat query with enhanced navigation context."""
     try:
         data = ChatRequest(**request.get_json())
-    except ValidationError as e:
-        return error_response(message=str(e.errors()), status_code=400)
+    except ValidationError:
+        return error_response(message="Invalid request data.", status_code=400)
 
     enhanced_context = {
         **data.context,
@@ -125,8 +125,8 @@ async def transport_suggest() -> tuple[Response, int]:
     """Suggest transport options from a gate at a given arrival time."""
     try:
         data = TransportSuggestRequest(**request.get_json())
-    except ValidationError as e:
-        return error_response(message=str(e.errors()), status_code=400)
+    except ValidationError:
+        return error_response(message="Invalid request data.", status_code=400)
 
     suggestion = await AIService.process_transport_suggestion(
         data.gate, data.arrival_time

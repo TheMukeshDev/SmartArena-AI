@@ -10,7 +10,7 @@ import datetime
 import logging
 
 from flask import Blueprint, request, g
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 from typing import Optional
 
 from app.middleware.auth import require_auth, require_role
@@ -24,6 +24,8 @@ admin_bp = Blueprint("admin", __name__)
 
 
 class GateUpdateRequest(BaseModel):
+    """Schema for gate update requests."""
+
     name: str = Field(..., min_length=1, description="Gate name.")
     status: str = Field(
         default="open",
@@ -35,6 +37,8 @@ class GateUpdateRequest(BaseModel):
 
 
 class AnnouncementRequest(BaseModel):
+    """Schema for announcement creation requests."""
+
     title: str = Field(..., min_length=1, max_length=200)
     message: str = Field(..., min_length=1, max_length=2000)
     priority: str = Field(default="normal", description="normal or urgent")
@@ -44,6 +48,11 @@ class AnnouncementRequest(BaseModel):
 
 
 def _get_db():
+    """Get Firestore client instance.
+
+    Returns:
+        Firestore client or None if unavailable.
+    """
     return get_firestore_client()
 
 
@@ -54,6 +63,12 @@ def _get_db():
 @require_auth
 @require_role(["admin"])
 def list_gates():
+    """List all stadium gates with current status and occupancy.
+
+    Returns:
+        JSON response containing gates array with name, status,
+        capacity, and current_count fields.
+    """
     db = _get_db()
     gates = []
 
@@ -62,21 +77,21 @@ def list_gates():
     if db:
         docs = db.collection("gates").stream()
         stored = {doc.id: doc.to_dict() for doc in docs}
-        for gz in gate_zones:
-            data = stored.get(gz, {})
+        for gate_zone in gate_zones:
+            data = stored.get(gate_zone, {})
             gates.append(
                 {
-                    "name": gz,
+                    "name": gate_zone,
                     "status": data.get("status", "open"),
                     "capacity": data.get("capacity", 5000),
                     "current_count": data.get("current_count", 0),
                 }
             )
     else:
-        for gz in gate_zones:
+        for gate_zone in gate_zones:
             gates.append(
                 {
-                    "name": gz,
+                    "name": gate_zone,
                     "status": "open",
                     "capacity": 5000,
                     "current_count": 0,
@@ -90,10 +105,20 @@ def list_gates():
 @require_auth
 @require_role(["admin"])
 def update_gate():
+    """Update a gate's status and/or capacity.
+
+    Expects JSON body with name, status, and optional capacity.
+
+    Returns:
+        JSON response confirming the gate update.
+    """
     try:
         data = GateUpdateRequest(**request.get_json())
-    except Exception as e:
-        return error_response(str(e), status_code=400)
+    except ValidationError:
+        return error_response(
+            "Invalid gate data. Check status and capacity values.",
+            status_code=400,
+        )
 
     db = _get_db()
     if not db:
@@ -105,9 +130,7 @@ def update_gate():
             "name": data.name,
             "status": data.status,
             "capacity": data.capacity,
-            "updated_at": datetime.datetime.now(
-                datetime.timezone.utc
-            ).isoformat(),
+            "updated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         },
         merge=True,
     )
@@ -131,6 +154,11 @@ def update_gate():
 @require_auth
 @require_role(["admin"])
 def list_announcements():
+    """List recent announcements, newest first.
+
+    Returns:
+        JSON response containing announcements array.
+    """
     db = _get_db()
     announcements = []
 
@@ -155,10 +183,20 @@ def list_announcements():
 @require_auth
 @require_role(["admin"])
 def create_announcement():
+    """Create and broadcast a new stadium announcement.
+
+    Expects JSON body with title, message, priority, and target_zones.
+
+    Returns:
+        JSON response with the new announcement ID and title.
+    """
     try:
         data = AnnouncementRequest(**request.get_json())
-    except Exception as e:
-        return error_response(str(e), status_code=400)
+    except ValidationError:
+        return error_response(
+            "Invalid announcement data. Check title and message lengths.",
+            status_code=400,
+        )
 
     db = _get_db()
     if not db:
@@ -195,6 +233,14 @@ def create_announcement():
 @require_auth
 @require_role(["admin"])
 def delete_announcement(announcement_id: str):
+    """Delete an announcement by ID.
+
+    Args:
+        announcement_id: Firestore document ID of the announcement.
+
+    Returns:
+        JSON response confirming deletion.
+    """
     db = _get_db()
     if not db:
         return error_response("Database unavailable", status_code=503)
@@ -221,6 +267,14 @@ def delete_announcement(announcement_id: str):
 @require_auth
 @require_role(["admin"])
 def list_security_logs():
+    """List recent security audit logs.
+
+    Query Parameters:
+        limit: Maximum number of logs to return (default 100, max 500).
+
+    Returns:
+        JSON response containing security log entries.
+    """
     db = _get_db()
     logs = []
 
@@ -250,11 +304,17 @@ def list_security_logs():
 @require_auth
 @require_role(["admin"])
 def list_users():
+    """List all registered users.
+
+    Returns:
+        JSON response containing users array with uid, email,
+        name, and role fields.
+    """
     db = _get_db()
     users = []
 
     if db:
-        docs = db.collection("users").stream()
+        docs = db.collection("users").limit(500).stream()
         for doc in docs:
             data = doc.to_dict()
             data["uid"] = doc.id
@@ -266,7 +326,14 @@ def list_users():
 # ── Helper ───────────────────────────────────────────────────────────────────
 
 
-def _log_security_event(event_type: str, description: str, admin_uid: str):
+def _log_security_event(event_type: str, description: str, admin_uid: str) -> None:
+    """Log a security-relevant event to Firestore.
+
+    Args:
+        event_type: Classification of the event (e.g. 'gate_update').
+        description: Human-readable description of what happened.
+        admin_uid: UID of the admin who performed the action.
+    """
     db = _get_db()
     if not db:
         return
@@ -276,9 +343,7 @@ def _log_security_event(event_type: str, description: str, admin_uid: str):
                 "event_type": event_type,
                 "description": description,
                 "admin_uid": admin_uid,
-                "timestamp": datetime.datetime.now(
-                    datetime.timezone.utc
-                ).isoformat(),
+                "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             }
         )
     except Exception as e:

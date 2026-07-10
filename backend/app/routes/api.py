@@ -12,6 +12,8 @@ from datetime import datetime, timezone
 from flask import Blueprint, jsonify
 from flask.wrappers import Response
 
+from app.config.settings import BaseConfig
+
 logger = logging.getLogger(__name__)
 
 api_bp = Blueprint("api", __name__)
@@ -30,7 +32,7 @@ def api_index() -> tuple[Response, int]:
                 "success": True,
                 "data": {
                     "service": "SmartArena AI API",
-                    "version": "1.0.0",
+                    "version": BaseConfig.VERSION,
                     "endpoints": {
                         "health": "/health",
                         "readiness": "/health/ready",

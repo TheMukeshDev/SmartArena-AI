@@ -87,28 +87,23 @@ def init_ratelimit(app: Flask) -> None:
 
         db = _ensure_db(app)
 
-        existing = db.execute(
+        # Atomic upsert: INSERT OR REPLACE avoids the TOCTOU race condition
+        # that existed with the previous SELECT-then-UPDATE pattern.
+        db.execute(
+            "INSERT INTO rate_limit_windows (bucket_key, window_start, request_count) "
+            "VALUES (?, ?, 1) "
+            "ON CONFLICT(bucket_key, window_start) "
+            "DO UPDATE SET request_count = request_count + 1",
+            (bucket_key, window_start),
+        )
+        db.commit()
+
+        row = db.execute(
             "SELECT request_count FROM rate_limit_windows "
             "WHERE bucket_key = ? AND window_start = ?",
             (bucket_key, window_start),
         ).fetchone()
-
-        if existing is None:
-            db.execute(
-                "INSERT INTO rate_limit_windows (bucket_key, window_start, request_count) "
-                "VALUES (?, ?, 1)",
-                (bucket_key, window_start),
-            )
-            current_count = 1
-        else:
-            current_count = existing["request_count"] + 1
-            db.execute(
-                "UPDATE rate_limit_windows SET request_count = ? "
-                "WHERE bucket_key = ? AND window_start = ?",
-                (current_count, bucket_key, window_start),
-            )
-
-        db.commit()
+        current_count = row["request_count"] if row else 1
 
         g.rate_limit = limit
         g.rate_remaining = max(0, limit - current_count)

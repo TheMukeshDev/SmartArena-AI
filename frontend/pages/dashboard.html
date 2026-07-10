@@ -58,8 +58,9 @@
     <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" tabindex="-1">
         
         <!-- Loading State -->
-        <div id="loading-state" class="flex justify-center items-center h-64">
-            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-arena-500"></div>
+        <div id="loading-state" class="flex justify-center items-center h-64" role="status">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-arena-500" aria-hidden="true"></div>
+            <span class="sr-only">Loading dashboard...</span>
         </div>
 
         <!-- Dashboard Content -->
@@ -161,7 +162,7 @@
                             
                             <div class="bg-surface-800 p-4 rounded-xl border border-white/5 flex flex-col justify-center items-center text-center">
                                 <h3 class="font-medium mb-2" id="fan-route-title" data-i18n="dash.fan.suggested">AI Suggested Route</h3>
-                                <div id="fan-route-result" class="text-sm text-surface-200/60 w-full h-full flex flex-col justify-center">
+                                <div id="fan-route-result" class="text-sm text-surface-200/60 w-full h-full flex flex-col justify-center" aria-live="polite">
                                     <p data-i18n="dash.fan.initial">Enter your target gate and time to get a smart route.</p>
                                 </div>
                             </div>
@@ -203,7 +204,7 @@
                     </form>
 
                     <!-- AI Response Area -->
-                    <div id="ai-incident-result" class="hidden mt-6 bg-surface-800 p-5 rounded-xl border border-white/10">
+                    <div id="ai-incident-result" class="hidden mt-6 bg-surface-800 p-5 rounded-xl border border-white/10" aria-live="polite">
                         <div class="flex items-center gap-3 mb-3">
                             <span id="ai-category" class="badge badge-warning">...</span>
                             <span id="ai-priority" class="badge">...</span>

@@ -74,10 +74,30 @@ const Admin = (() => {
             document.getElementById('gate-capacity').value = gate.capacity;
             modal.dataset.gateName = gate.name;
             modal.classList.remove('hidden');
+            document.getElementById('gate-status').focus();
         }
 
-        document.getElementById('modal-close-btn').addEventListener('click', () => modal.classList.add('hidden'));
-        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.add('hidden'); });
+        function closeModal() {
+            modal.classList.add('hidden');
+            document.querySelector(`[data-gate-idx]`)?.focus();
+        }
+
+        document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+        modal.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') { closeModal(); return; }
+            if (e.key === 'Tab') {
+                const focusable = modal.querySelectorAll('button, input, select, [tabindex]:not([tabindex="-1"])');
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault(); last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault(); first.focus();
+                }
+            }
+        });
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -125,7 +145,7 @@ const Admin = (() => {
                         <div class="flex items-center justify-between mb-1">
                             <h3 class="font-medium text-white">${escapeHtml(a.title)}</h3>
                             <div class="flex items-center gap-2">
-                                <span class="text-xs px-2 py-0.5 rounded ${a.priority === 'urgent' ? 'bg-red-500/20 text-red-400' : 'bg-surface-700 text-surface-200'}">${a.priority}</span>
+                                <span class="text-xs px-2 py-0.5 rounded ${a.priority === 'urgent' ? 'bg-red-500/20 text-red-400' : 'bg-surface-700 text-surface-200'}">${escapeHtml(a.priority)}</span>
                                 <button data-ann-id="${a.id}" class="ann-delete-btn text-surface-200/40 hover:text-red-400 text-lg" aria-label="Delete announcement">&times;</button>
                             </div>
                         </div>

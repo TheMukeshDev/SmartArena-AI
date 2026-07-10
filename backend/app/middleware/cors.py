@@ -19,7 +19,7 @@ def init_cors(app: Flask) -> None:
     Args:
         app: Flask application instance.
     """
-    origins: list[str] = app.config.get("CORS_ORIGINS", ["*"])
+    origins: list[str] = app.config.get("CORS_ORIGINS", [])
 
     CORS(
         app,
