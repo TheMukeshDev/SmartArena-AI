@@ -12,7 +12,7 @@ const CONFIG = {
       ? "http://127.0.0.1:5000"
       : window.location.hostname === "localhost"
       ? "http://localhost:5000"
-      : "https://smartarena-backend-xxxxxx-uc.a.run.app", // TODO: Replace with actual Cloud Run URL once deployed
+      : "https://smartarena-ai.onrender.com", // Production Render URL
 
   // API Version
   API_VERSION: "v1",
