@@ -137,7 +137,7 @@ function initMapPage() {
     const globalStatus = document.getElementById('ai-global-status');
     const insightsList = document.getElementById('ai-insights-list');
     const routingAdvice = document.getElementById('ai-routing-advice');
-    const predictedStatus = document.getElementById('ai-predicted-status');
+    const _predictedStatus = document.getElementById('ai-predicted-status');
     const recommendedAction = document.getElementById('ai-recommended-action');
 
     if(analyzeBtn) {

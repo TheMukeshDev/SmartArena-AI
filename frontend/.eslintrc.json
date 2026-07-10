@@ -9,17 +9,21 @@
         "sourceType": "script"
     },
     "globals": {
-        "CONFIG": "readonly",
-        "I18N": "readonly",
-        "Auth": "readonly",
-        "Admin": "readonly",
         "Chart": "readonly",
         "gsap": "readonly",
-        "initFirebase": "readonly",
-        "showToast": "readonly"
+        "firebase": "readonly",
+        "CONFIG": "readonly",
+        "Auth": "writable",
+        "Admin": "writable",
+        "I18N": "writable",
+        "initFirebase": "writable",
+        "showToast": "writable",
+        "getAuth": "writable",
+        "getDb": "writable"
     },
     "rules": {
-        "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+        "no-redeclare": "off",
+        "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_|^Admin$|^Auth$|^initFirebase$|^getDb$|^getAuth$" }],
         "no-console": "off",
         "eqeqeq": ["error", "always"],
         "no-eval": "error",
