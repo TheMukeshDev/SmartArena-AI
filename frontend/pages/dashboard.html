@@ -40,9 +40,15 @@
                     <span class="text-xl font-display font-bold">Smart<span class="gradient-text">Arena</span></span>
                 </div>
                 <div class="flex items-center gap-4">
+                    <select id="lang-selector" class="bg-surface-800 border border-white/10 text-white text-xs rounded px-2 py-1 focus:outline-none">
+                        <option value="en">EN</option>
+                        <option value="es">ES</option>
+                        <option value="fr">FR</option>
+                        <option value="ar">AR</option>
+                    </select>
                     <span id="user-name" class="text-sm font-medium text-surface-200">Loading...</span>
                     <span id="user-role-badge" class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-800 text-surface-200 border border-white/10 capitalize hidden"></span>
-                    <button id="logout-btn" class="text-sm text-surface-200 hover:text-white transition-colors">Logout</button>
+                    <button id="logout-btn" class="text-sm text-surface-200 hover:text-white transition-colors" data-i18n="dash.logout">Logout</button>
                 </div>
             </div>
         </div>
@@ -65,8 +71,8 @@
                 </div>
                 <div class="relative z-10 p-8 sm:p-12 text-center sm:text-left">
                     <span class="badge mb-3">FIFA World Cup 2026™ Operations Center</span>
-                    <h1 class="text-3xl sm:text-4xl font-display font-bold mb-2">Welcome to your <span class="gradient-text">Dashboard</span></h1>
-                    <p class="text-surface-200" id="welcome-message">Here's a real-time overview of the stadium.</p>
+                    <h1 class="text-3xl sm:text-4xl font-display font-bold mb-2"><span data-i18n="dash.welcome">Welcome to your</span> <span class="gradient-text">Dashboard</span></h1>
+                    <p class="text-surface-200" id="welcome-message" data-i18n="dash.subtitle">Here's a real-time overview of the stadium.</p>
                 </div>
             </header>
 
@@ -75,7 +81,7 @@
                 <div id="admin-panel" class="hidden col-span-full mb-6">
                     <div class="glass-card p-6 border-arena-500/30">
                         <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-arena-400">
-                            👑 Admin Controls
+                            👑 <span data-i18n="dash.admin.title">Admin Controls</span>
                         </h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             <a href="admin-gates.html" id="admin-gates-btn" class="bg-surface-800 hover:bg-surface-700 p-4 rounded-xl text-left border border-arena-500/50 transition-colors block">
@@ -106,7 +112,7 @@
                     <div class="glass-card p-6 border-neon-blue/30">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
                             <h2 class="text-lg font-bold flex items-center gap-2 text-neon-blue">
-                                🤝 Volunteer Tasks
+                                🤝 <span data-i18n="dash.volunteer.title">Volunteer Tasks</span>
                             </h2>
                             <div class="flex items-center gap-3">
                                 <select id="vol-location" class="bg-surface-900 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-neon-blue">
@@ -129,13 +135,17 @@
                                 <p class="text-sm text-surface-200/60">Help direct incoming fans to the express lanes.</p>
                             </li>
                         </ul>
+                        <div class="mt-4 pt-4 border-t border-white/5 flex items-center gap-3">
+                            <a href="volunteer.html" class="text-sm text-neon-blue hover:text-blue-400 font-medium transition-colors">Open Volunteer Hub →</a>
+                            <a href="map.html" class="text-sm text-surface-200/60 hover:text-white transition-colors">Open Live Map →</a>
+                        </div>
                     </div>
                 </div>
 
                 <div id="fan-panel" class="hidden col-span-full mb-6">
                     <div class="glass-card p-6 border-neon-green/30">
                         <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-neon-green">
-                            🎟️ Fan Experience
+                            🎟️ <span data-i18n="dash.fan.title">Fan Experience</span>
                         </h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div class="bg-surface-800 p-4 rounded-xl border border-white/5 flex flex-col justify-between">
@@ -230,7 +240,7 @@
             <div class="p-3 border-t border-white/10 bg-surface-800">
                 <form id="ai-chat-form" class="flex gap-2">
                     <label for="ai-chat-input" class="sr-only">Message ArenaBot</label>
-                    <input type="text" id="ai-chat-input" class="flex-1 bg-surface-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-arena-400 focus:ring-1 focus:ring-arena-400" placeholder="Ask something..." autocomplete="off">
+                    <input type="text" id="ai-chat-input" class="flex-1 bg-surface-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-arena-400 focus:ring-1 focus:ring-arena-400" placeholder="Ask something..." autocomplete="off" data-i18n="dash.chat.placeholder">
                     <button type="button" id="ai-chat-mic" class="bg-surface-800 hover:bg-surface-700 text-surface-200 hover:text-white border border-white/10 rounded-lg px-3 py-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white" aria-label="Start voice input" title="Voice Input">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
                     </button>
@@ -250,6 +260,7 @@
     <!-- SSE Incident Toast Container -->
     <div id="incident-toast-container"></div>
 
+    <script src="../js/i18n.js"></script>
     <script src="../js/dashboard.js"></script>
 </body>
 </html>

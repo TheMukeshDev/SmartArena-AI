@@ -255,7 +255,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const utterance = new SpeechSynthesisUtterance(text);
                 // Attempt to select a better voice
                 const voices = window.speechSynthesis.getVoices();
-                utterance.voice = voices.find(v => v.lang.includes('en')) || null;
+                const langCode = window.localStorage.getItem('preferred_language') || 'en';
+                utterance.voice = voices.find(v => v.lang.startsWith(langCode)) || null;
                 window.speechSynthesis.speak(utterance);
             };
 
@@ -283,7 +284,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const recognition = new SpeechRecognition();
                 recognition.continuous = false;
                 recognition.interimResults = false;
-                recognition.lang = 'en-US'; // Future: Detect browser language or settings
+                const langMap = { 'en': 'en-US', 'es': 'es-ES', 'fr': 'fr-FR', 'ar': 'ar-SA' };
+                recognition.lang = langMap[window.localStorage.getItem('preferred_language') || 'en'];
 
                 recognition.onstart = () => {
                     micBtn.classList.add('text-neon-pink', 'animate-pulse');
@@ -340,7 +342,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const res = await fetch(CONFIG.apiUrl("/ai/assistant/chat"), {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ query: query, previous_interaction_id: previousInteractionId }),
+                        body: JSON.stringify({ 
+                            query: query, 
+                            previous_interaction_id: previousInteractionId,
+                            preferred_language: window.localStorage.getItem('preferred_language') || 'en'
+                        }),
                         credentials: "include"
                     });
                     
