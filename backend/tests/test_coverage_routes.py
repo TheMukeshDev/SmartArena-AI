@@ -53,6 +53,12 @@ def test_ai_ops_errors_with_auth(client):
 
         res = client.get("/api/v1/ai/navigation/path", headers=headers)
         assert res.status_code == 400
+        
+        res = client.get("/api/v1/ai/navigation/path?start=A&end=Unknown", headers=headers)
+        assert res.status_code == 404
+        
+        res = client.get("/api/v1/ai/navigation/path?start=Gate A&end=Concourse North", headers=headers)
+        assert res.status_code == 200
 
         res = client.get("/api/v1/ai/navigation/zones", headers=headers)
         assert res.status_code == 200
