@@ -38,12 +38,12 @@ def require_auth(func: Callable[..., Any]) -> Callable[..., Any]:
         decoded_claims = None
 
         try:
-            if session_cookie:
+            if bearer_token:
+                decoded_claims = auth.verify_id_token(bearer_token, check_revoked=True)
+            elif session_cookie:
                 decoded_claims = auth.verify_session_cookie(
                     session_cookie, check_revoked=True
                 )
-            elif bearer_token:
-                decoded_claims = auth.verify_id_token(bearer_token, check_revoked=True)
             else:
                 return error_response(
                     message="Authentication required. No token or session cookie provided.",
