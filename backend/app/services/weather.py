@@ -56,8 +56,10 @@ async def fetch_weather(
             f"&current=temperature_2m,precipitation,weather_code,wind_speed_10m"
             f"&timezone=auto"
         )
+        if not url.startswith("https://"):
+            raise ValueError(f"Refusing non-HTTPS request: {url!r}")
         req = urllib.request.Request(url, headers={"User-Agent": "SmartArenaAI/1.0"})
-        with urllib.request.urlopen(req, timeout=10) as resp:
+        with urllib.request.urlopen(req, timeout=10) as resp:  # nosec B310
             body = json.loads(resp.read().decode())
 
         current = body.get("current", {})

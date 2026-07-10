@@ -178,6 +178,19 @@ See [Deployment Guide](docs/deployment.md) for full instructions on deploying to
 
 ---
 
+## Test Credentials
+
+For manual testing of Role-Based Access Control (RBAC) and dashboard panels, the following users have been seeded in Firebase Authentication and Firestore:
+
+| Role | Email | Password |
+|------|-------|----------|
+| **Admin** | `admin@smartarena.ai` | `Admin123!` |
+| **Volunteer** | `volunteer@smartarena.ai` | `Volunteer123!` |
+| **Fan** | `fan@smartarena.ai` | `Fan123!` |
+
+---
+
+
 ## API Endpoints
 
 | Method | Endpoint | Description |

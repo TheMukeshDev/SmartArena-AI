@@ -3,9 +3,7 @@ import time
 
 
 def test_sse_streams_incident(app, client):
-    from app.routes.events import push_incident, _incident_queue
-
-    _incident_queue.clear()
+    from app.routes.events import push_incident
 
     push_incident(
         {

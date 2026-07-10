@@ -61,6 +61,11 @@ class BaseConfig:
     CACHE_DB_PATH: str = os.getenv("CACHE_DB_PATH", "cache.db")
     CACHE_TTL_SECONDS: int = int(os.getenv("CACHE_TTL_SECONDS", "3600"))
 
+    # ── Events / Incident Queue (SQLite-backed) ─────────────────────────
+    # nosec B108 - non-sensitive local SQLite incident queue file, not a credential
+    EVENTS_DB_PATH: str = os.getenv("EVENTS_DB_PATH", "events.db")
+    EVENTS_POLL_INTERVAL: float = float(os.getenv("EVENTS_POLL_INTERVAL", "1"))
+
     # ── Security ────────────────────────────────────────────────────────
     FORCE_HTTPS: bool = os.getenv("FORCE_HTTPS", "1") == "1"
 

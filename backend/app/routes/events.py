@@ -2,6 +2,7 @@ import json
 import time
 import datetime
 import logging
+import sqlite3
 
 from flask import Blueprint, Response, stream_with_context
 
@@ -9,14 +10,55 @@ logger = logging.getLogger(__name__)
 
 events_bp = Blueprint("events", __name__)
 
-_incident_queue: list[dict] = []
-_last_id = 0
+CREATE_TABLE_SQL = """
+CREATE TABLE IF NOT EXISTS incidents (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    incident_json TEXT NOT NULL,
+    created_at INTEGER NOT NULL
+)
+"""
+
+
+def _get_db_path() -> str:
+    from flask import current_app
+
+    return current_app.config.get("EVENTS_DB_PATH", "events.db")
+
+
+def _init_db(db_path: str) -> None:
+    conn = sqlite3.connect(db_path)
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute(CREATE_TABLE_SQL)
+    conn.commit()
+    conn.close()
+
+
+def _get_conn(db_path: str) -> sqlite3.Connection:
+    conn = sqlite3.connect(db_path)
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA synchronous=NORMAL")
+    return conn
 
 
 def push_incident(incident: dict) -> None:
-    global _last_id
-    _last_id += 1
-    _incident_queue.append({"id": _last_id, "incident": incident})
+    from flask import current_app
+
+    db_path = current_app.config.get("EVENTS_DB_PATH", "events.db")
+    _init_db(db_path)
+    conn = _get_db(db_path)
+    try:
+        conn.execute(
+            "INSERT INTO incidents (incident_json, created_at) VALUES (?, ?)",
+            (json.dumps(incident), int(time.time())),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def _get_db(db_path: str) -> sqlite3.Connection:
+    _init_db(db_path)
+    return _get_conn(db_path)
 
 
 @events_bp.route("/incidents", methods=["GET"])
@@ -24,26 +66,37 @@ def stream_incidents():
     from flask import current_app
 
     testing = current_app.config.get("TESTING", False)
+    db_path = _get_db_path()
+    poll_interval = current_app.config.get("EVENTS_POLL_INTERVAL", 1.0)
 
     def generate():
-        sent_ids = set()
+        last_seen_id = 0
         while True:
-            for item in list(_incident_queue):
-                if item["id"] not in sent_ids:
-                    sent_ids.add(item["id"])
-                    data = json.dumps(
-                        {
-                            "id": item["id"],
-                            "incident": item["incident"],
-                            "timestamp": datetime.datetime.now(
-                                datetime.timezone.utc
-                            ).isoformat(),
-                        }
-                    )
-                    yield f"event: incident\ndata: {data}\n\n"
+            conn = _get_db(db_path)
+            try:
+                rows = conn.execute(
+                    "SELECT id, incident_json FROM incidents WHERE id > ? ORDER BY id",
+                    (last_seen_id,),
+                ).fetchall()
+            finally:
+                conn.close()
+
+            for row_id, incident_json in rows:
+                data = json.dumps(
+                    {
+                        "id": row_id,
+                        "incident": json.loads(incident_json),
+                        "timestamp": datetime.datetime.now(
+                            datetime.timezone.utc
+                        ).isoformat(),
+                    }
+                )
+                yield f"event: incident\ndata: {data}\n\n"
+                last_seen_id = row_id
+
             if testing:
                 break
-            time.sleep(1)
+            time.sleep(poll_interval)
 
     return Response(
         stream_with_context(generate()),

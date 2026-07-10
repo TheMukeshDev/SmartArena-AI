@@ -19,5 +19,5 @@ This document maps every PS4 pillar to the specific feature, file, and route tha
 |---------|---------|---------------|
 | Offline-first PWA (Service Worker + Manifest) | `frontend/js/sw.js`, `frontend/manifest.json`, `frontend/js/app.js` | Ensures stadium map and AI Assistant remain viewable in venue dead zones with weak connectivity — a major differentiator for large-crowd venues |
 | Weather widget with operational note | `backend/app/services/weather.py`, `GET /api/v1/ai/weather` | Feeds every weather-aware prompt and surfaces a human-readable operational note for organizers (e.g. "Strong winds — secure loose signage") |
-| Incident auto-push via SSE | `backend/app/routes/events.py`, `frontend/js/dashboard.js` | Eliminates manual refresh for incident list — organizers see new incidents as a toast within ~1 second |
+| Incident auto-push via SSE | `backend/app/routes/events.py`, `frontend/js/dashboard.js` | Eliminates manual refresh for incident list — organizers see new incidents as a toast within a configurable polling interval (default 1 second, backed by SQLite for multi-worker safety) |
 | Sensory-friendly zone surfaces | `backend/app/services/navigation.py` line 69, `frontend` map info panel | "Quiet space near Gate B" queries answered via `SENSORY_FRIENDLY_ZONES` in navigation context, rendered in AI Assistant and zone panel |

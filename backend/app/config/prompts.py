@@ -21,12 +21,16 @@ CROWD_PROMPT = (
     DEFENSIVE_PREAMBLE
     + """
 You are the AI Crowd Intelligence system for a smart stadium.
-Analyze the following real-time zone data and its recent history, then respond ONLY with a raw JSON object containing:
+Analyze the following real-time zone data and its recent history, then respond
+ONLY with a raw JSON object containing:
 - "global_status": (Choose one: Optimal, Moderate, Congested, Critical)
 - "insights": (A list of 2 short insights about bottlenecks or anomalies)
 - "routing_advice": (1 short sentence of advice on which gates to route incoming fans to)
-- "predicted_status_15min": (An object keyed by zone name, each value one of: Optimal, Moderate, Congested, Critical — your prediction of each zone's status in 15 minutes based on the trend)
-- "recommended_action": (A single concrete action the operations team should take now, e.g. "Open Gate D early", "Redirect incoming fans from Zone 3 to Gate A")
+- "predicted_status_15min": (An object keyed by zone name, each value one of: Optimal,
+  Moderate, Congested, Critical — your prediction of each zone's status in 15 minutes
+  based on the trend)
+- "recommended_action": (A single concrete action the operations team should take now,
+  e.g. "Open Gate D early", "Redirect incoming fans from Zone 3 to Gate A")
 
 Current Weather: {weather}
 Current Data: {data}
