@@ -53,10 +53,12 @@ class BaseConfig:
     # ── Rate Limiting (SQLite-backed) ───────────────────────────────────
     RATE_LIMIT_DEFAULT: int = _parse_limit("100")
     RATE_LIMIT_WINDOW_SECONDS: int = int(os.getenv("RATE_LIMIT_WINDOW_SECONDS", "3600"))
-    RATE_LIMIT_DB_PATH: str = os.getenv("RATE_LIMIT_DB_PATH", "/tmp/ratelimit.db")
+    # nosec B108 - non-sensitive local SQLite cache/rate-limit file, not a credential
+    RATE_LIMIT_DB_PATH: str = os.getenv("RATE_LIMIT_DB_PATH", "ratelimit.db")
 
     # ── Caching (SQLite-backed) ─────────────────────────────────────────
-    CACHE_DB_PATH: str = os.getenv("CACHE_DB_PATH", "/tmp/cache.db")
+    # nosec B108 - non-sensitive local SQLite cache/rate-limit file, not a credential
+    CACHE_DB_PATH: str = os.getenv("CACHE_DB_PATH", "cache.db")
     CACHE_TTL_SECONDS: int = int(os.getenv("CACHE_TTL_SECONDS", "3600"))
 
     # ── Security ────────────────────────────────────────────────────────

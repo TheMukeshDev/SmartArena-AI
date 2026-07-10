@@ -16,7 +16,8 @@ backlog = 2048
 # ── Worker Processes ────────────────────────────────────────────────────
 # Cloud Run: Use 1 worker per vCPU, minimum 2
 workers = int(os.getenv("WEB_CONCURRENCY", multiprocessing.cpu_count() * 2 + 1))
-worker_class = "sync"
+worker_class = "gthread"
+threads = int(os.getenv("MAX_THREADS", 8))
 worker_connections = 1000
 timeout = 120
 keepalive = 5

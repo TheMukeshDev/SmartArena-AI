@@ -1,5 +1,5 @@
 const { initializeTestEnvironment, assertFails, assertSucceeds } = require("@firebase/rules-unit-testing");
-const { doc, setDoc, getDoc } = require("firebase/firestore");
+const { doc, setDoc } = require("firebase/firestore");
 const fs = require("fs");
 const path = require("path");
 
@@ -11,6 +11,8 @@ before(async () => {
   testEnv = await initializeTestEnvironment({
     projectId: PROJECT_ID,
     firestore: {
+      host: "127.0.0.1",
+      port: 9090,
       rules: fs.readFileSync(
         path.resolve(__dirname, "../../firebase/firestore.rules"),
         "utf-8"

@@ -9,7 +9,7 @@ def test_get_config_development():
     assert config.ENV_NAME == "development"
 
 def test_get_config_production():
-    with patch.dict(os.environ, {"SECRET_KEY": "prod-key"}):
+    with patch.dict(os.environ, {"SECRET_KEY": "prod-key", "RATE_LIMIT_DB_PATH": "path", "CACHE_DB_PATH": "path"}):
         config = get_config("production")
         assert isinstance(config, ProductionConfig)
         assert config.ENV_NAME == "production"

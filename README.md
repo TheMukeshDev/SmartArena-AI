@@ -139,9 +139,23 @@ Visit `http://localhost:5000/health` to verify the backend is running.
 
 ## Testing
 
+### Backend Tests
 ```bash
 cd backend
 pytest tests/ -v --cov=app --cov-report=term-missing
+```
+
+### Firestore Rules Tests
+The Firestore rules tests require the Firebase emulator and Java/JRE to be installed.
+Run the emulator in one terminal:
+```bash
+npx firebase-tools emulators:start --project smartarena-test-rules --only firestore
+```
+Then run the tests in another terminal:
+```bash
+cd frontend
+npm install
+npm run test:rules
 ```
 
 ---

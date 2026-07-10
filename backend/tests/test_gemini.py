@@ -135,3 +135,57 @@ async def test_suggest_transport_invalid_json_returns_fallback():
         mock_instance.generate_content_async = AsyncMock(return_value=mock_response)
         res = await suggest_transport("Gate A", "3:00 PM")
         assert res["recommended_mode"] == "Parking"
+
+
+def test_sanitize_user_input_non_string():
+    result = sanitize_user_input(12345)
+    assert result == "12345"
+
+
+def test_init_gemini_missing_key(app):
+    with app.app_context():
+        app.config["GEMINI_API_KEY"] = ""
+        from app.ai.gemini import _init_gemini
+        assert _init_gemini() is False
+
+
+@pytest.mark.asyncio
+async def test_assign_volunteer_task_success():
+    with patch("app.ai.gemini._init_gemini", return_value=True), patch("app.ai.gemini.genai.GenerativeModel") as mock_model:
+        mock_instance = mock_model.return_value
+        mock_response = AsyncMock()
+        mock_response.text = '{"task": "Clean", "priority": "High", "description": "Spill"}'
+        mock_instance.generate_content_async = AsyncMock(return_value=mock_response)
+        res = await assign_volunteer_task("Gate A")
+        assert res["task"] == "Clean"
+
+
+@pytest.mark.asyncio
+async def test_optimize_sustainability_success():
+    with patch("app.ai.gemini._init_gemini", return_value=True), patch("app.ai.gemini.genai.GenerativeModel") as mock_model:
+        mock_instance = mock_model.return_value
+        mock_response = AsyncMock()
+        mock_response.text = '{"status": "Good", "recommendations": []}'
+        mock_instance.generate_content_async = AsyncMock(return_value=mock_response)
+        res = await optimize_sustainability({"energy": 100})
+        assert res["status"] == "Good"
+
+
+@pytest.mark.asyncio
+async def test_ask_assistant_success():
+    with patch("app.ai.gemini._init_gemini", return_value=True), patch("app.ai.gemini.genai.GenerativeModel") as mock_model:
+        mock_instance = mock_model.return_value
+        mock_response = AsyncMock()
+        mock_response.text = "Hello there"
+        mock_instance.generate_content_async = AsyncMock(return_value=mock_response)
+        res = await ask_assistant("Hi", {})
+        assert res == "Hello there"
+
+
+@pytest.mark.asyncio
+async def test_ask_assistant_exception():
+    with patch("app.ai.gemini._init_gemini", return_value=True), patch("app.ai.gemini.genai.GenerativeModel") as mock_model:
+        mock_instance = mock_model.return_value
+        mock_instance.generate_content_async = AsyncMock(side_effect=Exception("API Error"))
+        res = await ask_assistant("Hi", {})
+        assert "trouble processing" in res

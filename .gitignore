@@ -17,6 +17,10 @@ build/
 htmlcov/
 .coverage
 coverage.xml
+*.db
+
+# ── Ruff ────────────────────────────────────────────────────────────────
+.ruff_cache/
 
 # ── Virtual Environment ────────────────────────────────────────────────
 venv/
