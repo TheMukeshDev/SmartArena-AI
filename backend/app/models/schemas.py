@@ -34,6 +34,9 @@ class ChatRequest(BaseModel):
     preferred_language: str = Field(
         default="en", description="Preferred response language (en/hi/es)."
     )
+    previous_interaction_id: str = Field(
+        default=None, description="ID of the previous interaction for multi-turn chat."
+    )
 
 
 class TransportSuggestRequest(BaseModel):

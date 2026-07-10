@@ -1,7 +1,7 @@
 import json
 import re
 import logging
-import google.generativeai as genai
+from google import genai
 from flask import current_app
 from app.config.prompts import (
     INCIDENT_PROMPT,
@@ -34,13 +34,17 @@ def sanitize_user_input(text: str, max_length: int = 500) -> str:
     return text
 
 
-def _init_gemini():
-    api_key = current_app.config.get("GEMINI_API_KEY")
-    if not api_key:
-        logger.warning("GEMINI_API_KEY is not set.")
-        return False
-    genai.configure(api_key=api_key)
-    return True
+_client = None
+
+def _get_client():
+    global _client
+    if _client is None:
+        api_key = current_app.config.get("GEMINI_API_KEY")
+        if not api_key:
+            logger.warning("GEMINI_API_KEY is not set.")
+            return None
+        _client = genai.Client(api_key=api_key)
+    return _client
 
 
 async def classify_incident(description: str) -> dict:
@@ -50,17 +54,18 @@ async def classify_incident(description: str) -> dict:
         "action": "Dispatch staff to investigate.",
         "announcement": "",
     }
-
-    if not _init_gemini():
+    client = _get_client()
+    if not client:
         return fallback
 
-    model = genai.GenerativeModel("gemini-1.5-flash")
     safe_desc = sanitize_user_input(description)
     prompt = INCIDENT_PROMPT.format(description=safe_desc)
 
     try:
-        response = model.generate_content(
-            prompt, generation_config={"response_mime_type": "application/json"}
+        response = client.models.generate_content(
+            model="gemini-3.5-flash",
+            contents=prompt,
+            config={"response_mime_type": "application/json"}
         )
         return json.loads(response.text)
     except Exception as e:
@@ -78,11 +83,10 @@ async def analyze_crowd_data(
         "predicted_status_15min": {},
         "recommended_action": "Continue normal operations.",
     }
-
-    if not _init_gemini():
+    client = _get_client()
+    if not client:
         return fallback
 
-    model = genai.GenerativeModel("gemini-1.5-flash")
     safe_data = json.dumps(zones_data, default=str)[:5000]
     history_str = json.dumps(history or [], default=str)[:3000]
     safe_weather = sanitize_user_input(str(weather), max_length=200)[:200]
@@ -91,8 +95,10 @@ async def analyze_crowd_data(
     )
 
     try:
-        response = model.generate_content(
-            prompt, generation_config={"response_mime_type": "application/json"}
+        response = client.models.generate_content(
+            model="gemini-3.5-flash",
+            contents=prompt,
+            config={"response_mime_type": "application/json"}
         )
         return json.loads(response.text)
     except Exception as e:
@@ -106,17 +112,18 @@ async def assign_volunteer_task(location: str) -> dict:
         "priority": "Medium",
         "description": "Keep an eye on the crowd flow and report any issues.",
     }
-
-    if not _init_gemini():
+    client = _get_client()
+    if not client:
         return fallback
 
-    model = genai.GenerativeModel("gemini-1.5-flash")
     safe_loc = sanitize_user_input(location)
     prompt = VOLUNTEER_PROMPT.format(location=safe_loc)
 
     try:
-        response = model.generate_content(
-            prompt, generation_config={"response_mime_type": "application/json"}
+        response = client.models.generate_content(
+            model="gemini-3.5-flash",
+            contents=prompt,
+            config={"response_mime_type": "application/json"}
         )
         return json.loads(response.text)
     except Exception as e:
@@ -129,18 +136,19 @@ async def optimize_sustainability(metrics: dict, weather: str = "Unknown") -> di
         "status": "Optimization Failed",
         "recommendations": ["Dim stadium lights in empty zones to save power."],
     }
-
-    if not _init_gemini():
+    client = _get_client()
+    if not client:
         return fallback
 
-    model = genai.GenerativeModel("gemini-1.5-flash")
     safe_metrics = json.dumps(metrics, default=str)[:5000]
     safe_weather = sanitize_user_input(str(weather), max_length=200)[:200]
     prompt = SUSTAINABILITY_PROMPT.format(metrics=safe_metrics, weather=safe_weather)
 
     try:
-        response = model.generate_content(
-            prompt, generation_config={"response_mime_type": "application/json"}
+        response = client.models.generate_content(
+            model="gemini-3.5-flash",
+            contents=prompt,
+            config={"response_mime_type": "application/json"}
         )
         return json.loads(response.text)
     except Exception as e:
@@ -148,11 +156,11 @@ async def optimize_sustainability(metrics: dict, weather: str = "Unknown") -> di
         return fallback
 
 
-async def ask_assistant(query: str, context: dict, language: str = "English") -> str:
-    if not _init_gemini():
-        return "I am currently offline. Please try again later."
+async def ask_assistant(query: str, context: dict, language: str = "English", previous_interaction_id: str = None) -> tuple:
+    client = _get_client()
+    if not client:
+        return "I am currently offline. Please try again later.", None
 
-    model = genai.GenerativeModel("gemini-1.5-flash")
     safe_query = sanitize_user_input(query)
     safe_context = json.dumps(context, default=str)[:5000]
     prompt = ASSISTANT_PROMPT.format(
@@ -160,12 +168,18 @@ async def ask_assistant(query: str, context: dict, language: str = "English") ->
     )
 
     try:
-        # Use synchronous generate_content to avoid grpc asyncio loop issues in Flask threads
-        response = model.generate_content(prompt)
-        return response.text.strip()
+        kwargs = {
+            "model": "gemini-3.5-flash",
+            "input": prompt
+        }
+        if previous_interaction_id:
+            kwargs["previous_interaction_id"] = previous_interaction_id
+            
+        interaction = client.interactions.create(**kwargs)
+        return interaction.output_text.strip(), interaction.id
     except Exception as e:
         logger.error("Gemini assistant failed: %s", str(e))
-        return "I'm having trouble processing that right now."
+        return "I'm having trouble processing that right now.", None
 
 
 async def suggest_transport(
@@ -177,11 +191,10 @@ async def suggest_transport(
         "directions": "Proceed to the parking lot nearest to your gate.",
         "alternative": "Consider rideshare drop-off at the main entrance.",
     }
-
-    if not _init_gemini():
+    client = _get_client()
+    if not client:
         return fallback
 
-    model = genai.GenerativeModel("gemini-1.5-flash")
     safe_gate = sanitize_user_input(gate)
     safe_time = sanitize_user_input(arrival_time)
     safe_weather = sanitize_user_input(str(weather), max_length=200)[:200]
@@ -190,8 +203,10 @@ async def suggest_transport(
     )
 
     try:
-        response = model.generate_content(
-            prompt, generation_config={"response_mime_type": "application/json"}
+        response = client.models.generate_content(
+            model="gemini-3.5-flash",
+            contents=prompt,
+            config={"response_mime_type": "application/json"}
         )
         return json.loads(response.text)
     except Exception as e:

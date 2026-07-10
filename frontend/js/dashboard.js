@@ -258,6 +258,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             };
 
+            let previousInteractionId = null;
+
             chatForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const query = chatInput.value.trim();
@@ -279,7 +281,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const res = await fetch(CONFIG.apiUrl("/ai/assistant/chat"), {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ query: query }),
+                        body: JSON.stringify({ query: query, previous_interaction_id: previousInteractionId }),
                         credentials: "include"
                     });
                     
@@ -288,6 +290,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     if (res.ok) {
                         appendMessage(data.data.reply);
+                        if (data.data.interaction_id) {
+                            previousInteractionId = data.data.interaction_id;
+                        }
                     } else {
                         appendMessage("Sorry, I encountered an error.");
                     }
