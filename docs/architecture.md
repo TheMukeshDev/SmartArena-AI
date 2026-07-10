@@ -19,7 +19,7 @@ SmartArena AI is an AI-powered smart stadium operations platform designed to man
 │                                                          │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐              │
 │  │  Routes   │  │ Services │  │   AI     │              │
-│  │(Blueprints│  │  Layer   │  │ (Gemini) │              │
+│  │(Blueprints)│  │  Layer   │  │ (Gemini) │              │
 │  └────┬─────┘  └────┬─────┘  └────┬─────┘              │
 │       │              │              │                    │
 │  ┌────┴──────────────┴──────────────┴─────┐             │

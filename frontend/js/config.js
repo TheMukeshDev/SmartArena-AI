@@ -8,8 +8,9 @@
 const CONFIG = {
   // API Base URL — auto-detects environment
   API_BASE_URL:
-    window.location.hostname === "localhost" ||
     window.location.hostname === "127.0.0.1"
+      ? "http://127.0.0.1:5000"
+      : window.location.hostname === "localhost"
       ? "http://localhost:5000"
       : "https://smartarena-backend-xxxxxx-uc.a.run.app", // TODO: Replace with actual Cloud Run URL once deployed
 

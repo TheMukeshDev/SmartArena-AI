@@ -53,14 +53,17 @@ def session_login() -> tuple[Response, int]:
                 {"success": True, "message": "Session created successfully"}
             )
 
+            from flask import current_app
+            is_secure = current_app.config.get("FORCE_HTTPS", False)
+            
             # Set HttpOnly cookie
             response.set_cookie(
                 "session",
                 session_cookie,
                 max_age=int(SESSION_EXPIRES_IN.total_seconds()),
                 httponly=True,
-                samesite="Strict",
-                secure=True,  # Should be True in prod (HTTPS)
+                samesite="None" if is_secure else "Lax",
+                secure=is_secure,
             )
             return response, 200
         else:
