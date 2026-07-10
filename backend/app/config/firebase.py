@@ -33,14 +33,18 @@ def init_firebase(app: Flask) -> None:
     """
     global _firestore_client
 
+    if app.config.get("TESTING", False):
+        logger.info("Testing mode — skipping Firebase initialization")
+        return
+
     if firebase_admin._apps:
         logger.info("Firebase already initialized, skipping")
         _firestore_client = firestore.client()
         return
 
     project_id: str = app.config.get("FIREBASE_PROJECT_ID", "")
-    client_email: str = os.getenv("FIREBASE_CLIENT_EMAIL", "")
-    private_key: str = os.getenv("FIREBASE_PRIVATE_KEY", "")
+    client_email: str = app.config.get("FIREBASE_CLIENT_EMAIL", "")
+    private_key: str = app.config.get("FIREBASE_PRIVATE_KEY", "")
 
     try:
         if client_email and private_key:

@@ -58,37 +58,54 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, 5000); // Update every 5 seconds
 
-    // Click handler for zones
+    // Select a zone and update panel
+    const selectZone = (zone) => {
+        const data = JSON.parse(zone.dataset.currentData);
+        
+        // UI Updates
+        emptyState.classList.add('hidden');
+        infoCard.classList.remove('hidden');
+        
+        zoneNameEl.textContent = zone.dataset.zone;
+        occupancyEl.textContent = `${data.occupancyPct}%`;
+        occupancyEl.setAttribute('aria-label', `Occupancy ${data.occupancyPct} percent`);
+        headcountEl.textContent = data.headcount.toLocaleString();
+        headcountEl.setAttribute('aria-label', `Headcount ${data.headcount.toLocaleString()}`);
+        capacityEl.textContent = data.capacity.toLocaleString();
+        progressEl.style.width = `${data.occupancyPct}%`;
+        progressEl.setAttribute('aria-valuenow', data.occupancyPct);
+        insightEl.textContent = data.aiInsight;
+        
+        // Status Updates
+        statusTextEl.textContent = data.status;
+        
+        // Reset classes
+        statusIndEl.className = 'w-2 h-2 rounded-full animate-pulse ' + data.tailwindColor.split(' ')[0];
+        statusTextEl.className = 'text-sm font-medium ' + data.tailwindColor.split(' ')[1];
+        progressEl.className = 'h-full rounded-full transition-all duration-500 ' + data.tailwindColor.split(' ')[0];
+        
+        // Highlight selected zone and update ARIA
+        zones.forEach(z => {
+            z.setAttribute('stroke-width', '2');
+            z.setAttribute('aria-selected', 'false');
+        });
+        zone.setAttribute('stroke-width', '4');
+        zone.setAttribute('stroke', '#ffffff');
+        zone.setAttribute('aria-selected', 'true');
+    };
+
+    // Click and keyboard handler for zones
     zones.forEach(zone => {
         // Initialize with data
         zone.dataset.currentData = JSON.stringify(generateSimData(zone.dataset.zone));
+        zone.setAttribute('aria-selected', 'false');
 
-        zone.addEventListener('click', () => {
-            const data = JSON.parse(zone.dataset.currentData);
-            
-            // UI Updates
-            emptyState.classList.add('hidden');
-            infoCard.classList.remove('hidden');
-            
-            zoneNameEl.textContent = zone.dataset.zone;
-            occupancyEl.textContent = `${data.occupancyPct}%`;
-            headcountEl.textContent = data.headcount.toLocaleString();
-            capacityEl.textContent = data.capacity.toLocaleString();
-            progressEl.style.width = `${data.occupancyPct}%`;
-            insightEl.textContent = data.aiInsight;
-            
-            // Status Updates
-            statusTextEl.textContent = data.status;
-            
-            // Reset classes
-            statusIndEl.className = 'w-2 h-2 rounded-full animate-pulse ' + data.tailwindColor.split(' ')[0];
-            statusTextEl.className = 'text-sm font-medium ' + data.tailwindColor.split(' ')[1];
-            progressEl.className = 'h-full rounded-full transition-all duration-500 ' + data.tailwindColor.split(' ')[0];
-            
-            // Highlight selected zone
-            zones.forEach(z => z.setAttribute('stroke-width', '2'));
-            zone.setAttribute('stroke-width', '4');
-            zone.setAttribute('stroke', '#ffffff');
+        zone.addEventListener('click', () => selectZone(zone));
+        zone.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                selectZone(zone);
+            }
         });
     });
 
@@ -102,7 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if(analyzeBtn) {
         analyzeBtn.addEventListener('click', async () => {
             analyzeBtn.disabled = true;
-            analyzeBtn.textContent = '🧠 Analyzing...';
+            analyzeBtn.innerHTML = '<span aria-hidden="true">🧠</span> Analyzing...';
+            analyzeBtn.setAttribute('aria-busy', 'true');
             insightsBanner.classList.add('hidden');
 
             // Gather current zone data
@@ -145,7 +163,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("Error contacting AI service.");
             } finally {
                 analyzeBtn.disabled = false;
-                analyzeBtn.textContent = '🧠 Run AI Crowd Analysis';
+                analyzeBtn.innerHTML = '<span aria-hidden="true">🧠</span> Run AI Crowd Analysis';
+                analyzeBtn.removeAttribute('aria-busy');
             }
         });
     }

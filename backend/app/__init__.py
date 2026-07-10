@@ -14,6 +14,7 @@ from app.config.firebase import init_firebase
 from app.config.logging import setup_logging
 from app.middleware.cors import init_cors
 from app.middleware.ratelimit import init_ratelimit
+from app.middleware.security import init_security_headers
 from app.routes import register_blueprints
 from app.routes.errors import register_error_handlers
 
@@ -52,6 +53,9 @@ def create_app(config_name: str | None = None) -> Flask:
     # ── Initialize CORS ─────────────────────────────────────────────────
     init_cors(app)
 
+    # ── Initialize Security Headers ─────────────────────────────────────
+    init_security_headers(app)
+
     # ── Initialize Rate Limiter ─────────────────────────────────────────
     init_ratelimit(app)
 
@@ -60,8 +64,8 @@ def create_app(config_name: str | None = None) -> Flask:
 
     # ── Initialize CSRF Protection ──────────────────────────────────────
     csrf = CSRFProtect(app)
-    
-    @app.route('/api/v1/csrf-token', methods=['GET'])
+
+    @app.route("/api/v1/csrf-token", methods=["GET"])
     def get_csrf():
         return jsonify({"csrf_token": generate_csrf()})
 

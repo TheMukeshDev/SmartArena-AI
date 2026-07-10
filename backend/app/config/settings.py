@@ -7,10 +7,20 @@ All sensitive values are loaded from environment variables.
 """
 
 import os
+import logging
 from dotenv import load_dotenv
 
 # Load .env file if it exists
 load_dotenv()
+
+logger = logging.getLogger(__name__)
+
+
+def _parse_limit(val: str) -> int:
+    val = os.getenv("RATE_LIMIT_DEFAULT", val)
+    if "/" in val:
+        val = val.split("/")[0]
+    return int(val)
 
 
 class BaseConfig:
@@ -26,6 +36,8 @@ class BaseConfig:
     FIREBASE_CREDENTIALS_PATH: str = os.getenv(
         "FIREBASE_CREDENTIALS_PATH", "./firebase-credentials.json"
     )
+    FIREBASE_CLIENT_EMAIL: str = os.getenv("FIREBASE_CLIENT_EMAIL", "")
+    FIREBASE_PRIVATE_KEY: str = os.getenv("FIREBASE_PRIVATE_KEY", "")
 
     # ── Gemini AI ───────────────────────────────────────────────────────
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
@@ -38,9 +50,17 @@ class BaseConfig:
         ).split(",")
     ]
 
-    # ── Rate Limiting ───────────────────────────────────────────────────
-    RATE_LIMIT_DEFAULT: str = os.getenv("RATE_LIMIT_DEFAULT", "100/hour")
-    REDIS_URL: str = os.getenv("REDIS_URL", "")
+    # ── Rate Limiting (SQLite-backed) ───────────────────────────────────
+    RATE_LIMIT_DEFAULT: int = _parse_limit("100")
+    RATE_LIMIT_WINDOW_SECONDS: int = int(os.getenv("RATE_LIMIT_WINDOW_SECONDS", "3600"))
+    RATE_LIMIT_DB_PATH: str = os.getenv("RATE_LIMIT_DB_PATH", "ratelimit.db")
+
+    # ── Caching (SQLite-backed) ─────────────────────────────────────────
+    CACHE_DB_PATH: str = os.getenv("CACHE_DB_PATH", "cache.db")
+    CACHE_TTL_SECONDS: int = int(os.getenv("CACHE_TTL_SECONDS", "3600"))
+
+    # ── Security ────────────────────────────────────────────────────────
+    FORCE_HTTPS: bool = os.getenv("FORCE_HTTPS", "1") == "1"
 
     # ── Logging ─────────────────────────────────────────────────────────
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
@@ -54,6 +74,7 @@ class DevelopmentConfig(BaseConfig):
     DEBUG: bool = True
     TESTING: bool = False
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "DEBUG")
+    FORCE_HTTPS: bool = os.getenv("FORCE_HTTPS", "0") == "1"
 
 
 class ProductionConfig(BaseConfig):
@@ -67,7 +88,9 @@ class ProductionConfig(BaseConfig):
     def __init__(self):
         super().__init__()
         if not os.getenv("SECRET_KEY"):
-            raise ValueError("SECRET_KEY environment variable is required in production.")
+            raise ValueError(
+                "SECRET_KEY environment variable is required in production."
+            )
 
 
 class TestingConfig(BaseConfig):
@@ -78,6 +101,7 @@ class TestingConfig(BaseConfig):
     TESTING: bool = True
     LOG_LEVEL: str = "DEBUG"
     FIREBASE_PROJECT_ID: str = "test-project"
+    WTF_CSRF_ENABLED: bool = False
 
 
 # ── Configuration Map ───────────────────────────────────────────────────
@@ -111,4 +135,12 @@ def get_config(config_name: str | None = None) -> BaseConfig:
             f"Unknown configuration: '{config_name}'. Valid options: {valid}"
         )
 
-    return config_class()
+    instance = config_class()
+
+    if instance.SECRET_KEY == "dev-secret-key-change-me":
+        logger.warning(
+            "SECRET_KEY is still set to the default value. "
+            "Set SECRET_KEY in your .env file for any non-development environment."
+        )
+
+    return instance

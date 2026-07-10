@@ -20,6 +20,7 @@
     <script src="../js/auth.js"></script>
 </head>
 <body class="bg-surface-950 bg-mesh min-h-screen flex items-center justify-center p-4">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-arena-500 text-white px-4 py-2 rounded z-[100]">Skip to main content</a>
     <div class="w-full max-w-md">
         <!-- Logo -->
         <div class="text-center mb-8">
@@ -32,7 +33,7 @@
         </div>
 
         <!-- Signup Card -->
-        <div class="glass-card p-8">
+        <div class="glass-card p-8" id="main-content" tabindex="-1">
             <h1 class="text-xl font-display font-bold text-white mb-2 text-center">Create an Account</h1>
             <p class="text-sm text-surface-200/50 text-center mb-8">Join the intelligent stadium network</p>
 
