@@ -30,6 +30,7 @@ class BaseConfig:
     APP_NAME: str = "SmartArena AI"
     VERSION: str = "1.0.0"
     SECRET_KEY: str = os.getenv("SECRET_KEY", "dev-secret-key-change-me")
+    SESSION_COOKIE_NAME: str = "smartarena_csrf_token"
 
     # ── Firebase ────────────────────────────────────────────────────────
     FIREBASE_PROJECT_ID: str = os.getenv("FIREBASE_PROJECT_ID", "")
