@@ -58,6 +58,7 @@ Object.freeze(CONFIG);
 
 // ── Global Fetch Interceptor ──────────────────────────────────────────────
 let _csrfToken = null;
+let _csrfFetchPromise = null;
 const _originalFetch = window.fetch;
 
 window.fetch = async function (resource, options) {
@@ -94,15 +95,22 @@ window.fetch = async function (resource, options) {
     // 2. Attach CSRF Token for mutating requests
     if (['POST', 'PUT', 'DELETE'].includes(options.method?.toUpperCase())) {
       if (!_csrfToken) {
-        try {
-          const tokenRes = await _originalFetch(CONFIG.baseUrl('/api/v1/csrf-token'), { credentials: 'include' });
-          if (tokenRes.ok) {
-            const data = await tokenRes.json();
-            _csrfToken = data.csrf_token;
-          }
-        } catch (e) {
-          console.warn('[Fetch Interceptor] Failed to fetch CSRF token');
+        if (!_csrfFetchPromise) {
+          _csrfFetchPromise = (async () => {
+            try {
+              const tokenRes = await _originalFetch(CONFIG.baseUrl('/api/v1/csrf-token'), { credentials: 'include' });
+              if (tokenRes.ok) {
+                const data = await tokenRes.json();
+                _csrfToken = data.csrf_token;
+              }
+            } catch (e) {
+              console.warn('[Fetch Interceptor] Failed to fetch CSRF token');
+            } finally {
+              _csrfFetchPromise = null;
+            }
+          })();
         }
+        await _csrfFetchPromise;
       }
       
       if (_csrfToken) {

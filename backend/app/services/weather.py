@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import urllib.request
@@ -59,8 +60,12 @@ async def fetch_weather(
         if not url.startswith("https://"):
             raise ValueError(f"Refusing non-HTTPS request: {url!r}")
         req = urllib.request.Request(url, headers={"User-Agent": "SmartArenaAI/1.0"})
-        with urllib.request.urlopen(req, timeout=10) as resp:  # nosec B310
-            body = json.loads(resp.read().decode())
+
+        def _do_request():
+            with urllib.request.urlopen(req, timeout=10) as resp:  # nosec B310
+                return json.loads(resp.read().decode())
+
+        body = await asyncio.to_thread(_do_request)
 
         current = body.get("current", {})
         code = current.get("weather_code", 0)

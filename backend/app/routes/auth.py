@@ -144,7 +144,7 @@ def register_user() -> tuple[Response, int]:
 
     except Exception as e:
         logger.error("Error registering user: %s", str(e))
-        return error_response(str(e), status_code=500)
+        return error_response("Registration failed. Please try again later.", status_code=500)
 
 
 @auth_bp.route("/me", methods=["GET"])

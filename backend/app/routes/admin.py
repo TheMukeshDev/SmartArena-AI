@@ -225,7 +225,10 @@ def list_security_logs():
     logs = []
 
     if db:
-        limit = min(int(request.args.get("limit", 100)), 500)
+        try:
+            limit = min(int(request.args.get("limit", 100)), 500)
+        except (ValueError, TypeError):
+            limit = 100
         docs = (
             db.collection("security_logs")
             .order_by("timestamp", direction="DESCENDING")

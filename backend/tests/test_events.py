@@ -9,6 +9,7 @@ import textwrap
 
 def test_sse_streams_incident(app, client):
     from app.routes.events import push_incident
+    from unittest.mock import patch
 
     push_incident(
         {
@@ -23,13 +24,18 @@ def test_sse_streams_incident(app, client):
         }
     )
 
-    res = client.get("/api/v1/events/incidents")
-    assert res.status_code == 200
-    assert res.mimetype == "text/event-stream"
-    data = res.get_data(as_text=True)
-    assert "event: incident" in data
-    assert "Test fire near Gate A" in data
-    assert "Security" in data
+    with patch(
+        "app.middleware.auth.auth.verify_session_cookie",
+        return_value={"uid": "test123", "role": "admin"},
+    ):
+        client.set_cookie("session", "fake")
+        res = client.get("/api/v1/events/incidents")
+        assert res.status_code == 200
+        assert res.mimetype == "text/event-stream"
+        data = res.get_data(as_text=True)
+        assert "event: incident" in data
+        assert "Test fire near Gate A" in data
+        assert "Security" in data
 
 
 def test_weather_endpoint_returns_data(app, client):

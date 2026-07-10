@@ -5,6 +5,7 @@ import logging
 import sqlite3
 
 from flask import Blueprint, Response, stream_with_context
+from app.middleware.auth import require_auth, require_role
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +63,8 @@ def _get_db(db_path: str) -> sqlite3.Connection:
 
 
 @events_bp.route("/incidents", methods=["GET"])
+@require_auth
+@require_role(["admin", "volunteer"])
 def stream_incidents():
     from flask import current_app
 

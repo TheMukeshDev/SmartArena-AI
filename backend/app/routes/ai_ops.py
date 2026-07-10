@@ -24,13 +24,9 @@ from pydantic import ValidationError
 ai_ops_bp = Blueprint("ai_ops", __name__)
 
 
-def _run(coro):
-    return asyncio.run(coro)
-
-
 @ai_ops_bp.route("/incident", methods=["POST"])
 @require_auth
-def report_incident():
+async def report_incident():
     from flask import g
 
     try:
@@ -38,7 +34,7 @@ def report_incident():
     except ValidationError as e:
         return error_response(message=str(e.errors()), status_code=400)
 
-    classification = _run(AIService.process_incident(data.description, g.user["uid"]))
+    classification = await AIService.process_incident(data.description, g.user["uid"])
 
     return success_response(
         {"original_description": data.description, "classification": classification},
@@ -48,7 +44,7 @@ def report_incident():
 
 @ai_ops_bp.route("/crowd/analyze", methods=["POST"])
 @require_auth
-def analyze_crowd():
+async def analyze_crowd():
     from flask import g
 
     try:
@@ -56,14 +52,14 @@ def analyze_crowd():
     except ValidationError as e:
         return error_response(message=str(e.errors()), status_code=400)
 
-    analysis = _run(AIService.process_crowd_analysis(data.zones, g.user["uid"]))
+    analysis = await AIService.process_crowd_analysis(data.zones, g.user["uid"])
 
     return success_response(analysis, "Crowd analysis complete.")
 
 
 @ai_ops_bp.route("/volunteer/assign", methods=["POST"])
 @require_auth
-def assign_task():
+async def assign_task():
     from flask import g
 
     try:
@@ -71,16 +67,14 @@ def assign_task():
     except ValidationError as e:
         return error_response(message=str(e.errors()), status_code=400)
 
-    assignment = _run(
-        AIService.process_volunteer_assignment(data.location, g.user["uid"])
-    )
+    assignment = await AIService.process_volunteer_assignment(data.location, g.user["uid"])
 
     return success_response(assignment, "Task assigned.")
 
 
 @ai_ops_bp.route("/sustainability/optimize", methods=["POST"])
 @require_auth
-def optimize_sus():
+async def optimize_sus():
     from flask import g
 
     try:
@@ -88,14 +82,14 @@ def optimize_sus():
     except ValidationError as e:
         return error_response(message=str(e.errors()), status_code=400)
 
-    optimization = _run(AIService.process_sustainability(data.metrics, g.user["uid"]))
+    optimization = await AIService.process_sustainability(data.metrics, g.user["uid"])
 
     return success_response(optimization, "Sustainability optimized.")
 
 
 @ai_ops_bp.route("/assistant/chat", methods=["POST"])
 @require_auth
-def chat():
+async def chat():
     try:
         data = ChatRequest(**request.get_json())
     except ValidationError as e:
@@ -105,13 +99,11 @@ def chat():
         **data.context,
         **get_navigation_context(data.context.get("current_zone")),
     }
-    reply, interaction_id = _run(
-        AIService.process_chat(
-            data.query,
-            enhanced_context,
-            language=data.preferred_language,
-            previous_interaction_id=data.previous_interaction_id,
-        )
+    reply, interaction_id = await AIService.process_chat(
+        data.query,
+        enhanced_context,
+        language=data.preferred_language,
+        previous_interaction_id=data.previous_interaction_id,
     )
     return success_response(
         {"reply": reply, "interaction_id": interaction_id}, "Chat response."
@@ -120,15 +112,13 @@ def chat():
 
 @ai_ops_bp.route("/transport/suggest", methods=["POST"])
 @require_auth
-def transport_suggest():
+async def transport_suggest():
     try:
         data = TransportSuggestRequest(**request.get_json())
     except ValidationError as e:
         return error_response(message=str(e.errors()), status_code=400)
 
-    suggestion = _run(
-        AIService.process_transport_suggestion(data.gate, data.arrival_time)
-    )
+    suggestion = await AIService.process_transport_suggestion(data.gate, data.arrival_time)
     return success_response(suggestion, "Transport suggestion ready.")
 
 
@@ -164,8 +154,8 @@ def get_path():
 
 @ai_ops_bp.route("/weather", methods=["GET"])
 @require_auth
-def get_weather():
-    w = _run(fetch_weather())
+async def get_weather():
+    w = await fetch_weather()
     if not w:
         return error_response(message="Weather data unavailable.", status_code=503)
     return success_response(
