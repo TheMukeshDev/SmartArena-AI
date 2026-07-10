@@ -14,24 +14,33 @@ async function main() {
   console.log("Starting Firestore emulator...");
   const emu = spawn(
     "firebase",
-    ["emulators:start", "--project", PROJECT_ID, "--only", "firestore", "--ui=false"],
+    ["emulators:start", "--project", PROJECT_ID, "--only", "firestore"],
     { cwd: FIREBASE_DIR, stdio: "pipe", shell: true }
   );
 
   await new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error("Emulator startup timed out")), 45000);
     let output = "";
+    let settled = false;
     emu.stdout.on("data", (d) => {
       const s = d.toString();
       output += s;
       process.stdout.write(s);
-      if (output.includes("All emulators ready") || /running on/i.test(output)) {
+      if (!settled && (output.includes("All emulators ready") || /running on/i.test(output))) {
+        settled = true;
         clearTimeout(timer);
         setTimeout(resolve, 2000);
       }
     });
     emu.stderr.on("data", (d) => { output += d.toString(); process.stderr.write(d); });
-    emu.on("error", (e) => { clearTimeout(timer); reject(e); });
+    emu.on("error", (e) => { if (!settled) { settled = true; clearTimeout(timer); reject(e); } });
+    emu.on("exit", (code) => {
+      if (!settled) {
+        settled = true;
+        clearTimeout(timer);
+        reject(new Error(`Emulator exited early with code ${code}: ${output.slice(-500)}`));
+      }
+    });
   });
 
   console.log("\nRunning Firestore rules tests...\n");

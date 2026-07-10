@@ -262,4 +262,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
         console.error("Initialization failed:", err);
     }
+
+    // Phase 11: SSE Incident Stream
+    const toastContainer = document.getElementById('incident-toast-container');
+    if (toastContainer) {
+        const evtSource = new EventSource(CONFIG.apiUrl("/events/incidents"));
+        evtSource.addEventListener("incident", (e) => {
+            try {
+                const data = JSON.parse(e.data);
+                const inc = data.incident;
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-4 right-4 z-[200] bg-surface-800 border border-neon-orange/50 rounded-xl p-4 shadow-2xl animate-slide-up max-w-sm';
+                toast.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <span class="text-2xl">🚨</span>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xs font-mono text-neon-orange">${inc.classification?.priority || 'UNKNOWN'}</span>
+                                <span class="text-xs text-surface-200/40">${inc.classification?.category || 'General'}</span>
+                            </div>
+                            <p class="text-sm text-white">${inc.description}</p>
+                            <p class="text-xs text-surface-200/40 mt-1">${inc.classification?.action || ''}</p>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" class="text-surface-200/40 hover:text-white" aria-label="Dismiss">&times;</button>
+                    </div>
+                `;
+                toastContainer.appendChild(toast);
+                setTimeout(() => toast.remove(), 15000);
+            } catch (err) {
+                console.error("SSE parse error:", err);
+            }
+        });
+        evtSource.onerror = () => console.warn("SSE connection lost, will retry...");
+    }
 });

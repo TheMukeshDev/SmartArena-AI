@@ -54,8 +54,8 @@ def session_login() -> tuple[Response, int]:
             )
 
             from flask import current_app
+
             is_secure = current_app.config.get("FORCE_HTTPS", False)
-            
             # Set HttpOnly cookie
             response.set_cookie(
                 "session",

@@ -2,11 +2,14 @@
  * SmartArena AI — Main Application Logic
  * ========================================
  *
- * Handles page initialization, animations, and API health checks.
+ * Handles page initialization, animations, API health checks, PWA registration,
+ * and offline-state detection.
  */
 
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
+  registerSW();
+  initOfflineDetection();
 });
 
 /**
@@ -176,4 +179,42 @@ async function checkBackendHealth() {
     indicator.classList.add("bg-red-500");
     indicator.title = "Backend: Offline";
   }
+}
+
+/**
+ * Register Service Worker for PWA offline support.
+ */
+function registerSW() {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("/js/sw.js")
+      .then((reg) => {
+        console.log("SW registered:", reg.scope);
+      })
+      .catch((err) => {
+        console.warn("SW registration failed:", err);
+      });
+  }
+}
+
+/**
+ * Listen for online/offline events and toggle an offline banner.
+ */
+function initOfflineDetection() {
+  const banner = document.getElementById("offline-banner");
+  if (!banner) return;
+
+  const updateBanner = () => {
+    if (navigator.onLine) {
+      banner.classList.add("hidden");
+    } else {
+      const time = new Date().toLocaleTimeString();
+      banner.querySelector("span").textContent = time;
+      banner.classList.remove("hidden");
+    }
+  };
+
+  window.addEventListener("online", updateBanner);
+  window.addEventListener("offline", updateBanner);
+  updateBanner();
 }

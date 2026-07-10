@@ -68,11 +68,15 @@ async def classify_incident(description: str) -> dict:
         return fallback
 
 
-async def analyze_crowd_data(zones_data: list) -> dict:
+async def analyze_crowd_data(
+    zones_data: list, history: list | None = None, weather: str = "Unknown"
+) -> dict:
     fallback = {
         "global_status": "Normal",
         "insights": ["Crowd flow is normal across most zones."],
         "routing_advice": "Proceed to designated gates.",
+        "predicted_status_15min": {},
+        "recommended_action": "Continue normal operations.",
     }
 
     if not _init_gemini():
@@ -80,7 +84,11 @@ async def analyze_crowd_data(zones_data: list) -> dict:
 
     model = genai.GenerativeModel("gemini-1.5-flash")
     safe_data = json.dumps(zones_data, default=str)[:5000]
-    prompt = CROWD_PROMPT.format(data=safe_data)
+    history_str = json.dumps(history or [], default=str)[:3000]
+    safe_weather = sanitize_user_input(str(weather), max_length=200)[:200]
+    prompt = CROWD_PROMPT.format(
+        data=safe_data, history=history_str, weather=safe_weather
+    )
 
     try:
         response = await model.generate_content_async(
@@ -116,7 +124,7 @@ async def assign_volunteer_task(location: str) -> dict:
         return fallback
 
 
-async def optimize_sustainability(metrics: dict) -> dict:
+async def optimize_sustainability(metrics: dict, weather: str = "Unknown") -> dict:
     fallback = {
         "status": "Optimization Failed",
         "recommendations": ["Dim stadium lights in empty zones to save power."],
@@ -127,7 +135,8 @@ async def optimize_sustainability(metrics: dict) -> dict:
 
     model = genai.GenerativeModel("gemini-1.5-flash")
     safe_metrics = json.dumps(metrics, default=str)[:5000]
-    prompt = SUSTAINABILITY_PROMPT.format(metrics=safe_metrics)
+    safe_weather = sanitize_user_input(str(weather), max_length=200)[:200]
+    prompt = SUSTAINABILITY_PROMPT.format(metrics=safe_metrics, weather=safe_weather)
 
     try:
         response = await model.generate_content_async(
@@ -158,7 +167,9 @@ async def ask_assistant(query: str, context: dict, language: str = "English") ->
         return "I'm having trouble processing that right now."
 
 
-async def suggest_transport(gate: str, arrival_time: str) -> dict:
+async def suggest_transport(
+    gate: str, arrival_time: str, weather: str = "Unknown"
+) -> dict:
     fallback = {
         "recommended_mode": "Parking",
         "estimated_travel_time_minutes": 15,
@@ -172,7 +183,10 @@ async def suggest_transport(gate: str, arrival_time: str) -> dict:
     model = genai.GenerativeModel("gemini-1.5-flash")
     safe_gate = sanitize_user_input(gate)
     safe_time = sanitize_user_input(arrival_time)
-    prompt = TRANSPORT_PROMPT.format(gate=safe_gate, arrival_time=safe_time)
+    safe_weather = sanitize_user_input(str(weather), max_length=200)[:200]
+    prompt = TRANSPORT_PROMPT.format(
+        gate=safe_gate, arrival_time=safe_time, weather=safe_weather
+    )
 
     try:
         response = await model.generate_content_async(

@@ -1,7 +1,14 @@
 import asyncio
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from app.services.ai_service import AIService
-from app.services.navigation import ZONE_ADJACENCY, find_path, get_navigation_context
+from app.services.navigation import (
+    ZONE_ADJACENCY,
+    SENSORY_FRIENDLY_ZONES,
+    find_path,
+    find_accessible_path,
+    get_navigation_context,
+)
+from app.services.weather import fetch_weather
 from app.utils.response import success_response, error_response
 from app.middleware.auth import require_auth
 from app.models.schemas import (
@@ -124,7 +131,11 @@ def transport_suggest():
 @require_auth
 def get_zones():
     return success_response(
-        {"zones": list(ZONE_ADJACENCY.keys()), "adjacency": ZONE_ADJACENCY},
+        {
+            "zones": list(ZONE_ADJACENCY.keys()),
+            "adjacency": ZONE_ADJACENCY,
+            "sensory_friendly_zones": list(SENSORY_FRIENDLY_ZONES),
+        },
         "Zone map retrieved.",
     )
 
@@ -144,3 +155,42 @@ def get_path():
             message=f"No path found between '{start}' and '{end}'.", status_code=404
         )
     return success_response({"path": path, "start": start, "end": end}, "Path found.")
+
+
+@ai_ops_bp.route("/weather", methods=["GET"])
+@require_auth
+def get_weather():
+    w = _run(fetch_weather())
+    if not w:
+        return error_response(message="Weather data unavailable.", status_code=503)
+    return success_response(
+        {
+            "temperature_c": w.temperature_c,
+            "precipitation_mm": w.precipitation_mm,
+            "wind_speed_kmh": w.wind_speed_kmh,
+            "weather_code": w.weather_code,
+            "summary": w.summary,
+            "operational_note": w.operational_note,
+        },
+        "Weather data fetched.",
+    )
+
+
+@ai_ops_bp.route("/navigation/path/accessible", methods=["GET"])
+@require_auth
+def get_accessible_path():
+    start = request.args.get("start", "")
+    end = request.args.get("end", "")
+    if not start or not end:
+        return error_response(
+            message="start and end query parameters required.", status_code=400
+        )
+    path = find_accessible_path(start, end)
+    if not path:
+        return error_response(
+            message=f"No accessible path found between '{start}' and '{end}'.",
+            status_code=404,
+        )
+    return success_response(
+        {"path": path, "start": start, "end": end}, "Accessible path found."
+    )

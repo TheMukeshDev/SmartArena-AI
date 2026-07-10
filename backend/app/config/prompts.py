@@ -21,12 +21,17 @@ CROWD_PROMPT = (
     DEFENSIVE_PREAMBLE
     + """
 You are the AI Crowd Intelligence system for a smart stadium.
-Analyze the following real-time zone data and respond ONLY with a raw JSON object containing:
+Analyze the following real-time zone data and its recent history, then respond ONLY with a raw JSON object containing:
 - "global_status": (Choose one: Optimal, Moderate, Congested, Critical)
 - "insights": (A list of 2 short insights about bottlenecks or anomalies)
 - "routing_advice": (1 short sentence of advice on which gates to route incoming fans to)
+- "predicted_status_15min": (An object keyed by zone name, each value one of: Optimal, Moderate, Congested, Critical — your prediction of each zone's status in 15 minutes based on the trend)
+- "recommended_action": (A single concrete action the operations team should take now, e.g. "Open Gate D early", "Redirect incoming fans from Zone 3 to Gate A")
 
-Data: {data}
+Current Weather: {weather}
+Current Data: {data}
+
+Recent History (most recent last): {history}
 """
 )
 
@@ -49,6 +54,7 @@ SUSTAINABILITY_PROMPT = (
     + """
 You are an AI Sustainability Engine for a smart stadium.
 Analyze the current usage metrics: {metrics}
+Current Weather: {weather}
 Respond ONLY with a raw JSON object containing:
 - "status": (A brief summary of current efficiency, e.g. "Energy Spike Detected")
 - "recommendations": (A list of 2 actionable steps to reduce carbon footprint right now)
@@ -75,6 +81,7 @@ TRANSPORT_PROMPT = (
     + """
 You are an AI Transport Advisor for a smart stadium.
 The user is at gate "{gate}" and needs to arrive by "{arrival_time}".
+Current Weather: {weather}
 Respond ONLY with a raw JSON object containing:
 - "recommended_mode": (Choose one: Parking, Transit, Rideshare, Walking)
 - "estimated_travel_time_minutes": (integer estimate)

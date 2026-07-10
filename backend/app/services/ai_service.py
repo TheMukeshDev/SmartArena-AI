@@ -6,6 +6,7 @@ import logging
 
 from app.config.firebase import get_firestore_client
 from app.services.cache import SQLiteCache
+from app.services.weather import fetch_weather
 from app.ai.gemini import (
     classify_incident,
     analyze_crowd_data,
@@ -22,6 +23,9 @@ _cache = SQLiteCache(
     ttl_seconds=int(os.getenv("CACHE_TTL_SECONDS", "3600")),
 )
 
+CROWD_HISTORY_MAX = 6
+_crowd_history: list[dict] = []
+
 
 def _cache_key(query: str, context: dict, language: str = "en") -> str:
     context_hash = hashlib.sha256(
@@ -36,7 +40,7 @@ class AIService:
         classification = await classify_incident(description)
         db = get_firestore_client()
         if db:
-            db.collection("incidents").add(
+            doc_ref = db.collection("incidents").add(
                 {
                     "description": description,
                     "classification": classification,
@@ -46,11 +50,38 @@ class AIService:
                     ).isoformat(),
                 }
             )
+            try:
+                from app.routes.events import push_incident
+
+                push_incident(
+                    {
+                        "description": description,
+                        "classification": classification,
+                        "reporter_uid": uid,
+                        "doc_id": doc_ref[1].id
+                        if hasattr(doc_ref, "__len__")
+                        else None,
+                    }
+                )
+            except Exception:
+                logger.warning("Failed to push SSE incident", exc_info=True)
         return classification
 
     @staticmethod
     async def process_crowd_analysis(zones: list, uid: str) -> dict:
-        analysis = await analyze_crowd_data(zones)
+        history_snapshot = {
+            "zones": zones,
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        }
+        _crowd_history.append(history_snapshot)
+        if len(_crowd_history) > CROWD_HISTORY_MAX:
+            _crowd_history.pop(0)
+
+        weather = await fetch_weather()
+        weather_str = weather.summary if weather else "Unknown"
+        analysis = await analyze_crowd_data(
+            zones, history=list(_crowd_history), weather=weather_str
+        )
         db = get_firestore_client()
         if db:
             db.collection("crowd_data").add(
@@ -84,7 +115,9 @@ class AIService:
 
     @staticmethod
     async def process_sustainability(metrics: dict, uid: str) -> dict:
-        optimization = await optimize_sustainability(metrics)
+        weather = await fetch_weather()
+        weather_str = weather.summary if weather else "Unknown"
+        optimization = await optimize_sustainability(metrics, weather=weather_str)
         db = get_firestore_client()
         if db:
             db.collection("sustainability").add(
@@ -118,4 +151,6 @@ class AIService:
 
     @staticmethod
     async def process_transport_suggestion(gate: str, arrival_time: str) -> dict:
-        return await suggest_transport(gate, arrival_time)
+        weather = await fetch_weather()
+        weather_str = weather.summary if weather else "Unknown"
+        return await suggest_transport(gate, arrival_time, weather=weather_str)

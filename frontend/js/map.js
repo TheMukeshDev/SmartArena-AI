@@ -122,6 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const globalStatus = document.getElementById('ai-global-status');
     const insightsList = document.getElementById('ai-insights-list');
     const routingAdvice = document.getElementById('ai-routing-advice');
+    const predictedStatus = document.getElementById('ai-predicted-status');
+    const recommendedAction = document.getElementById('ai-recommended-action');
 
     if(analyzeBtn) {
         analyzeBtn.addEventListener('click', async () => {
@@ -161,6 +163,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     
                     routingAdvice.textContent = "Routing Advice: " + analysis.routing_advice;
+
+                    // Predictive fields
+                    if (analysis.predicted_status_15min) {
+                        const predEls = document.querySelectorAll('.zone-prediction');
+                        predEls.forEach(el => el.remove());
+                        for (const [zoneName, status] of Object.entries(analysis.predicted_status_15min)) {
+                            const zoneEl = document.querySelector(`path[data-zone="${zoneName}"]`);
+                            if (zoneEl) {
+                                const trendEl = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+                                trendEl.className = 'zone-prediction';
+                                trendEl.textContent = `→ ${status} in 15min`;
+                                zoneEl.appendChild(trendEl);
+                                zoneEl.dataset.predicted15 = status;
+                            }
+                        }
+                    }
+                    if (analysis.recommended_action && recommendedAction) {
+                        recommendedAction.textContent = analysis.recommended_action;
+                        recommendedAction.closest('.flex')?.classList.remove('hidden');
+                    }
                     insightsBanner.classList.remove('hidden');
                 } else {
                     alert("AI failed to analyze crowd data.");

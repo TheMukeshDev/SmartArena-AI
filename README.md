@@ -13,7 +13,7 @@
 
 **Real-time crowd intelligence • AI incident management • Sustainability tracking • Multilingual (EN/ES/FR/AR)**
 
-[Live Demo](#) · [Documentation](docs/) · [Architecture](docs/architecture.md) · [API Docs](docs/api.md)
+[Live Demo](#) · [Documentation](docs/) · [Architecture](docs/architecture.md) · [API Docs](docs/api.md) · [PS4 Alignment](docs/ps-alignment.md)
 
 </div>
 

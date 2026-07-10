@@ -41,9 +41,15 @@ class TestRateLimit:
 
     def test_rate_limit_exceeded_returns_429(self, rl_client):
         rl_client.set_cookie("session", "fake")
-        with patch(
-            "app.middleware.auth.auth.verify_session_cookie",
-            return_value={"uid": "test123"},
+        with (
+            patch(
+                "app.middleware.auth.auth.verify_session_cookie",
+                return_value={"uid": "test123"},
+            ),
+            patch(
+                "app.services.ai_service.AIService.process_chat",
+                return_value="fake response",
+            ),
         ):
             url = "/api/v1/ai/assistant/chat"
             payload = {"query": "Hello", "context": {}}
@@ -58,9 +64,15 @@ class TestRateLimit:
 
     def test_rate_limit_has_correct_error_shape(self, rl_client):
         rl_client.set_cookie("session", "fake")
-        with patch(
-            "app.middleware.auth.auth.verify_session_cookie",
-            return_value={"uid": "test123"},
+        with (
+            patch(
+                "app.middleware.auth.auth.verify_session_cookie",
+                return_value={"uid": "test123"},
+            ),
+            patch(
+                "app.services.ai_service.AIService.process_chat",
+                return_value="fake response",
+            ),
         ):
             url = "/api/v1/ai/assistant/chat"
             payload = {"query": "Hello", "context": {}}
@@ -75,9 +87,15 @@ class TestRateLimit:
 
     def test_rate_limit_headers_present(self, rl_client):
         rl_client.set_cookie("session", "fake")
-        with patch(
-            "app.middleware.auth.auth.verify_session_cookie",
-            return_value={"uid": "test123"},
+        with (
+            patch(
+                "app.middleware.auth.auth.verify_session_cookie",
+                return_value={"uid": "test123"},
+            ),
+            patch(
+                "app.services.ai_service.AIService.process_chat",
+                return_value="fake response",
+            ),
         ):
             res = rl_client.post(
                 "/api/v1/ai/assistant/chat", json={"query": "Hello", "context": {}}

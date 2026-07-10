@@ -1,3 +1,4 @@
+import json
 import pytest
 from unittest.mock import patch, MagicMock, AsyncMock
 
@@ -146,15 +147,21 @@ def test_init_gemini_missing_key(app):
     with app.app_context():
         app.config["GEMINI_API_KEY"] = ""
         from app.ai.gemini import _init_gemini
+
         assert _init_gemini() is False
 
 
 @pytest.mark.asyncio
 async def test_assign_volunteer_task_success():
-    with patch("app.ai.gemini._init_gemini", return_value=True), patch("app.ai.gemini.genai.GenerativeModel") as mock_model:
+    with (
+        patch("app.ai.gemini._init_gemini", return_value=True),
+        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
+    ):
         mock_instance = mock_model.return_value
         mock_response = AsyncMock()
-        mock_response.text = '{"task": "Clean", "priority": "High", "description": "Spill"}'
+        mock_response.text = (
+            '{"task": "Clean", "priority": "High", "description": "Spill"}'
+        )
         mock_instance.generate_content_async = AsyncMock(return_value=mock_response)
         res = await assign_volunteer_task("Gate A")
         assert res["task"] == "Clean"
@@ -162,7 +169,10 @@ async def test_assign_volunteer_task_success():
 
 @pytest.mark.asyncio
 async def test_optimize_sustainability_success():
-    with patch("app.ai.gemini._init_gemini", return_value=True), patch("app.ai.gemini.genai.GenerativeModel") as mock_model:
+    with (
+        patch("app.ai.gemini._init_gemini", return_value=True),
+        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
+    ):
         mock_instance = mock_model.return_value
         mock_response = AsyncMock()
         mock_response.text = '{"status": "Good", "recommendations": []}'
@@ -173,7 +183,10 @@ async def test_optimize_sustainability_success():
 
 @pytest.mark.asyncio
 async def test_ask_assistant_success():
-    with patch("app.ai.gemini._init_gemini", return_value=True), patch("app.ai.gemini.genai.GenerativeModel") as mock_model:
+    with (
+        patch("app.ai.gemini._init_gemini", return_value=True),
+        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
+    ):
         mock_instance = mock_model.return_value
         mock_response = AsyncMock()
         mock_response.text = "Hello there"
@@ -184,8 +197,72 @@ async def test_ask_assistant_success():
 
 @pytest.mark.asyncio
 async def test_ask_assistant_exception():
-    with patch("app.ai.gemini._init_gemini", return_value=True), patch("app.ai.gemini.genai.GenerativeModel") as mock_model:
+    with (
+        patch("app.ai.gemini._init_gemini", return_value=True),
+        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
+    ):
         mock_instance = mock_model.return_value
-        mock_instance.generate_content_async = AsyncMock(side_effect=Exception("API Error"))
+        mock_instance.generate_content_async = AsyncMock(
+            side_effect=Exception("API Error")
+        )
         res = await ask_assistant("Hi", {})
         assert "trouble processing" in res
+
+
+@pytest.mark.asyncio
+async def test_analyze_crowd_data_with_history():
+    """Verify history is included in the prompt for predictive analysis."""
+    from app.config.prompts import CROWD_PROMPT
+
+    history = [
+        {
+            "zones": [{"zone": "North Stand", "occupancy": 30}],
+            "timestamp": "2026-01-01T10:00:00",
+        },
+        {
+            "zones": [{"zone": "North Stand", "occupancy": 45}],
+            "timestamp": "2026-01-01T10:05:00",
+        },
+        {
+            "zones": [{"zone": "North Stand", "occupancy": 60}],
+            "timestamp": "2026-01-01T10:10:00",
+        },
+    ]
+    zones_data = [{"zone": "North Stand", "occupancy": 75, "headcount": 11250}]
+
+    assert "{history}" in CROWD_PROMPT
+
+    with (
+        patch("app.ai.gemini._init_gemini", return_value=True),
+        patch("app.ai.gemini.genai.GenerativeModel") as mock_model,
+    ):
+        mock_instance = mock_model.return_value
+        mock_response = AsyncMock()
+        mock_response.text = json.dumps(
+            {
+                "global_status": "Congested",
+                "insights": ["North Stand filling rapidly"],
+                "routing_advice": "Route to Gate D",
+                "predicted_status_15min": {"North Stand": "Critical"},
+                "recommended_action": "Open overflow seating",
+            }
+        )
+        mock_instance.generate_content_async = AsyncMock(return_value=mock_response)
+
+        res = await analyze_crowd_data(zones_data, history=history)
+
+        assert res["global_status"] == "Congested"
+        assert res["predicted_status_15min"]["North Stand"] == "Critical"
+        assert res["recommended_action"] == "Open overflow seating"
+        assert len(res["insights"]) == 1
+
+
+@pytest.mark.asyncio
+async def test_analyze_crowd_data_with_history_fallback_without_init(app):
+    """Fallback works when _init_gemini fails, even with history."""
+    with app.app_context():
+        app.config["GEMINI_API_KEY"] = ""
+        res = await analyze_crowd_data([], history=[{"zones": [], "timestamp": ""}])
+        assert res["global_status"] == "Normal"
+        assert res["predicted_status_15min"] == {}
+        assert res["recommended_action"] == "Continue normal operations."
