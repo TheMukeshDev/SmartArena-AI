@@ -31,11 +31,14 @@ def session_login() -> tuple[Response, int]:
 
     Expects JSON body with 'idToken'.
     """
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if not data or "idToken" not in data:
         return error_response("idToken is required", status_code=400)
 
     id_token = data["idToken"]
+
+    if not id_token or not isinstance(id_token, str):
+        return error_response("idToken must be a non-empty string", status_code=400)
 
     try:
         # Verify the ID token first
@@ -52,7 +55,6 @@ def session_login() -> tuple[Response, int]:
             response = jsonify(
                 {"success": True, "message": "Session created successfully"}
             )
-
 
             # Set HttpOnly cookie
             response.set_cookie(
@@ -82,11 +84,7 @@ def session_logout() -> tuple[Response, int]:
     response = jsonify({"success": True, "message": "Logged out successfully"})
 
     response.set_cookie(
-        "session",
-        expires=0,
-        httponly=True,
-        samesite="None",
-        secure=True
+        "session", expires=0, httponly=True, samesite="None", secure=True
     )
 
     if session_cookie:

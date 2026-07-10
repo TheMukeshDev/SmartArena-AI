@@ -62,11 +62,19 @@ const _originalFetch = window.fetch;
 
 window.fetch = async function (resource, options) {
   options = options || {};
-  
+
   if (
-    typeof resource === 'string' && 
+    typeof resource === 'string' &&
     (resource.includes(CONFIG.API_BASE_URL) || resource.startsWith('/'))
   ) {
+    // Skip interceptor for auth session endpoints — they are the auth entry
+    // point and must not have Bearer/CSRF headers attached (sessionLogin
+    // reads idToken from the body; sessionLogout needs no auth).
+    const isAuthEndpoint = /\/auth\/(sessionLogin|sessionLogout)(\?|$)/.test(resource);
+    if (isAuthEndpoint) {
+      return _originalFetch(resource, options);
+    }
+
     // 1. Attach Firebase Auth Bearer Token
     if (window.firebase && window.firebase.auth) {
       const currentUser = window.firebase.auth().currentUser;

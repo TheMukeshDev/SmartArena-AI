@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,22 +8,28 @@
     <title>Live Map — SmartArena AI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
-    
+
     <!-- Firebase Compat SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    
+
     <script src="../js/config.js?v=2"></script>
     <script src="../js/firebase-init.js?v=2"></script>
     <script src="../js/auth.js?v=2"></script>
 </head>
+
 <body class="bg-surface-950 min-h-screen text-white flex flex-col">
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-arena-500 text-white px-4 py-2 rounded z-[100]">Skip to main content</a>
+    <a href="#main-content"
+        class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-arena-500 text-white px-4 py-2 rounded z-[100]">Skip
+        to main content</a>
 
     <!-- Navbar -->
-    <nav class="border-b border-white/10 bg-surface-900/50 backdrop-blur-md sticky top-0 z-50" aria-label="Main navigation">
+    <nav class="border-b border-white/10 bg-surface-900/50 backdrop-blur-md sticky top-0 z-50"
+        aria-label="Main navigation">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-6">
@@ -30,17 +37,22 @@
                         <div class="w-8 h-8 rounded-lg overflow-hidden shadow-glow">
                             <img src="/assets/images/logo.png" alt="SmartArena Logo" class="w-full h-full object-cover">
                         </div>
-                        <span class="text-xl font-display font-bold hidden sm:block">Smart<span class="gradient-text">Arena</span></span>
+                        <span class="text-xl font-display font-bold hidden sm:block">Smart<span
+                                class="gradient-text">Arena</span></span>
                     </a>
                     <div class="h-6 w-px bg-white/10 hidden sm:block"></div>
                     <div class="flex items-center gap-4">
-                        <a href="dashboard.html" class="text-sm text-surface-200 hover:text-white transition-colors">Dashboard</a>
-                        <a href="map.html" class="text-sm text-arena-400 font-medium border-b-2 border-arena-400 pb-5 translate-y-[10px]">Live Map</a>
+                        <a href="dashboard.html"
+                            class="text-sm text-surface-200 hover:text-white transition-colors">Dashboard</a>
+                        <a href="map.html"
+                            class="text-sm text-arena-400 font-medium border-b-2 border-arena-400 pb-5 translate-y-[10px]">Live
+                            Map</a>
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
                     <div id="language-switcher" class="flex items-center gap-1"></div>
-                    <button id="logout-btn" class="text-sm text-surface-200 hover:text-white transition-colors">Logout</button>
+                    <button id="logout-btn"
+                        class="text-sm text-surface-200 hover:text-white transition-colors">Logout</button>
                 </div>
             </div>
         </div>
@@ -56,31 +68,52 @@
                     <p class="text-surface-200/60 text-sm">Real-time crowd occupancy tracking</p>
                 </div>
                 <div class="flex flex-col items-end gap-2">
-                    <button id="ai-analyze-btn" class="bg-arena-600 hover:bg-arena-500 text-white font-medium py-2 px-4 rounded-xl text-sm transition-colors flex items-center gap-2 shadow-glow" aria-label="Run AI Crowd Analysis">
+                    <button id="ai-analyze-btn"
+                        class="bg-arena-600 hover:bg-arena-500 text-white font-medium py-2 px-4 rounded-xl text-sm transition-colors flex items-center gap-2 shadow-glow"
+                        aria-label="Run AI Crowd Analysis">
                         <span aria-hidden="true">🧠</span> Run AI Crowd Analysis
                     </button>
-                    <div class="flex items-center gap-3 text-xs font-medium text-surface-200/80" role="list" aria-label="Crowd level color legend">
-                        <div class="flex items-center gap-1" role="listitem"><div class="w-3 h-3 rounded-full bg-neon-green/80" aria-hidden="true"></div> <span aria-label="Low crowd level">Low</span></div>
-                        <div class="flex items-center gap-1" role="listitem"><div class="w-3 h-3 rounded-full bg-yellow-500/80" aria-hidden="true"></div> <span aria-label="Medium crowd level">Med</span></div>
-                        <div class="flex items-center gap-1" role="listitem"><div class="w-3 h-3 rounded-full bg-neon-orange/80" aria-hidden="true"></div> <span aria-label="High crowd level">High</span></div>
-                        <div class="flex items-center gap-1" role="listitem"><div class="w-3 h-3 rounded-full bg-red-500/80" aria-hidden="true"></div> <span aria-label="Maximum crowd level">Max</span></div>
+                    <div class="flex items-center gap-3 text-xs font-medium text-surface-200/80" role="list"
+                        aria-label="Crowd level color legend">
+                        <div class="flex items-center gap-1" role="listitem">
+                            <div class="w-3 h-3 rounded-full bg-neon-green/80" aria-hidden="true"></div> <span
+                                aria-label="Low crowd level">Low</span>
+                        </div>
+                        <div class="flex items-center gap-1" role="listitem">
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/80" aria-hidden="true"></div> <span
+                                aria-label="Medium crowd level">Med</span>
+                        </div>
+                        <div class="flex items-center gap-1" role="listitem">
+                            <div class="w-3 h-3 rounded-full bg-neon-orange/80" aria-hidden="true"></div> <span
+                                aria-label="High crowd level">High</span>
+                        </div>
+                        <div class="flex items-center gap-1" role="listitem">
+                            <div class="w-3 h-3 rounded-full bg-red-500/80" aria-hidden="true"></div> <span
+                                aria-label="Maximum crowd level">Max</span>
+                        </div>
                     </div>
                 </div>
             </header>
 
             <!-- AI Insights Banner -->
-            <div id="ai-global-insights" class="hidden mb-4 bg-arena-900/50 border border-arena-500/30 p-4 rounded-xl backdrop-blur-md" role="region" aria-live="polite" aria-label="AI crowd analysis results">
+            <div id="ai-global-insights"
+                class="hidden mb-4 bg-arena-900/50 border border-arena-500/30 p-4 rounded-xl backdrop-blur-md"
+                role="region" aria-live="polite" aria-label="AI crowd analysis results">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="font-bold text-arena-400"><span aria-hidden="true">🧠</span> AI Global Strategy</h3>
                     <span id="ai-global-status" class="badge">...</span>
                 </div>
                 <ul id="ai-insights-list" class="list-disc list-inside text-sm text-surface-200/80 mb-2 space-y-1"></ul>
-                <p id="ai-routing-advice" class="text-sm font-medium text-white bg-surface-900/50 p-2 rounded-lg border border-white/5"></p>
+                <p id="ai-routing-advice"
+                    class="text-sm font-medium text-white bg-surface-900/50 p-2 rounded-lg border border-white/5"></p>
             </div>
 
-            <div class="flex-1 glass-card border border-white/5 flex items-center justify-center p-8 relative overflow-hidden group">
+            <div
+                class="flex-1 glass-card border border-white/5 flex items-center justify-center p-8 relative overflow-hidden group">
                 <!-- SVG Stadium Map -->
-                <svg viewBox="0 0 800 600" class="w-full h-full max-h-[70vh] drop-shadow-2xl" id="stadium-map" role="img" aria-label="Interactive stadium map showing North, South, West, and East stands with crowd occupancy heatmap colors">
+                <svg viewBox="0 0 800 600" class="w-full h-full max-h-[70vh] drop-shadow-2xl" id="stadium-map"
+                    role="img"
+                    aria-label="Interactive stadium map showing North, South, West, and East stands with crowd occupancy heatmap colors">
                     <defs>
                         <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
                             <feGaussianBlur stdDeviation="10" result="blur" />
@@ -88,37 +121,58 @@
                         </filter>
                     </defs>
                     <!-- Pitch -->
-                    <rect x="250" y="150" width="300" height="300" rx="20" fill="#1e293b" stroke="#ffffff20" stroke-width="2" class="transition-colors duration-500"/>
-                    <text x="400" y="300" fill="#ffffff40" text-anchor="middle" alignment-baseline="middle" font-family="sans-serif" font-weight="bold" font-size="24" aria-hidden="true">PITCH</text>
-                    
+                    <rect x="250" y="150" width="300" height="300" rx="20" fill="#1e293b" stroke="#ffffff20"
+                        stroke-width="2" class="transition-colors duration-500" />
+                    <text x="400" y="300" fill="#ffffff40" text-anchor="middle" alignment-baseline="middle"
+                        font-family="sans-serif" font-weight="bold" font-size="24" aria-hidden="true">PITCH</text>
+
                     <!-- North Stand -->
-                    <path id="zone-north" data-zone="North Stand" d="M 200 100 Q 400 20 600 100 L 550 140 Q 400 80 250 140 Z" fill="#00ff8880" stroke="#ffffff20" stroke-width="2" class="cursor-pointer hover:stroke-white transition-all duration-300 transform hover:-translate-y-1" role="button" tabindex="0" aria-label="North Stand zone. Click to view details."/>
-                    
+                    <path id="zone-north" data-zone="North Stand"
+                        d="M 200 100 Q 400 20 600 100 L 550 140 Q 400 80 250 140 Z" fill="#00ff8880" stroke="#ffffff20"
+                        stroke-width="2"
+                        class="cursor-pointer hover:stroke-white transition-all duration-300 transform hover:-translate-y-1"
+                        role="button" tabindex="0" aria-label="North Stand zone. Click to view details." />
+
                     <!-- South Stand -->
-                    <path id="zone-south" data-zone="South Stand" d="M 200 500 Q 400 580 600 500 L 550 460 Q 400 520 250 460 Z" fill="#ff6b2b80" stroke="#ffffff20" stroke-width="2" class="cursor-pointer hover:stroke-white transition-all duration-300 transform hover:translate-y-1" role="button" tabindex="0" aria-label="South Stand zone. Click to view details."/>
-                    
+                    <path id="zone-south" data-zone="South Stand"
+                        d="M 200 500 Q 400 580 600 500 L 550 460 Q 400 520 250 460 Z" fill="#ff6b2b80"
+                        stroke="#ffffff20" stroke-width="2"
+                        class="cursor-pointer hover:stroke-white transition-all duration-300 transform hover:translate-y-1"
+                        role="button" tabindex="0" aria-label="South Stand zone. Click to view details." />
+
                     <!-- West Stand -->
-                    <path id="zone-west" data-zone="West Stand" d="M 150 150 Q 50 300 150 450 L 190 410 Q 110 300 190 190 Z" fill="#00ff8880" stroke="#ffffff20" stroke-width="2" class="cursor-pointer hover:stroke-white transition-all duration-300 transform hover:-translate-x-1" role="button" tabindex="0" aria-label="West Stand zone. Click to view details."/>
-                    
+                    <path id="zone-west" data-zone="West Stand"
+                        d="M 150 150 Q 50 300 150 450 L 190 410 Q 110 300 190 190 Z" fill="#00ff8880" stroke="#ffffff20"
+                        stroke-width="2"
+                        class="cursor-pointer hover:stroke-white transition-all duration-300 transform hover:-translate-x-1"
+                        role="button" tabindex="0" aria-label="West Stand zone. Click to view details." />
+
                     <!-- East Stand -->
-                    <path id="zone-east" data-zone="East Stand" d="M 650 150 Q 750 300 650 450 L 610 410 Q 690 300 610 190 Z" fill="#ef444480" stroke="#ffffff20" stroke-width="2" class="cursor-pointer hover:stroke-white transition-all duration-300 transform hover:translate-x-1" role="button" tabindex="0" aria-label="East Stand zone. Click to view details."/>
+                    <path id="zone-east" data-zone="East Stand"
+                        d="M 650 150 Q 750 300 650 450 L 610 410 Q 690 300 610 190 Z" fill="#ef444480"
+                        stroke="#ffffff20" stroke-width="2"
+                        class="cursor-pointer hover:stroke-white transition-all duration-300 transform hover:translate-x-1"
+                        role="button" tabindex="0" aria-label="East Stand zone. Click to view details." />
                 </svg>
             </div>
         </div>
 
         <!-- Side Panel for Zone Details -->
-        <div class="w-80 border-l border-white/5 bg-surface-900/30 p-6 flex-col hidden sm:flex" role="region" aria-label="Zone details panel">
+        <div class="w-80 border-l border-white/5 bg-surface-900/30 p-6 flex-col hidden sm:flex" role="region"
+            aria-label="Zone details panel">
             <h2 class="text-lg font-display font-bold mb-6">Zone Details</h2>
-            
+
             <div id="zone-info-empty" class="text-surface-200/40 text-sm text-center mt-10">
                 Click a stadium zone on the map to view live analytics.
             </div>
 
-            <div id="zone-info-card" class="hidden space-y-6" aria-live="polite" aria-atomic="true" aria-label="Selected zone information">
+            <div id="zone-info-card" class="hidden space-y-6" aria-live="polite" aria-atomic="true"
+                aria-label="Selected zone information">
                 <div>
                     <h3 id="panel-zone-name" class="text-2xl font-display font-bold text-white mb-1">North Stand</h3>
                     <div class="flex items-center gap-2">
-                        <span id="panel-status-indicator" class="w-2 h-2 rounded-full bg-neon-green animate-pulse" aria-hidden="true"></span>
+                        <span id="panel-status-indicator" class="w-2 h-2 rounded-full bg-neon-green animate-pulse"
+                            aria-hidden="true"></span>
                         <span id="panel-status-text" class="text-sm font-medium text-neon-green">Optimal</span>
                     </div>
                 </div>
@@ -139,8 +193,11 @@
                         <span class="text-surface-200/60">Capacity Limit</span>
                         <span id="panel-capacity" class="text-white font-medium">12,000</span>
                     </div>
-                    <div class="w-full bg-surface-800 h-1.5 rounded-full overflow-hidden" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Capacity usage">
-                        <div id="panel-progress-bar" class="bg-neon-green h-full rounded-full transition-all duration-500" style="width: 45%"></div>
+                    <div class="w-full bg-surface-800 h-1.5 rounded-full overflow-hidden" role="progressbar"
+                        aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Capacity usage">
+                        <div id="panel-progress-bar"
+                            class="bg-neon-green h-full rounded-full transition-all duration-500" style="width: 45%">
+                        </div>
                     </div>
                 </div>
 
@@ -165,4 +222,5 @@
         document.getElementById('logout-btn').addEventListener('click', () => Auth.logout());
     </script>
 </body>
+
 </html>

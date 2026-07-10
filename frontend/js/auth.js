@@ -141,19 +141,24 @@ const Auth = {
   async createBackendSession(user) {
     try {
       const idToken = await user.getIdToken();
-      
+      if (!idToken) {
+        console.error("[Auth] No ID token available from user");
+        return;
+      }
+
       const response = await fetch(CONFIG.apiUrl("/auth/sessionLogin"), {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          // CSRF token would go here if implemented via header
         },
         body: JSON.stringify({ idToken })
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create backend session");
+        const errorData = await response.json().catch(() => null);
+        console.error("[Auth] Session creation failed:", response.status, errorData);
+        throw new Error(errorData?.error?.message || "Failed to create backend session");
       }
       console.log("[Auth] Backend session created successfully.");
     } catch (error) {
