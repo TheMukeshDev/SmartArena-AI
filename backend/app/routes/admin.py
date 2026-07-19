@@ -331,6 +331,58 @@ def list_users():
 # ── Dataset Import ──────────────────────────────────────────────────────────
 
 
+def _parse_uploaded_file(file) -> list[dict]:
+    """Parse an uploaded CSV or JSON file into a list of record dicts.
+
+    Args:
+        file: A Flask ``FileStorage`` object from ``request.files``.
+
+    Returns:
+        A list of record dictionaries parsed from the file.
+
+    Raises:
+        ValueError: If the file type is unsupported, the content cannot be
+            parsed, or the resulting record list is empty.
+    """
+    filename = file.filename.lower()
+    if filename.endswith(".json"):
+        raw = file.read().decode("utf-8")
+        records = json.loads(raw)
+        if not isinstance(records, list):
+            records = [records]
+    elif filename.endswith(".csv"):
+        stream = io.StringIO(file.stream.read().decode("utf-8"))
+        reader = csv.DictReader(stream)
+        records = list(reader)
+    else:
+        raise ValueError("Unsupported file type. Upload CSV or JSON.")
+
+    if not records:
+        raise ValueError("File contains no records.")
+    return records
+
+
+def _categorize_records(records: list[dict]) -> dict[str, int]:
+    """Count records by their ``type`` field.
+
+    Args:
+        records: A list of record dictionaries, each optionally containing
+            a ``type`` key.
+
+    Returns:
+        A dict mapping each known type ('zone', 'gate', 'incident',
+        'other') to its count.
+    """
+    counts: dict[str, int] = {"zone": 0, "gate": 0, "incident": 0, "other": 0}
+    for record in records:
+        rtype = record.get("type", "other")
+        if rtype in counts:
+            counts[rtype] += 1
+        else:
+            counts["other"] += 1
+    return counts
+
+
 @admin_bp.route("/import-dataset", methods=["POST"])
 @require_auth
 @require_role(["admin"])
@@ -357,34 +409,17 @@ def import_dataset():
     if not file.filename:
         return error_response("Empty filename.", status_code=400)
 
-    filename = file.filename.lower()
     try:
-        if filename.endswith(".json"):
-            raw = file.read().decode("utf-8")
-            records = json.loads(raw)
-            if not isinstance(records, list):
-                records = [records]
-        elif filename.endswith(".csv"):
-            stream = io.StringIO(file.stream.read().decode("utf-8"))
-            reader = csv.DictReader(stream)
-            records = [row for row in reader]
-        else:
-            return error_response(
-                "Unsupported file type. Upload CSV or JSON.", status_code=400
-            )
-    except (json.JSONDecodeError, UnicodeDecodeError, csv.Error) as exc:
+        records = _parse_uploaded_file(file)
+    except (
+        ValueError,
+        json.JSONDecodeError,
+        UnicodeDecodeError,
+        csv.Error,
+    ) as exc:
         return error_response(f"Failed to parse file: {exc}", status_code=400)
 
-    if not records:
-        return error_response("File contains no records.", status_code=400)
-
-    counts: dict[str, int] = {"zone": 0, "gate": 0, "incident": 0, "other": 0}
-    for record in records:
-        rtype = record.get("type", "other")
-        if rtype in counts:
-            counts[rtype] += 1
-        else:
-            counts["other"] += 1
+    counts = _categorize_records(records)
 
     db = _get_db()
     if db:

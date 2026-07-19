@@ -13,7 +13,7 @@
 
 **Built for under-trained stadium volunteers managing multilingual crowds in real time — crowd intelligence, incident response, and sustainability tracking in 5 languages.**
 
-[Live Demo](#) · [Documentation](docs/) · [Architecture](docs/architecture.md) · [API Docs](docs/api.md) · [PS Alignment](docs/ps-alignment.md)
+[Live Demo](https://smart-arena-ai.vercel.app) · [Documentation](docs/) · [Architecture](docs/architecture.md) · [API Docs](docs/api.md) · [PS Alignment](docs/ps-alignment.md)
 
 </div>
 
@@ -24,6 +24,18 @@
 FIFA World Cup 2026 Challenge 4 — An AI-powered platform built for **under-trained stadium volunteers** who must coordinate multilingual crowds in real time. The system provides a **Volunteer Co-Pilot** mode with live zone status, AI-generated recommended actions, and multilingual guidance across English, Spanish, French, Arabic, and Hindi — enabling volunteers to make confident decisions under pressure.
 
 **Why depth over breadth:** Every feature exists to support one persona (the volunteer) in one vertical (crowd management + multilingual coordination). Navigation, transport, sustainability, and admin capabilities are secondary features that feed data back into the volunteer's real-time awareness.
+
+---
+
+## Assumptions
+
+- **Synthetic data**: Crowd occupancy, gate status, and incident data are simulated since no live stadium API was available for this challenge. A data-upload endpoint (`POST /api/v1/admin/import-dataset`) is provided so evaluators can test the system with real data structures (CSV or JSON).
+- **Role management via Firebase Custom Claims**: User roles (`admin`, `volunteer`, `fan`) are the source of truth for access control. No separate role-management UI was built beyond the existing admin dashboard user list.
+- **Multilingual scope**: The UI and AI responses cover 5 languages (English, Spanish, French, Arabic, Hindi) as a representative sample — not the full set of FIFA World Cup 2026 host-country languages.
+- **Single-stadium model**: The system assumes a single fixed stadium layout. The navigation graph and zone map are hardcoded for one venue; multi-venue support was not in scope.
+- **SQLite for rate limiting and caching**: Rate limiting and AI response caching use local SQLite rather than an external service like Redis, keeping the deployment lightweight and dependency-free for a prototype.
+- **Firebase as sole backend data store**: All persistent data (users, gates, announcements, incidents, security logs) lives in Firestore. There is no separate relational database.
+- **Gemini 1.5 Flash as the AI model**: The AI features use Google Gemini 1.5 Flash for latency and cost reasons; a more capable model was not required for the demonstration scope.
 
 ---
 
@@ -65,7 +77,7 @@ FIFA World Cup 2026 Challenge 4 — An AI-powered platform built for **under-tra
 | Speech | Web Speech API (recognition + synthesis) |
 | Events | Server-Sent Events (SSE) with keepalive heartbeat |
 | i18n | Custom JS i18n (EN, ES, FR, AR, HI) |
-| Hosting | Firebase Hosting + Cloud Run |
+| Hosting | Render.com (Backend) + Vercel (Frontend) + Firebase (Auth/Firestore) |
 | CI/CD | GitHub Actions |
 
 ---
@@ -188,8 +200,9 @@ docker run -p 8080:8080 --env-file .env smartarena-ai
 ## Deployment
 
 See [Deployment Guide](docs/deployment.md) for full instructions on deploying to:
-- **Firebase Hosting** (Frontend) — `smartarena-ai-eaa94.web.app`
+- **Vercel** (Frontend) — `smart-arena-ai.vercel.app`
 - **Render.com** (Backend) — `https://smartarena-ai.onrender.com`
+- **Firebase** (Auth / Firestore) — `smartarena-ai-eaa94`
 
 ---
 
