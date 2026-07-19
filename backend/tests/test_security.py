@@ -6,22 +6,6 @@ Comprehensive security tests covering CSRF, CORS, rate limiting,
 security headers, and input validation.
 """
 
-import pytest
-from app import create_app
-
-
-@pytest.fixture
-def app():
-    """Create application for testing."""
-    application = create_app("testing")
-    yield application
-
-
-@pytest.fixture
-def client(app):
-    """Create test client."""
-    return app.test_client()
-
 
 # ── CORS Tests ──────────────────────────────────────────────────────────
 

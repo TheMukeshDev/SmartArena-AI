@@ -262,7 +262,6 @@ def test_list_security_logs_with_custom_limit(app, client):
             "app.middleware.auth._authenticate_request", return_value=(decoded, None)
         ):
             resp = client.get("/api/v1/admin/security/logs?limit=25")
-            data = resp.get_json()
             assert resp.status_code == 200
             mock_db.collection.return_value.order_by.return_value.limit.assert_called_with(
                 25

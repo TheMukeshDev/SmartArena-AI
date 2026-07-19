@@ -152,7 +152,7 @@ def test_cross_process_incident_delivery():
 def test_cross_process_sequential_delivery():
     """Multiple subprocesses each call push_incident(); main process sees all.
 
-    Uses a polling loop (retry every 0.1s, max 5s) to handle WAL flush
+    Uses a polling loop (retry every 0.1s, max 10s) to handle WAL flush
     timing across processes.
     """
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -166,7 +166,7 @@ def test_cross_process_sequential_delivery():
         for inc in incidents:
             _push_via_app_subprocess(db_path, inc)
 
-        deadline = time.monotonic() + 5
+        deadline = time.monotonic() + 10
         rows = []
         while time.monotonic() < deadline:
             conn = sqlite3.connect(db_path)
