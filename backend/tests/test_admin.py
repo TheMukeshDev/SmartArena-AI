@@ -93,6 +93,40 @@ def test_list_announcements(app, client):
             assert isinstance(data["data"]["announcements"], list)
 
 
+def test_list_announcements_with_firestore(app, client):
+    mock_doc1 = MagicMock()
+    mock_doc1.id = "ann-001"
+    mock_doc1.to_dict.return_value = {
+        "title": "Gate closure",
+        "message": "Gate A closed",
+        "priority": "urgent",
+    }
+    mock_doc2 = MagicMock()
+    mock_doc2.id = "ann-002"
+    mock_doc2.to_dict.return_value = {
+        "title": "Weather alert",
+        "message": "Rain expected",
+        "priority": "normal",
+    }
+    mock_db = MagicMock()
+    mock_db.collection.return_value.order_by.return_value.limit.return_value.stream.return_value = [
+        mock_doc1,
+        mock_doc2,
+    ]
+    with patch("app.routes.admin._get_db", return_value=mock_db):
+        decoded = {"uid": "admin-123", "role": "admin"}
+        with patch(
+            "app.middleware.auth._authenticate_request", return_value=(decoded, None)
+        ):
+            resp = client.get("/api/v1/admin/announcements")
+            data = resp.get_json()
+            assert resp.status_code == 200
+            assert data["success"] is True
+            assert len(data["data"]["announcements"]) == 2
+            assert data["data"]["announcements"][0]["id"] == "ann-001"
+            assert data["data"]["announcements"][1]["id"] == "ann-002"
+
+
 def test_create_announcement(app, client):
     mock_db = MagicMock()
     mock_ref = MagicMock()
@@ -119,6 +153,19 @@ def test_create_announcement_validation_error(app, client):
     ):
         resp = client.post("/api/v1/admin/announcements", json={"title": ""})
         assert resp.status_code == 400
+
+
+def test_create_announcement_db_unavailable(app, client):
+    with patch("app.routes.admin._get_db", return_value=None):
+        decoded = {"uid": "admin-123", "role": "admin"}
+        with patch(
+            "app.middleware.auth._authenticate_request", return_value=(decoded, None)
+        ):
+            resp = client.post(
+                "/api/v1/admin/announcements",
+                json={"title": "Test", "message": "Hello", "priority": "normal"},
+            )
+            assert resp.status_code == 503
 
 
 def test_delete_announcement(app, client):
@@ -156,6 +203,16 @@ def test_delete_announcement_not_found(app, client):
             assert resp.status_code == 404
 
 
+def test_delete_announcement_db_unavailable(app, client):
+    with patch("app.routes.admin._get_db", return_value=None):
+        decoded = {"uid": "admin-123", "role": "admin"}
+        with patch(
+            "app.middleware.auth._authenticate_request", return_value=(decoded, None)
+        ):
+            resp = client.delete("/api/v1/admin/announcements/ann-001")
+            assert resp.status_code == 503
+
+
 def test_list_security_logs(app, client):
     with patch("app.routes.admin._get_db", return_value=None):
         decoded = {"uid": "admin-123", "role": "admin"}
@@ -169,6 +226,49 @@ def test_list_security_logs(app, client):
             assert isinstance(data["data"]["logs"], list)
 
 
+def test_list_security_logs_with_firestore(app, client):
+    mock_doc = MagicMock()
+    mock_doc.id = "log-001"
+    mock_doc.to_dict.return_value = {
+        "event_type": "gate_update",
+        "description": "Gate A status changed",
+        "admin_uid": "admin-123",
+        "timestamp": "2026-01-01T00:00:00",
+    }
+    mock_db = MagicMock()
+    (
+        mock_db.collection.return_value.order_by.return_value.limit.return_value.stream.return_value
+    ) = [mock_doc]
+    with patch("app.routes.admin._get_db", return_value=mock_db):
+        decoded = {"uid": "admin-123", "role": "admin"}
+        with patch(
+            "app.middleware.auth._authenticate_request", return_value=(decoded, None)
+        ):
+            resp = client.get("/api/v1/admin/security/logs")
+            data = resp.get_json()
+            assert resp.status_code == 200
+            assert len(data["data"]["logs"]) == 1
+            assert data["data"]["logs"][0]["id"] == "log-001"
+
+
+def test_list_security_logs_with_custom_limit(app, client):
+    mock_db = MagicMock()
+    (
+        mock_db.collection.return_value.order_by.return_value.limit.return_value.stream.return_value
+    ) = []
+    with patch("app.routes.admin._get_db", return_value=mock_db):
+        decoded = {"uid": "admin-123", "role": "admin"}
+        with patch(
+            "app.middleware.auth._authenticate_request", return_value=(decoded, None)
+        ):
+            resp = client.get("/api/v1/admin/security/logs?limit=25")
+            data = resp.get_json()
+            assert resp.status_code == 200
+            mock_db.collection.return_value.order_by.return_value.limit.assert_called_with(
+                25
+            )
+
+
 def test_list_users(app, client):
     with patch("app.routes.admin._get_db", return_value=None):
         decoded = {"uid": "admin-123", "role": "admin"}
@@ -180,6 +280,37 @@ def test_list_users(app, client):
             assert resp.status_code == 200
             assert data["success"] is True
             assert isinstance(data["data"]["users"], list)
+
+
+def test_list_users_with_firestore(app, client):
+    mock_doc1 = MagicMock()
+    mock_doc1.id = "user-001"
+    mock_doc1.to_dict.return_value = {
+        "email": "admin@smartarena.ai",
+        "role": "admin",
+    }
+    mock_doc2 = MagicMock()
+    mock_doc2.id = "user-002"
+    mock_doc2.to_dict.return_value = {
+        "email": "vol@smartarena.ai",
+        "role": "volunteer",
+    }
+    mock_db = MagicMock()
+    mock_db.collection.return_value.limit.return_value.stream.return_value = [
+        mock_doc1,
+        mock_doc2,
+    ]
+    with patch("app.routes.admin._get_db", return_value=mock_db):
+        decoded = {"uid": "admin-123", "role": "admin"}
+        with patch(
+            "app.middleware.auth._authenticate_request", return_value=(decoded, None)
+        ):
+            resp = client.get("/api/v1/admin/users")
+            data = resp.get_json()
+            assert resp.status_code == 200
+            assert len(data["data"]["users"]) == 2
+            assert data["data"]["users"][0]["uid"] == "user-001"
+            assert data["data"]["users"][1]["uid"] == "user-002"
 
 
 def test_admin_role_required(app, client):

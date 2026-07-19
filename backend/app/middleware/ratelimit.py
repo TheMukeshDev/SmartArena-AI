@@ -82,6 +82,16 @@ def init_ratelimit(app: Flask) -> None:
 
     @app.before_request
     def _check_rate_limit():  # type: ignore[return]
+        """Enforce the per-IP, per-path fixed-window rate limit.
+
+        Skips health-check endpoints.  For every other request the function
+        computes a bucket key from the client IP and request path, atomically
+        increments the counter for the current window in SQLite, and returns
+        a 429 error response if the configured limit has been exceeded.
+        On success the current limit and remaining quota are stashed in
+        ``g.rate_limit`` and ``g.rate_remaining`` for the after-request
+        header hook.
+        """
         if request.path.startswith("/health"):
             return None
 
@@ -128,6 +138,12 @@ def init_ratelimit(app: Flask) -> None:
 
     @app.after_request
     def _set_ratelimit_headers(response):
+        """Attach X-RateLimit-Limit and X-RateLimit-Remaining headers.
+
+        Reads the values stashed in ``g`` by ``_check_rate_limit`` and adds
+        them as standard rate-limit response headers so clients can track
+        their remaining quota.
+        """
         rl = getattr(g, "rate_limit", None)
         rr = getattr(g, "rate_remaining", None)
         if rl is not None:

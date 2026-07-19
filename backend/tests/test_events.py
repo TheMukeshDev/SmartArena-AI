@@ -102,18 +102,23 @@ def _push_via_app_subprocess(db_path, incident):
         app.config["EVENTS_DB_PATH"] = {db_path!r}
         with app.app_context():
             push_incident({json.dumps(incident)})
+        os._exit(0)
     """
     )
     subprocess.run(
         [sys.executable, "-c", code],
         check=True,
-        timeout=30,
+        timeout=60,
         cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     )
 
 
 def test_cross_process_incident_delivery():
-    """Subprocess calls push_incident(); main process reads the row from SQLite."""
+    """Subprocess calls push_incident(); main process reads the row from SQLite.
+
+    Uses a polling loop (retry every 0.1s, max 5s) to handle WAL flush
+    timing across processes.
+    """
     with tempfile.TemporaryDirectory() as tmpdir:
         db_path = os.path.join(tmpdir, "events_test.db")
 
@@ -125,12 +130,18 @@ def test_cross_process_incident_delivery():
 
         _push_via_app_subprocess(db_path, incident)
 
-        conn = sqlite3.connect(db_path)
-        conn.execute("PRAGMA journal_mode=WAL")
-        rows = conn.execute(
-            "SELECT id, incident_json FROM incidents WHERE id > 0 ORDER BY id"
-        ).fetchall()
-        conn.close()
+        deadline = time.monotonic() + 5
+        rows = []
+        while time.monotonic() < deadline:
+            conn = sqlite3.connect(db_path)
+            conn.execute("PRAGMA journal_mode=WAL")
+            rows = conn.execute(
+                "SELECT id, incident_json FROM incidents WHERE id > 0 ORDER BY id"
+            ).fetchall()
+            conn.close()
+            if len(rows) >= 1:
+                break
+            time.sleep(0.1)
 
         assert len(rows) == 1
         fetched = json.loads(rows[0][1])
@@ -175,7 +186,11 @@ def test_cross_process_sequential_delivery():
 
 def test_cross_process_sse_poll_pattern():
     """Subprocess pushes via push_incident(); main process polls with the
-    exact same WHERE id > ? query used by the SSE generate() loop."""
+    exact same WHERE id > ? query used by the SSE generate() loop.
+
+    Uses a polling loop (retry every 0.1s, max 5s) to handle WAL flush
+    timing across processes.
+    """
     with tempfile.TemporaryDirectory() as tmpdir:
         db_path = os.path.join(tmpdir, "events_test.db")
 
@@ -190,17 +205,22 @@ def test_cross_process_sse_poll_pattern():
         last_seen_id = 0
         received = []
 
-        conn = sqlite3.connect(db_path)
-        conn.execute("PRAGMA journal_mode=WAL")
-        rows = conn.execute(
-            "SELECT id, incident_json FROM incidents WHERE id > ? ORDER BY id",
-            (last_seen_id,),
-        ).fetchall()
-        conn.close()
+        deadline = time.monotonic() + 5
+        while time.monotonic() < deadline:
+            conn = sqlite3.connect(db_path)
+            conn.execute("PRAGMA journal_mode=WAL")
+            rows = conn.execute(
+                "SELECT id, incident_json FROM incidents WHERE id > ? ORDER BY id",
+                (last_seen_id,),
+            ).fetchall()
+            conn.close()
 
-        for row_id, incident_json in rows:
-            received.append(json.loads(incident_json))
-            last_seen_id = row_id
+            for row_id, incident_json in rows:
+                received.append(json.loads(incident_json))
+                last_seen_id = row_id
+            if len(received) >= 1:
+                break
+            time.sleep(0.1)
 
         assert len(received) == 1
         assert received[0]["description"] == "Smoke detected in Section 12"

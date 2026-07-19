@@ -74,6 +74,13 @@ def require_auth(func: Callable[..., Any]) -> Callable[..., Any]:
 
         @functools.wraps(func)
         async def async_wrapper(*args: Any, **kwargs: Any) -> Any:
+            """Verify Firebase authentication and populate g.user.
+
+            Calls ``_authenticate_request`` to validate the session cookie or
+            ID token.  Returns an error response immediately if
+            authentication fails; otherwise stores the decoded claims in
+            ``g.user`` and delegates to the wrapped async view function.
+            """
             decoded_claims, err = _authenticate_request()
             if err:
                 return err
@@ -85,6 +92,13 @@ def require_auth(func: Callable[..., Any]) -> Callable[..., Any]:
 
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
+            """Verify Firebase authentication and populate g.user.
+
+            Calls ``_authenticate_request`` to validate the session cookie or
+            ID token.  Returns an error response immediately if
+            authentication fails; otherwise stores the decoded claims in
+            ``g.user`` and delegates to the wrapped sync view function.
+            """
             decoded_claims, err = _authenticate_request()
             if err:
                 return err
@@ -133,6 +147,13 @@ def require_role(allowed_roles: list[str]) -> Callable[..., Any]:
 
             @functools.wraps(func)
             async def async_wrapper(*args: Any, **kwargs: Any) -> Any:
+                """Enforce role-based access control on an async view.
+
+                Reads the ``role`` claim from ``g.user`` (set by
+                ``@require_auth``) and returns a 403 error if it is not
+                present in *allowed_roles*.  Otherwise delegates to the
+                wrapped async view function.
+                """
                 err = _check_role()
                 if err:
                     return err
@@ -143,6 +164,13 @@ def require_role(allowed_roles: list[str]) -> Callable[..., Any]:
 
             @functools.wraps(func)
             def wrapper(*args: Any, **kwargs: Any) -> Any:
+                """Enforce role-based access control on a sync view.
+
+                Reads the ``role`` claim from ``g.user`` (set by
+                ``@require_auth``) and returns a 403 error if it is not
+                present in *allowed_roles*.  Otherwise delegates to the
+                wrapped sync view function.
+                """
                 err = _check_role()
                 if err:
                     return err
